@@ -5,3 +5,4 @@ export default function Home() {
     <div>Welcome To PurdueHub!</div>
   )
 }
+

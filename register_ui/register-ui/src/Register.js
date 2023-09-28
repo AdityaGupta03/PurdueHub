@@ -6,6 +6,8 @@
 
 import {useRef, useState, useEffect} from 'react';
 import React from 'react'
+import { Link, Route } from 'react-router-dom';
+
 
 const Register = () => {
     /* 
@@ -134,7 +136,7 @@ const Register = () => {
             <section>
                 <h1>Successful!</h1>
                 <p>
-                    <a href='#'>Sign In</a>
+                    <Link to="/login">Sign In</Link>
                 </p>
             </section>
         ) : (
@@ -245,7 +247,7 @@ const Register = () => {
             <p>
                 Already registered? <br />
                 <span class> 
-                <a href="#">Sign Up</a>
+                <Link to="/login">Login</Link>
                 </span>
             </p>
         </section>

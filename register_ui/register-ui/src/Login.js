@@ -1,7 +1,12 @@
 import React from 'react';
 import {useRef, useState, useEffect} from 'react';
+import { Link, Route } from 'react-router-dom';
+
+import Register from './Register';
+import Home from './Home';
 
 export const Login = () => {
+    
     const userRef = useRef(); // set user focus on first input when the form loads 
     const errRef = useRef(); // set focus on errors if they occur, good for accessibility pursposes as well
     
@@ -24,7 +29,7 @@ export const Login = () => {
         e.preventDefault(); // avoid reloading the page as default
 
         // INSERT BACKEND LOGIC HERE 
-        
+
         console.log(user, pwd);
         setUser('');
         setPwd('');
@@ -36,7 +41,7 @@ export const Login = () => {
             <section>
                 <h1>Successful!</h1>
                 <p>
-                    <a href='#'>Back To Homepage</a>
+                    <Link to="/">Back To Homepage</Link>
                 </p>
             </section>
         ) : (
@@ -66,7 +71,8 @@ export const Login = () => {
                    <button>Sign In</button>
             </form>
             <p>Need An Account? <br />
-                <a href="#">Sign Up</a> {/* Will need to introduce router */}
+                {/*<a href="#">Sign Up</a>  Will need to introduce router */}
+                <Link to="/register">Register</Link>
             </p>
 
         </section>
