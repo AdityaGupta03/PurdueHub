@@ -29,6 +29,8 @@ const Register = () => {
       */
     const PWD_REGEX = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
+    const EMAIL_REGEX = /^[A-Za-z0-9._%+-]+@purdue\.edu$/;
+
     /* user = '', so user is the initial state (X) of whatever useState(X) says*/
     const [user, setUser] = useState('');
     /* Assume a username is already false to avoid complications */
@@ -52,6 +54,10 @@ const Register = () => {
     const [matchPwd, setMatchPwd] = useState('');
     const [validMatch, setValidMatch] = useState(false);
     const [matchFocus, setMatchFocus] = useState(false);
+
+    const [email, setEmail] = useState('');
+    const [validEmail, setValidEmail] = useState(false);
+    const [emailFocus, setEmailFocus] = useState(false);
 
     /*
      * Incorporate error messages and be adjustable on the type of error, and
@@ -88,10 +94,18 @@ const Register = () => {
         setValidMatch(match);
     }, [pwd, matchPwd])
 
+     // Anytime email field changes, validate it
+    useEffect(() => {
+        const result = EMAIL_REGEX.test(email);
+        console.log(result);
+        console.log(email);
+        setValidEmail(result);
+    })
+
     // Whenever user changes their username, password the error goes away
     useEffect(() => {
         setErrMsg('');
-    }, [user, pwd, matchPwd])
+    }, [user, pwd, matchPwd, email])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -99,13 +113,14 @@ const Register = () => {
         // by validating the existing fields and making sure they are valid
         const a1 = USER_REGEX.test(user);
         const a2 = PWD_REGEX.test(pwd);
-        if (!a1 || !a2) {
+        const a3 = EMAIL_REGEX.test(email);
+        if (!a1 || !a2 || !a3) {
             setErrMsg("Invalid Entry");
             return; 
         }
         
         // INSERT DATA TO SEND TO BACKEND HERE ! 
-        console.log(user, pwd);
+        console.log(user, pwd, email);
         setSuccess(true);
 
     }  
@@ -127,6 +142,7 @@ const Register = () => {
             <p ref={errRef} className={errMsg ? "errMsg" : "offscreen"}>{errMsg}</p>
             <h1>Register Into PurdueHub</h1>
             <form onSubmit={handleSubmit}>
+                {/* USERNAME */}
                 <label htmlFor='username'> 
                     Username: 
                     {/* If we have a valid username, apply valid class or otherwsie hide*/}
@@ -155,7 +171,30 @@ const Register = () => {
                     Must begin with a letter. <br/>
                     Letters, numbers, underscores, hyphens allowed.
                 </p>
-                
+                    
+                {/* EMAIL */}
+                <label htmlFor='email'>
+                    Email: 
+                    <span className={validEmail ? "valid" : "hide"}>*V*</span>
+                    <span className={validEmail || !email ? "hide" : "invalid"}>*X*</span>
+                </label>
+                <input
+                    type="text"
+                    id='email'
+                    autoComplete='off'
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    // onBlur = focus has left element, onFocus = otherwise
+                    onFocus={() => setEmailFocus(true)} // 
+                    onBlur={() => setEmailFocus(false)} // 
+                />
+                <p className={emailFocus && email && !validEmail
+                     ? "instructions": "offscreen"}>
+                    Must include @purdue.edu
+                </p>
+
+                {/* PASSWORD */}
+
                 <label htmlFor='password'> 
                     Password: 
                     {/* If we have a valid password, apply valid class or otherwsie hide*/}
