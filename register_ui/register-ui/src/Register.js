@@ -245,7 +245,7 @@ const Register = () => {
             <p>
                 Already registered? <br />
                 <span class> 
-                *RouterLINK HERE*
+                <a href="#">Sign Up</a>
                 </span>
             </p>
         </section>
