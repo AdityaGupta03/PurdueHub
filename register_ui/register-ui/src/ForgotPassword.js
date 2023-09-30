@@ -8,9 +8,9 @@ export const ForgotPassword = () => {
     const errRef = useRef(); // set focus on errors if they occur, good for accessibility pursposes as well
     
     const [user, setUser] = useState(''); 
-    const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false); // replace with react router
-
+    const [errMsg, setErrMsg] = useState('');
+    
     // Set focus on first user input when page updates
     useEffect(() => {
         userRef.current.focus();
@@ -57,7 +57,7 @@ export const ForgotPassword = () => {
                         value={user}
                         required
                    />
-                   <button>Request New Password</button>
+                   <button>Reset Password</button>
             </form>
             <p>Forgot Username?<br />
                 <Link to="/forgotusername">Request New Username</Link>

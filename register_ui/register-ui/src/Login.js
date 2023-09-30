@@ -5,6 +5,7 @@ import { Link, Route } from 'react-router-dom';
 import Register from './Register';
 import Home from './Home';
 
+
 export const Login = () => {
     
     const userRef = useRef(); // set user focus on first input when the form loads 
@@ -41,7 +42,7 @@ export const Login = () => {
             <section>
                 <h1>Successful!</h1>
                 <p>
-                    <Link to="/">Back To Homepage</Link>
+                    <Link to="/">Back To Home</Link>
                 </p>
             </section>
         ) : (
