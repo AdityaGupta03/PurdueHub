@@ -144,7 +144,7 @@ button {
 
 .errmsg {
     background-color: lightpink;
-    color: firebrick;
+    color: rgb(129, 66, 66);
     font-weight: bold;
     padding: 0.5rem;
     margin-bottom: 0.5rem;
