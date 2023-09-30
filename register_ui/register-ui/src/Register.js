@@ -109,6 +109,9 @@ const Register = () => {
         setErrMsg('');
     }, [user, pwd, matchPwd, email])
 
+    
+    const existingUsername = "david123"; // fake data test to check what happens if a username is already taken
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         // avoid JS tricks from enabling user submit button,
@@ -121,9 +124,15 @@ const Register = () => {
             return; 
         }
         
-        // INSERT DATA TO SEND TO BACKEND HERE ! 
-        console.log(user, pwd, email);
-        setSuccess(true);
+        // INSERT DATA TO SEND TO BACKEND HERE 
+
+        if(user === existingUsername) {
+            setErrMsg('Username is already taken, create a new username');
+            errRef.current.focus();
+        }
+        else {
+            setSuccess(true);
+        }
 
     }  
 
@@ -134,14 +143,14 @@ const Register = () => {
         <>
         {success ? (
             <section>
-                <h1>Successful!</h1>
+                <h1>Successfully created new PurdueHub account!</h1>
                 <p>
                     <Link to="/login">Sign In</Link>
                 </p>
             </section>
         ) : (
         <section>
-            <p ref={errRef} className={errMsg ? "errMsg" : "offscreen"}>{errMsg}</p>
+            <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</p>
             <h1>Register Into PurdueHub</h1>
             <form onSubmit={handleSubmit}>
                 {/* USERNAME */}

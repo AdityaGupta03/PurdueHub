@@ -45,7 +45,7 @@ export const ForgotPassword = () => {
         ) : (
         <section>
             {/* If errmsg is true, display an error and put focus on it*/}
-            <p ref={errRef} className={errMsg ? "errmsg" : "offsreen"}></p>
+            <p ref={errRef} className={errMsg ? "errmsg" : "offsreen"}>{errMsg}</p>
             <h1> Forgot Password </h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor='username'>Username:</label>

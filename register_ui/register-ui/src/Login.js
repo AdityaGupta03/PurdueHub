@@ -48,7 +48,7 @@ export const Login = () => {
         ) : (
         <section>
             {/* If errmsg is true, display an error and put focus on it*/}
-            <p ref={errRef} className={errMsg ? "errmsg" : "offsreen"}></p>
+            <p ref={errRef} className={errMsg ? "errmsg" : "offsreen"}>{errMsg}</p>
             <h1> Sign In </h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor='username'>Username:</label>
