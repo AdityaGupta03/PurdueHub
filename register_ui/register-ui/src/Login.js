@@ -78,6 +78,10 @@ export const Login = () => {
             <p>Forgot Password? <br /> 
                 <Link to="/forgotpass">Reset Password</Link>
             </p>
+            <p>Forgot Username? <br />
+                {/*<a href="#">Sign Up</a>  Will need to introduce router */}
+                <Link to="/forgotusername">Reset Username</Link>
+            </p>
         </section>
          )}
          </>

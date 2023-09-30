@@ -1,17 +1,16 @@
 import {useRef, useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 
-export const ChangeUsername = () => {
+export const ChangePassword = () => {
 
-    const previousUsername = "david123"; // testing (check if the username already is the same)
-    const alreadyExistsUsername = "mikey54"; // testing (check if entered username already exists)
+    const previousPassword = "pass123!"; // testing (check if the password already is the same)
 
-    const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;;
+    const PWD_REGEX = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
     const userRef = useRef();
     const errRef = useRef(); 
 
-    const [user, setUser] = useState(''); 
+    const [pwd, setPwd] = useState(''); 
     const [success, setSuccess] = useState(false);
     const [errMsg, setErrMsg] = useState('');
 
@@ -22,30 +21,23 @@ export const ChangeUsername = () => {
     // When user inputs changes, error messages go away
     useEffect(() => {
         setErrMsg('');
-    }, [user])
+    }, [pwd])
 
     const handleSubmit = async (e) => {
         e.preventDefault(); // avoid reloading the page as default
-        const resultTemp = USER_REGEX.test(user); // test validity (has @purdue.edu in it)
+        const resultTemp = PWD_REGEX.test(pwd); // test validity (has @purdue.edu in it)
     
         // INSERT BACKEND LOGIC HERE 
 
-        if(user === previousUsername) {
-            setErrMsg('Username was already used previously, set a new username');
-            setSuccess(false);
-            errRef.current.focus();
-
-        }
-        else if(user === alreadyExistsUsername) {
-            setErrMsg('Username already exists');
+        if(pwd === previousPassword) {
+            setErrMsg('Password was already used before, try again');
             setSuccess(false);
             errRef.current.focus();
         }
-        else if(!resultTemp){
+        else if(!resultTemp) {
             const str = <>
-                4 to 24 characters. <br/>
-                Must begin with a letter. <br/>
-                Letters, numbers, underscores, hyphens allowed.
+                8 to 24 characters. <br/>
+                Must include uppercase and lowercase letters, a number, and a special character (!@#$%)<br />
             </>
             setErrMsg(str);
             setSuccess(false);
@@ -60,7 +52,7 @@ export const ChangeUsername = () => {
         <>
             {success ? (
                 <section>
-                    <h1>Successfully Changed Username!</h1>
+                    <h1>Successfully Changed Password!</h1>
                     <p>
                         <Link to="/login">Back To Sign In</Link>
                     </p>
@@ -69,19 +61,19 @@ export const ChangeUsername = () => {
         <section>
             {/* If errmsg is true, display an error and put focus on it*/}
             <p ref={errRef} className={errMsg ? "errmsg" : "offsreen"}>{errMsg}</p>
-            <h1> New Username </h1>
+            <h1> New Password </h1>
             <form onSubmit={handleSubmit}>
-                <label htmlFor='username'>Username:</label>
+                <label htmlFor='pwd'>Password:</label>
                     <input 
-                        type='text' 
-                        id='username'
+                        type='password' 
+                        id='pwd'
                         ref={userRef} // set user focus first on email
                         autoComplete='off'
-                        onChange={(e) => setUser(e.target.value)} // grab input whenever it changes
-                        value={user}
+                        onChange={(e) => setPwd(e.target.value)} // grab input whenever it changes
+                        value={pwd}
                         required
                    />
-                   <button>Change Username</button>
+                   <button>Change Password</button>
             </form>
             <p>Back To Sign In<br />
                 <Link to="/login">Sign In</Link>
@@ -92,4 +84,4 @@ export const ChangeUsername = () => {
     )
 }
 
-export default ChangeUsername;
+export default ChangePassword;

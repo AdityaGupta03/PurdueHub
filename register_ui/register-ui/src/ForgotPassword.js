@@ -40,6 +40,7 @@ export const ForgotPassword = () => {
                 <p>
                     <Link to="/login">Back To Sign In</Link>
                 </p>
+                <p><Link to="/changepassword">Change Password Page</Link></p>
             </section>
         ) : (
         <section>
@@ -61,6 +62,9 @@ export const ForgotPassword = () => {
             </form>
             <p>Forgot Username?<br />
                 <Link to="/forgotusername">Request New Username</Link>
+            </p>
+            <p>Back To Sign In<br />
+                <Link to="/login">Sign In</Link>
             </p>
         </section>
          )}
