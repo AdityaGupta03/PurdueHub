@@ -63,7 +63,7 @@ async function updateUsername(req, res) {
       return res.status(400).json({ error: "Not unique username" });
     }
 
-    const db_res = updateUsernameQuery(user_id, newUsername);
+    const db_res = await updateUsernameQuery(user_id, newUsername);
     if (!db_res) {
       return res.status(500).json({ error: "Internal server error" });
     } else {
