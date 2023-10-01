@@ -1,5 +1,5 @@
-const pool = require("./db");
-const { isUniqueUsername, createAccountQuery, updateUsernameQuery } = require("./accountQueries");
+const pool = require("../database/db");
+const { isUniqueUsername, createAccountQuery, updateUsernameQuery } = require("../queries/accountQueries");
 
 async function createAccount(req, res) {
   try {
