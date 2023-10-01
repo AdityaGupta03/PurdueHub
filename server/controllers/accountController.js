@@ -1,4 +1,4 @@
-const { isUniqueUsernameQuery, createAccountQuery, updateUsernameQuery, getUserInfoFromUsernameQuery, blockUserQuery, unblockUserQuery } = require("../database/queries/accountQueries");
+const accountQueries = require("../database/queries/accountQueries");
 const { sendEmail } = require("./resetController");
 const { addEmailVerificationQuery, getAuthCodeQuery, removeEmailVerificationQuery } = require("../database/queries/verificationQueries");
 
@@ -18,12 +18,12 @@ async function createAccount(req, res) {
       return res.status(400).json({ error: "Missing password" });
     }
 
-    const isUnique = isUniqueUsernameQuery(username);
+    const isUnique = accountQueries.isUniqueUsernameQuery(username);
     if (!isUnique) {
       return res.status(400).json({ error: "Not unique username" });
     }
 
-    let db_res = await createAccountQuery(username, email, password);
+    let db_res = await accountQueries.createAccountQuery(username, email, password);
     if (!db_res) {
       return res.status(500).json({ error: "Internal server error" });
     }
@@ -58,12 +58,12 @@ async function updateUsername(req, res) {
       return res.status(400).json({ error: "Missing new username" });
     }
 
-    const isUnique = isUniqueUsernameQuery(newUsername);
+    const isUnique = accountQueries.isUniqueUsernameQuery(newUsername);
     if (!isUnique) {
       return res.status(400).json({ error: "Not unique username" });
     }
 
-    const db_res = await updateUsernameQuery(user_id, newUsername);
+    const db_res = await accountQueries.updateUsernameQuery(user_id, newUsername);
     if (!db_res) {
       return res.status(500).json({ error: "Internal server error" });
     } else {
@@ -130,14 +130,14 @@ async function blockUser(req, res) {
   }
 
   try {
-    const blocked_user_info = await getUserInfoFromUsernameQuery(block_username);
+    const blocked_user_info = await accountQueries.getUserInfoFromUsernameQuery(block_username);
     if (blocked_user_info === null) {
       return res.status(404).json({ error: "User not found" });
     }
 
     const block_user_id = blocked_user_info.user_id;
 
-    const db_res = await blockUserQuery(block_user_id, user_id);
+    const db_res = await accountQueries.blockUserQuery(block_user_id, user_id);
     if (!db_res) {
       return res.status(500).json({ error: "Internal Server Error" });
     }
@@ -161,14 +161,14 @@ async function unblockUser(req, res) {
   }
 
   try {
-    const unblocked_user_info = await getUserInfoFromUsernameQuery(unblock_username);
+    const unblocked_user_info = await accountQueries.getUserInfoFromUsernameQuery(unblock_username);
     if (unblocked_user_info === null) {
       return res.status(404).json({ error: "User not found" });
     }
 
     const unblock_user_id = unblocked_user_info.user_id;
 
-    const db_res = await unblockUserQuery(unblock_user_id, user_id);
+    const db_res = await accountQueries.unblockUserQuery(unblock_user_id, user_id);
     if (!db_res) {
       return res.status(500).json({ error: "Internal Server Error" });
     }
