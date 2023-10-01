@@ -1,4 +1,4 @@
-const pool = require("../database/db");
+const pool = require("../db");
 
 async function isUniqueUsernameQuery(username) {
   const query = "SELECT COUNT(*) FROM users WHERE username = $1";
@@ -63,9 +63,9 @@ async function checkAccountFromEmailQuery(email) {
 }
 
 module.exports = {
-  isUniqueUsername,
+  isUniqueUsernameQuery,
   updateUsernameQuery,
   createAccountQuery,
-  getUserInfo,
+  getUserInfoQuery,
   checkAccountFromEmailQuery,
 };
