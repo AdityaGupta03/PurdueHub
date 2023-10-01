@@ -62,10 +62,65 @@ async function checkAccountFromEmailQuery(email) {
   }
 }
 
+async function getUserInfoFromUsernameQuery(username) {
+  const query = "SELECT * FROM users where username = $1";
+  const data = [ username ];
+
+  try {
+    const db_res = await pool.query(query, data);
+    return db_res.rows[0];
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+}
+
+async function blockUserQuery(block_user_id, user_id) {
+  const query = "UPDATE users SET blocked = array_append(blocked, $1) WHERE user_id = $2";
+  const data = [ block_user_id, user_id ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+}
+
+async function blockUserQuery(block_user_id, user_id) {
+  const query = "UPDATE users SET blocked = array_append(blocked, $1) WHERE user_id = $2";
+  const data = [ block_user_id, user_id ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+}
+
+async function unblockUserQuery(unblock_user_id, user_id) {
+  const query = "UPDATE users SET blocked = array_remove(blocked, $1) WHERE user_id = $2";
+  const data = [ block_user_id, user_id ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
   createAccountQuery,
   getUserInfoQuery,
   checkAccountFromEmailQuery,
+  getUserInfoFromUsernameQuery,
+  blockUserQuery,
+  unblockUserQuery,
 };
