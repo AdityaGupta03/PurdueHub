@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PurdueHub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ceb888;
+        }
+
+        .calendar {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: ffffff;
+        }
+
+        .calendar-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+        }
+
+        .calendar-table th,
+        .calendar-table td {
+            text-align: center;
+            padding: 0;
+            border: 2px solid #ceb888;
+            position: relative;
+            height: 80px;
+            font-size: 28px;
+        }
+
+        .calendar-table th {
+            background-color: #f0f0f0;
+        }
+
+        .current-month {
+            font-weight: bold;
+            font-size: 36px;
+        }
+
+        .prev-month, .next-month {
+            color: #f0f0f0;
+        }
+
+        .date-number {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar">
+        <div class="calendar-header">
+            <button id="prevMonth">Previous Month</button>
+            <span class="current-month"></span>
+            <button id="nextMonth">Next Month</button>
+        </div>
+        <table class="calendar-table">
+            <thead>
+                <tr>
+                    <th>Sun</th>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                </tr>
+            </thead>
+            <tbody id="calendar-body">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const currentDate = new Date();
+        let currentYear = currentDate.getFullYear();
+        let currentMonth = currentDate.getMonth();
+
+        // function to generate the calendar
+        function generateCalendar(year, month) {
+            const calendarBody = document.getElementById('calendar-body');
+            calendarBody.innerHTML = ''; // Clear previous calendar
+
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+
+            document.querySelector('.current-month').textContent = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long' }).format(firstDay);
+
+            //starting day calculated here
+            const startingDay = firstDay.getDay();
+
+            let date = new Date(firstDay);
+            date.setDate(date.getDate() - startingDay); 
+
+            for (let i = 0; i < 6; i++) {
+                const row = calendarBody.insertRow();
+                for (let j = 0; j < 7; j++) {
+                    const cell = row.insertCell();
+                    if (date.getMonth() !== month) {
+                        cell.classList.add('prev-month');
+                    } else {
+                        const dateNumber = date.getDate();
+                        if (dateNumber === currentDate.getDate() && date.getMonth() === currentDate.getMonth() && date.getFullYear() === currentDate.getFullYear()) {
+                            cell.classList.add('current-day');
+                        }
+                        const dateElement = document.createElement('div');
+                        dateElement.classList.add('date-number');
+                        dateElement.textContent = dateNumber;
+                        dateElement.addEventListener('click', () => {
+                            promptForEventDetails(date);
+                        });
+                        cell.appendChild(dateElement);
+                    }
+                    date.setDate(date.getDate() + 1);
+                }
+            }
+        }
+
+        //ask the user for event details
+        function promptForEventDetails(date) {
+            const eventStartDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            const eventEndDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            eventEndDate.setDate(eventEndDate.getDate() + 1); 
+
+            const eventName = window.prompt('Enter Event Name:');
+            if (eventName) {
+                const eventDescription = window.prompt('Enter Event Description:');
+                const eventStartTime = window.prompt('Enter Start Time:');
+                const eventEndTime = window.prompt('Enter End Time:');
+                
+                const eventDetails = `Event Name: ${eventName}\nDescription: ${eventDescription}\nStart Time: ${eventStartTime}\nEnd Time: ${eventEndTime}`;
+
+                alert(`Event details for ${date.toLocaleDateString()}:\n\n${eventDetails}`);
+            }
+        }
+
+        generateCalendar(currentYear, currentMonth);
+
+        //event listeners for next and previous buttons
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            generateCalendar(currentYear, currentMonth);
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            generateCalendar(currentYear, currentMonth);
+        });
+    </script>
+</body>
+</html>
