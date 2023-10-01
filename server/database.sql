@@ -1,6 +1,6 @@
 CREATE DATABASE PurdueHub;
 
-CREATE TABLE user (
+CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     username VARCHAR(255) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE user (
     FOREIGN KEY (calendar_id) REFERENCES calendar (id)
 );
 
-CREATE TABLE calendar(
+CREATE TABLE calendars (
     id SERIAL PRIMARY KEY,
     user_id INTEGER UNIQUE,
     subscribed_cals INTEGER[] DEFAULT ARRAY[]::INTEGER[],
