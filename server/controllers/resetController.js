@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer');
-const pool = require("../database/db");
 const { checkAccountFromEmailQuery } = require("../database/queries/accountQueries")
 
 const transporter = nodemailer.createTransport({
