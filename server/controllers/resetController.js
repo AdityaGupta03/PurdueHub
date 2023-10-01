@@ -51,7 +51,6 @@ async function sendEmail(reciever, subject, text) {
   };
 
   try {
-    // Send the email
     await transporter.sendMail(mailOptions);
     return true;
   } catch (error) {
@@ -62,4 +61,5 @@ async function sendEmail(reciever, subject, text) {
 
 module.exports = {
   resetUsername,
+  sendEmail,
 };
