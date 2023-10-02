@@ -18,7 +18,7 @@ async function createAccountQuery(username, email, password) {
     await pool.query(query, data);
     return true;
   } catch (err) {
-    console.log(err);
+    console.log("[ERROR] " + err.message);
     return false;
   }
 }
@@ -31,7 +31,7 @@ async function updateUsernameQuery(user_id, newUsername) {
     await pool.query(query, data);
     return true;
   } catch (err) {
-    console.log(err);
+    console.log("[ERROR] " + err.message);
     return false;
   }
 }
@@ -44,7 +44,7 @@ async function getUserInfoQuery(user_id) {
     const db_res = await pool.query(query, data);
     return db_res.rows[0];
   } catch (err) {
-    console.log(err);
+    console.log("[ERROR] " + err.message);
     return false;
   }
 }
@@ -57,7 +57,7 @@ async function checkAccountFromEmailQuery(email) {
     const db_res = await pool.query(query, data);
     return db_res.rows.length > 0;
   } catch (err) {
-    console.log(err);
+    console.log("[ERROR] " + err.message);
     return false;
   }
 }
@@ -70,7 +70,7 @@ async function getUserInfoFromUsernameQuery(username) {
     const db_res = await pool.query(query, data);
     return db_res.rows[0];
   } catch (err) {
-    console.log(err);
+    console.log("[ERROR] " + err.message);
     return null;
   }
 }
@@ -83,7 +83,7 @@ async function blockUserQuery(block_user_id, user_id) {
     await pool.query(query, data);
     return true;
   } catch (err) {
-    console.log(err);
+    console.log("[ERROR] " + err.message);
     return false;
   }
 }
@@ -96,7 +96,7 @@ async function blockUserQuery(block_user_id, user_id) {
     await pool.query(query, data);
     return true;
   } catch (err) {
-    console.log(err);
+    console.log("[ERROR] " + err.message);
     return false;
   }
 }
@@ -109,7 +109,7 @@ async function unblockUserQuery(unblock_user_id, user_id) {
     await pool.query(query, data);
     return true;
   } catch (err) {
-    console.log(err);
+    console.log("[ERROR] " + err.message);
     return false;
   }
 }

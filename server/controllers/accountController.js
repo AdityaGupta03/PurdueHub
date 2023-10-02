@@ -3,6 +3,7 @@ const helperFuncs = require("./helperFunctions");
 const { addEmailVerificationQuery, getAuthCodeQuery, removeEmailVerificationQuery } = require("../database/queries/verificationQueries");
 
 async function createAccount(req, res) {
+  console.log("[INFO] Creating account api.");
   try {
     const { username, email, password } = req.body;
 
@@ -18,7 +19,7 @@ async function createAccount(req, res) {
       return res.status(400).json({ error: "Missing password" });
     }
 
-    const isUnique = accountQueries.isUniqueUsernameQuery(username);
+    const isUnique = await accountQueries.isUniqueUsernameQuery(username);
     if (!isUnique) {
       return res.status(400).json({ error: "Not unique username" });
     }
@@ -47,6 +48,7 @@ async function createAccount(req, res) {
 }
 
 async function updateUsername(req, res) {
+  console.log("[INFO] Update username api.");
   try {
     const { newUsername, user_id } = req.body;
 
@@ -58,7 +60,7 @@ async function updateUsername(req, res) {
       return res.status(400).json({ error: "Missing new username" });
     }
 
-    const isUnique = accountQueries.isUniqueUsernameQuery(newUsername);
+    const isUnique = await accountQueries.isUniqueUsernameQuery(newUsername);
     if (!isUnique) {
       return res.status(400).json({ error: "Not unique username" });
     }
@@ -76,6 +78,7 @@ async function updateUsername(req, res) {
 }
 
 async function verifyEmail(req, res) {
+  console.log("[INFO] Verify email api.");
   try {
     const { email, authCode } = req.body;
 
@@ -106,11 +109,13 @@ async function verifyEmail(req, res) {
 }
 
 async function sendEmailVerification(email, authCode) {
+  console.log("[INFO] Send email verification helper.");
   try {
     const text = `Your email verification code is ${authCode}`;
     const subject = "Purduehub - Email Verification";
     
     const email_status = await helperFuncs.sendEmail(email, subject, text);
+    console.log("[INFO] Sent verification email.");
     return email_status;
   } catch (err) {
     console.log(err.message);
@@ -119,6 +124,7 @@ async function sendEmailVerification(email, authCode) {
 }
 
 async function blockUser(req, res) {
+  console.log("[INFO] Block user api.");
   const { user_id, block_username } = req.body;
 
   if (!user_id) {
@@ -150,6 +156,7 @@ async function blockUser(req, res) {
 }
 
 async function unblockUser(req, res) {
+  console.log("[INFO] Unblock user api.");
   const { user_id, unblock_username } = req.body;
 
   if (!user_id) {
@@ -181,6 +188,7 @@ async function unblockUser(req, res) {
 }
 
 async function resetUsername(req, res) {
+  console.log("[INFO] Reset username api.");
   const { email } = req.body;
 
   if (!email) {
