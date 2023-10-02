@@ -58,6 +58,9 @@
             font-size: 14px;
             cursor: pointer;
         }
+        .event-day {
+            background-color: #3bd5ee;
+        }
     </style>
 </head>
 <body>
@@ -136,14 +139,23 @@
             eventEndDate.setDate(eventEndDate.getDate() + 1); 
 
             const eventName = window.prompt('Enter Event Name:');
+            
             if (eventName) {
-                const eventDescription = window.prompt('Enter Event Description:');
-                const eventStartTime = window.prompt('Enter Start Time:');
-                const eventEndTime = window.prompt('Enter End Time:');
                 
-                const eventDetails = `Event Name: ${eventName}\nDescription: ${eventDescription}\nStart Time: ${eventStartTime}\nEnd Time: ${eventEndTime}`;
-
-                alert(`Event details for ${date.toLocaleDateString()}:\n\n${eventDetails}`);
+                    const eventDescription = window.prompt('Enter Event Description:');
+                    const eventStartTime = window.prompt('Enter Start Time:');
+                    const eventEndTime = window.prompt('Enter End Time:');
+                
+                    const eventDetails = `Event Name: ${eventName}\nDescription: ${eventDescription}\nStart Time: ${eventStartTime}\nEnd Time: ${eventEndTime}`;
+                    
+                    alert(`Event details for ${date.toLocaleDateString()}:\n\n${eventDetails}`);
+                    //display event details in the grid cell
+                    const cell = date.closest('td');
+                    const dateElement = cell.querySelector('.date-number');
+                    dateElement.insertAdjacentHTML('afterend', `<br>${eventDetails}`);
+                    cell.classList.add('event-day');
+            } else {
+                alert('Error: no title');
             }
         }
 
