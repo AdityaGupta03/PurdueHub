@@ -1,5 +1,5 @@
 # Editor specific
-./vsocde
+.vscode
 
 # Node specific
 *node_modules
