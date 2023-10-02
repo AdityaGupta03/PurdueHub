@@ -10,5 +10,5 @@ app.use(bodyParser.json());
 app.use("/api", router);
 
 app.listen(port, () => {
-  console.log(`[INFO] Server has started on port ${port}`);
+  console.log(`Server has started on port ${port}\n`);
 });

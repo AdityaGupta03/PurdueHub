@@ -1,10 +1,10 @@
 {
-  "name": "PurdueHub-Backend",
+  "name": "purduehub-backend",
   "version": "1.0.0",
   "description": "Backend server for PurdueHub application.",
   "main": "server.js",
   "scripts": {
-    "test": "Error: no test specified",
+    "test": "jest ./tests --passWithNoTests",
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
@@ -17,6 +17,7 @@
     "pg": "^8.11.3"
   },
   "devDependencies": {
+    "jest": "^29.7.0",
     "nodemon": "^3.0.1"
   }
 }
