@@ -1,5 +1,5 @@
 const accountQueries = require("../database/queries/accountQueries");
-const { sendEmail } = require("./resetController");
+const helperFuncs = require("./helperFunctions");
 const { addEmailVerificationQuery, getAuthCodeQuery, removeEmailVerificationQuery } = require("../database/queries/verificationQueries");
 
 async function createAccount(req, res) {
@@ -28,11 +28,11 @@ async function createAccount(req, res) {
       return res.status(500).json({ error: "Internal server error" });
     }
 
-    const authCode = generateAuthCode();
-    const email_status = await sendEmailVerification(email, authCode);
-    if (!email_status) {
-      return res.status(500).json({ error: "Error sending verfication to email" });
-    }
+    const authCode = helperFuncs.generateAuthCode();
+    // const email_status = await sendEmailVerification(email, authCode);
+    // if (!email_status) {
+    //   return res.status(500).json({ error: "Error sending verfication to email" });
+    // }
 
     db_res = await addEmailVerificationQuery(email, authCode);
     if (!db_res) {
@@ -110,7 +110,7 @@ async function sendEmailVerification(email, authCode) {
     const text = `Your email verification code is ${authCode}`;
     const subject = "Purduehub - Email Verification";
     
-    const email_status = await sendEmail(email, subject, text);
+    const email_status = await helperFuncs.sendEmail(email, subject, text);
     return email_status;
   } catch (err) {
     console.log(err.message);
@@ -180,8 +180,33 @@ async function unblockUser(req, res) {
   }
 }
 
-function generateAuthCode() {
-  return String(Math.floor(Math.random * 1000000)).padStart(6, "0");
+async function resetUsername(req, res) {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: "Missing email field" });
+  }
+
+  const acc_exists = await accountQueries.checkAccountFromEmailQuery(email);
+  if (!acc_exists) {
+    return res.status(404).json({ error: "No account found with email provided "});
+  }
+
+  const authCode = helperFuncs.generateAuthCode();
+  const text = `Your authentication code for your requested username reset is ${authCode}`
+  const subject = "PurdueHub - Username Account Reset"
+
+  try {
+    const sendemail_status = await helperFuncs.sendEmail(email, subject, text);
+    if (sendemail_status) {
+      return res.status(201).json({ message: "Successfully sent email" });
+    } else {
+      return res.status(500).json({ error: "Error sending email" });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 }
 
 module.exports = {
@@ -190,4 +215,5 @@ module.exports = {
   verifyEmail,
   blockUser,
   unblockUser,
+  resetUsername,
 };
