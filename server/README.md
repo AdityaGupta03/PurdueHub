@@ -1,8 +1,28 @@
 # PurdueHub Backend Services
 
-## Setup the local database
+## Setup
 
 NOTE: The rest of the automation and more details involving testing will come in the future.
+
+### Automated Setup
+
+Requirements:
+- Postgresql Version 15.4 (need psql installed)
+- Bash scripting
+
+The following assumes you are in the `./server` directory from the project root.
+
+To setup postgres databases, run the bash script:
+```
+./bin/psql-setup.bash
+```
+
+To setup required javascript packages, run:
+```
+npm install
+```
+
+### Manual Setup
 
 Download postgres however necessary.
 Sign in in cli using:
@@ -16,4 +36,9 @@ Create database called "purduehub":
 \c purduehub
 ```
 
-For now, copy the sql code in database.sql which setups the schema of our DB into postgres to create a local database.
+Copy the sql code in database.sql which setups the schema of our DB into postgres to create a local database.
+
+To setup the required javascript packages, from the server directory from project root, run:
+```
+npm install
+```
