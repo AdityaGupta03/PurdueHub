@@ -16,7 +16,7 @@ The following assumes you are in the `./server` directory from the project root.
 
 To setup postgres databases, run the bash script:
 ```
-./bin/psql-setup.bash
+../bin/psql-setup.bash
 ```
 
 To setup required javascript packages, run:
