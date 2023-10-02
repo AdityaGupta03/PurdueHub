@@ -7,7 +7,9 @@ NOTE: The rest of the automation and more details involving testing will come in
 ### Automated Setup
 
 Requirements:
-- Postgresql Version 15.4 (need psql installed)
+- Postgresql Version 15.4
+    - Cli tool "psql" installed
+    - Have a SuperUser called "postgres" with password "postgres"
 - Bash scripting
 
 The following assumes you are in the `./server` directory from the project root.
