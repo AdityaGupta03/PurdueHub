@@ -1,9 +1,6 @@
-CREATE DATABASE purduehub;
-
 CREATE TABLE users (
   user_id SERIAL PRIMARY KEY,
   username VARCHAR(255) NOT NULL UNIQUE,
-  username VARCHAR(255) NOT NULL,
   birthday DATE,
   email VARCHAR(255) NOT NULL UNIQUE,
   profile_picture VARCHAR(255),
@@ -13,17 +10,21 @@ CREATE TABLE users (
   friends INTEGER[] DEFAULT ARRAY[]::INTEGER[],
   saved_courses INTEGER[] DEFAULT ARRAY[]::INTEGER[],
   saved_orgs INTEGER[] DEFAULT ARRAY[]::INTEGER[],
-  calendar_id INTEGER UNIQUE,
-  FOREIGN KEY (calendar_id) REFERENCES calendar (id)
+  calendar_id INTEGER UNIQUE
 );
 
 CREATE TABLE calendars (
   id SERIAL PRIMARY KEY,
   user_id INTEGER UNIQUE,
   subscribed_cals INTEGER[] DEFAULT ARRAY[]::INTEGER[],
-  calendar_events INTEGER[] DEFAULT ARRAY[]::INTEGER[],
-  FOREIGN KEY (user_id) REFERENCES users (user_id)
+  calendar_events INTEGER[] DEFAULT ARRAY[]::INTEGER[]
 );
+
+ALTER TABLE users
+ADD FOREIGN KEY (calendar_id) REFERENCES calendars (id);
+
+ALTER TABLE calendars
+ADD FOREIGN KEY (user_id) REFERENCES users (user_id);
 
 CREATE TABLE email_verification (
   id SERIAL PRIMARY KEY,
