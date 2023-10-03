@@ -19,7 +19,7 @@ async function getAuthCodeQuery(email) {
 
   try {
     const db_res = await pool.query(query, data);
-    return db_res.rows[0].authCode;
+    return db_res.rows[0].authcode;
   } catch (err) {
     console.log(err);
     return "";

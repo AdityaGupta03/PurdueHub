@@ -6,8 +6,8 @@ async function isUniqueUsernameQuery(username) {
 
   const db_res = await pool.query(query, data);
   const numFound = db_res.rows[0].count;
-
-  return numFound === 0;
+  
+  return numFound == 0;
 }
 
 async function createAccountQuery(username, email, password) {

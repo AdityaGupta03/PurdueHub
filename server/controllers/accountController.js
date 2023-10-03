@@ -30,10 +30,10 @@ async function createAccount(req, res) {
     }
 
     const authCode = helperFuncs.generateAuthCode();
-    // const email_status = await sendEmailVerification(email, authCode);
-    // if (!email_status) {
-    //   return res.status(500).json({ error: "Error sending verfication to email" });
-    // }
+    const email_status = await sendEmailVerification(email, authCode);
+    if (!email_status) {
+      return res.status(500).json({ error: "Error sending verfication to email" });
+    }
 
     db_res = await addEmailVerificationQuery(email, authCode);
     if (!db_res) {
@@ -93,7 +93,7 @@ async function verifyEmail(req, res) {
     const actual_authCode = await getAuthCodeQuery(email);
     if (actual_authCode === "") {
       return res.status(500).json({ error: "Internal server error" });
-    } else if (actual_authCode !== authCode) {
+    } else if (actual_authCode != authCode) {
       return res.status(400).json({ error: "Incorrect authentication code" });
     }
 
