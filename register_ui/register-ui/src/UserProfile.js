@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import {useRef, useEffect} from 'react';
 import './Profile.css' // css pulled online
 import temp from './temporary-profile.jpeg' // temp picture
 
@@ -10,11 +11,13 @@ const UserProfile = () => {
     const[isEditing, setIsEditing] = useState(false); // edit status check
     const [selectedImage, setSelectedImage] = useState(null);
 
+    const [errMsg, setErrMsg] = useState('');
+    const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;;
+
+
     // FAKE DATA
     const savedUser = 'user123'; // test error if username already exists
-    
 
-    let pf = useState(null);
     // Be able to set functions for buttons: save and edit
     // save = save information, no longer editing
     // edit = not saved yet, information will change
@@ -23,10 +26,27 @@ const UserProfile = () => {
         setIsEditing(true);
     }
     const handleSaveClick = () => {
+        const a1 = USER_REGEX.test(username);
         if(username == savedUser) {
-            console.log('err');
+            setErrMsg('Username is already taken, create a new username');
+            setIsEditing(true);
         }
-        setIsEditing(false);
+        else if (!a1) {
+            setIsEditing(true);
+            const message = <>
+                Username requirements: <br/>
+                4 to 24 characters. <br/>
+                Must begin with a letter. <br/>
+                Letters, numbers, underscores, hyphens allowed.
+            </>
+            setErrMsg(message);
+        }
+        else {
+            // success here
+
+
+            setIsEditing(false);
+        }
 
         // SAVE DATA TO BACKEND HERE!
     }
@@ -43,13 +63,17 @@ const UserProfile = () => {
     
           reader.readAsDataURL(file);
         }
-        pf = selectedImage;
     };
 
+    useEffect(() => {
+        setErrMsg('');
+    }, [username])
+    
     return (
         <>
         {isEditing ? (
             <section>
+                <p className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</p>
                 <label htmlFor='username'> 
                     Username: 
                 </label>
