@@ -10,6 +10,10 @@ const UserProfile = () => {
     const[isEditing, setIsEditing] = useState(false); // edit status check
     const [selectedImage, setSelectedImage] = useState(null);
 
+    // FAKE DATA
+    const savedUser = 'user123'; // test error if username already exists
+    
+
     let pf = useState(null);
     // Be able to set functions for buttons: save and edit
     // save = save information, no longer editing
@@ -19,6 +23,9 @@ const UserProfile = () => {
         setIsEditing(true);
     }
     const handleSaveClick = () => {
+        if(username == savedUser) {
+            console.log('err');
+        }
         setIsEditing(false);
 
         // SAVE DATA TO BACKEND HERE!

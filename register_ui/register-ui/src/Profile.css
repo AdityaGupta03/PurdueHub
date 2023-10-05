@@ -12,5 +12,6 @@
  textarea {
     width: auto;
     height: auto;
+    resize: none;
  }
 
