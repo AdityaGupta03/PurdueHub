@@ -13,11 +13,22 @@ CREATE TABLE users (
   calendar_id INTEGER UNIQUE
 );
 
+CREATE TABLE calendar_events (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  start_date TIMESTAMP NOT NULL,
+  end_date TIMESTAMP NOT NULL,
+  location VARCHAR(255),
+  description TEXT,
+  organization_id INTEGER
+);
+
 CREATE TABLE calendars (
   id SERIAL PRIMARY KEY,
   user_id INTEGER UNIQUE,
   subscribed_cals INTEGER[] DEFAULT ARRAY[]::INTEGER[],
-  calendar_events INTEGER[] DEFAULT ARRAY[]::INTEGER[]
+  calendar_events INTEGER[] DEFAULT ARRAY[]::INTEGER[],
+  FOREIGN KEY (calendar_events) REFERENCES calendar_events (id)
 );
 
 ALTER TABLE users
@@ -25,6 +36,8 @@ ADD FOREIGN KEY (calendar_id) REFERENCES calendars (id);
 
 ALTER TABLE calendars
 ADD FOREIGN KEY (user_id) REFERENCES users (user_id);
+
+
 
 CREATE TABLE email_verification (
   id SERIAL PRIMARY KEY,
