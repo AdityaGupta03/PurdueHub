@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "tests": "jest ./tests --passWithNoTests",
-    "start": "node server.js",
+    "start": "NODE_ENV=local server.js",
+    "start-aws": "NODE_ENV=aws node server.js",
     "dev": "nodemon server.js"
   },
   "author": "Aditya Gupta",
