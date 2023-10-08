@@ -88,19 +88,6 @@ async function blockUserQuery(block_user_id, user_id) {
   }
 }
 
-async function blockUserQuery(block_user_id, user_id) {
-  const query = "UPDATE users SET blocked = array_append(blocked, $1) WHERE user_id = $2";
-  const data = [ block_user_id, user_id ];
-
-  try {
-    await pool.query(query, data);
-    return true;
-  } catch (err) {
-    console.log("[ERROR] " + err.message);
-    return false;
-  }
-}
-
 async function unblockUserQuery(unblock_user_id, user_id) {
   const query = "UPDATE users SET blocked = array_remove(blocked, $1) WHERE user_id = $2";
   const data = [ block_user_id, user_id ];

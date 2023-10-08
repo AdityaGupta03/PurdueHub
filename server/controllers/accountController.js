@@ -40,9 +40,9 @@ async function createAccount(req, res) {
       return res.status(500).json({ error: "Internal server error" });
     }
 
-    return res.status(201).json({ message: "Account successfully created" });
+    return res.status(200).json({ message: "Account successfully created" });
   } catch (err) {
-    console.log(err.message);
+    console.error("[ERROR] " + err.message);
     return res.status(500).json({ error: "Error creating account" });
   }
 }
@@ -224,4 +224,5 @@ module.exports = {
   blockUser,
   unblockUser,
   resetUsername,
+  sendEmailVerification,
 };

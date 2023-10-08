@@ -8,7 +8,7 @@ async function addEmailVerificationQuery(email, authCode) {
     await pool.query(query, data);
     return true;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return false;
   }
 }
