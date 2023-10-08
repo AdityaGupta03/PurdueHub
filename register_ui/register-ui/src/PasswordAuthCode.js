@@ -13,10 +13,6 @@ export const PasswordAuthCode = () => {
     const [code, setCode] = useState(''); 
     const [success, setSuccess] = useState(false);
     const [errMsg, setErrMsg] = useState('');
-
-    // useEffect(() => {
-    //     userRef.current.focus();
-    // }, [])
     
     // When user inputs changes, error messages go away
     useEffect(() => {
