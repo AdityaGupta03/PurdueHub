@@ -8,6 +8,7 @@ import ForgotUsername from './ForgotUsername';
 import ChangeUsername from './ChangeUsername';
 import ChangePassword from './ChangePassword';
 import UserProfile from './UserProfile';
+import ViewProfile from './ViewProfile';
 
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 
@@ -26,6 +27,7 @@ function App() {
         <Route path='/changeusername' element={<ChangeUsername />} />
         <Route path='/changepassword' element={<ChangePassword />} />
         <Route path='/userprofile' element={<UserProfile />} />
+        <Route path='/viewprofile' element={<ViewProfile />} />
       </Routes>
     </BrowserRouter>
     </main>
