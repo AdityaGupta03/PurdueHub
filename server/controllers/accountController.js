@@ -207,7 +207,7 @@ async function resetUsername(req, res) {
   try {
     const sendemail_status = await helperFuncs.sendEmail(email, subject, text);
     if (sendemail_status) {
-      return res.status(201).json({ message: "Successfully sent email" });
+      return res.status(200).json({ message: "Successfully sent email" });
     } else {
       return res.status(500).json({ error: "Error sending email" });
     }
