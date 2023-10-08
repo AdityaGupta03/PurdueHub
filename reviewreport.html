@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PurdueHub</title>
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+h2 {
+    margin-top: 20px;
+    color: #444;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+strong {
+    font-weight: bold;
+}
+
+button {
+    margin-top: 5px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Report Management</h1>
+    <h2>Reports:</h2>
+    <ul id="reportList">
+        <!-- Reports will be displayed here -->
+    </ul>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const reportList = document.getElementById("reportList");
+
+    // Simulated report data (you can replace this with actual data or fetch it from a server)
+    const reports = [
+        { username: "User1", reason: "Spamming" },
+        // Add more reports here as needed
+    ];
+
+    // Function to display reports
+    function displayReports() {
+        reportList.innerHTML = "";
+
+        reports.forEach(function (report) {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <strong>Username:</strong> ${report.username}<br>
+                <strong>Reason:</strong> ${report.reason}<br>
+                <button class="ban">Ban</button>
+                <button class="suspend">Suspend</button>
+                <button class="remove">Remove Report</button>
+            `;
+
+            li.querySelector(".ban").addEventListener("click", function () {
+                // Implement ban logic here
+                alert(`User ${report.username} has been banned.`);
+            });
+
+            li.querySelector(".suspend").addEventListener("click", function () {
+                // Implement suspend logic here
+                alert(`User ${report.username} has been suspended.`);
+            });
+
+            li.querySelector(".remove").addEventListener("click", function () {
+                // Implement remove report logic here
+                reports.splice(reports.indexOf(report), 1);
+                li.remove();
+            });
+
+            reportList.appendChild(li);
+        });
+    }
+
+    // Initial display of reports
+    displayReports();
+});
+
+    </script>
+</body>
+</html>
