@@ -16,3 +16,33 @@
  }
 
 
+.imagebox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.baseimage {
+    width: 80px;
+    border-radius: 50%;
+}
+
+.ViewList {
+    text-align: center;
+}
+section {
+    width: 100%;
+    max-width: auto;
+    min-height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 1rem;
+    background-color: #000000;
+}
+
+.container {
+    padding: 20px;
+    margin: 50px auto;
+    width: 650px;
+    border-radius: 5px;
+}
