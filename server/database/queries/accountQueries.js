@@ -62,6 +62,19 @@ async function checkAccountFromEmailQuery(email) {
   }
 }
 
+async function checkAccountFromUsernameQuery(username) {
+  const query = "SELECT * FROM users where username = $1";
+  const data = [ username ];
+
+  try {
+    const db_res = await pool.query(query, data);
+    return db_res.rows.length > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
 async function getUserInfoFromUsernameQuery(username) {
   const query = "SELECT * FROM users where username = $1";
   const data = [ username ];
@@ -114,6 +127,32 @@ async function unblockUserQuery(unblock_user_id, user_id) {
   }
 }
 
+async function getFollowedUsersQuery(user_id) {
+  const query = "SELECT follow FROM users WHERE user_id = $1";
+  const data = [ user_id ];
+
+  try {
+    const follow_list = pool.query(query, data);
+    return follow_list;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+async function getUsernamesFromIDS(user_ids) {
+  const query = "SELECT username FROM users WHERE user_id = ANY($1)";
+  const data = [ user_ids ];
+
+  try {
+    const usernames = pool.query(query, data);
+    return usernames;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -123,4 +162,7 @@ module.exports = {
   getUserInfoFromUsernameQuery,
   blockUserQuery,
   unblockUserQuery,
+  checkAccountFromUsernameQuery,
+  getFollowedUsersQuery,
+  getUsernamesFromIDS,
 };
