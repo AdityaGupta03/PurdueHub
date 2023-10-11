@@ -217,6 +217,28 @@ async function resetUsername(req, res) {
   }
 }
 
+async function getBlockList(req, res) {
+  console.log("[INFO] Get block list api.");
+  const { username } = req.body;
+
+  const acc_exists = await accountQueries.checkAccountFromUsernameQuery(username);
+  if (!acc_exists) {
+    return res.status(404).json({ error: "No account found with username provided "});
+  }
+
+  try {
+    const usernames = await accountQueries.getBlockListQuery(username);
+    if (usernames === null) {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    return res.status(200).json({ blocked: usernames });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 module.exports = {
   createAccount,
   updateUsername,
@@ -224,4 +246,5 @@ module.exports = {
   blockUser,
   unblockUser,
   resetUsername,
+  getBlockList,
 };
