@@ -217,6 +217,68 @@ async function resetUsername(req, res) {
   }
 }
 
+async function followUser(req, res) {
+  console.log("[INFO] Follow user api.");
+  const { user_id, to_follow_username } = req.body;
+
+  if (!user_id) {
+    return res.status(400).json({ error: "Missing user_id" }); 
+  }
+  if (!to_follow_username) {
+    return res.status(400).json({ error: "Missing username to follow" });
+  }
+
+  try {
+    const to_follow_user_info = await accountQueries.getUserInfoFromUsernameQuery(to_follow_username);
+    if (to_follow_user_info === null) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const to_follow_user_id = to_follow_user_info.user_id;
+
+    const db_res = await accountQueries.followUserQuery(user_id, to_follow_user_id);
+    if (!db_res) {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    return res.status(200).json({ message: "Successfully followed user" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Error following user" });
+  }
+}
+
+async function unfollowUser(req, res) {
+  console.log("[INFO] Unfollow user api.");
+  const { user_id, to_unfollow_username } = req.body;
+
+  if (!user_id) {
+    return res.status(400).json({ error: "Missing user_id" });
+  }
+  if (!to_unfollow_username) {
+    return res.status(400).json({ error: "Missing username to unfollow" });
+  }
+
+  try {
+    const to_unfollow_user_info = await accountQueries.getUserInfoFromUsernameQuery(to_unfollow_username);
+    if (to_unfollow_user_info === null) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const to_unfollow_user_id = to_unfollow_user_info.user_id;
+    
+    const db_res = await accountQueries.unfollowUserQuery(user_id, to_unfollow_user_id);
+    if (!db_res) {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    return res.status(200).json({ message: "Successfully unfollowed user" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Error unfollowing user" });
+  }
+}
+
 module.exports = {
   createAccount,
   updateUsername,
@@ -224,4 +286,6 @@ module.exports = {
   blockUser,
   unblockUser,
   resetUsername,
+  followUser,
+  unfollowUser,
 };
