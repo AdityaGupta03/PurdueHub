@@ -20,16 +20,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-.baseimage {
-    width: 80px;
-    border-radius: 50%;
-}
 
-.ViewList {
-    text-align: center;
-}
-section {
     width: 100%;
     max-width: auto;
     min-height: auto;
@@ -39,6 +30,15 @@ section {
     padding: 1rem;
     background-color: #000000;
 }
+.baseimage {
+    width: 80px;
+    border-radius: 50%;
+}
+
+.ViewList {
+    text-align: center;
+}
+
 
 .container {
     padding: 20px;

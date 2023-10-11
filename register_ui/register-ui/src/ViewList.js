@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import data from './friend-data';
 import List from './List';
+import temp from './temporary-profile.jpeg' // temp picture
+
 import './Profile.css' // css pulled online
 
 function ViewList() {
@@ -33,7 +35,12 @@ function ViewList() {
                                 <div>
                                     {/* change 'key' to index which refers to array index of data provided if want to change easier */}
                                     {value.map((item) => {
-                                        return <List {...item} key={item.id}/>
+                                        <section className='imagebox' key={item.id}>
+                                        <div>
+                                            <img src={item.img} alt={item.name} className='baseimage'/>
+                                        </div>
+                                        <div>{item.name}</div>
+                                    </section>
                                     })}
                                 </div>
                             )
