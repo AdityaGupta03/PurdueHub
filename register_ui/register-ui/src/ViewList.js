@@ -35,12 +35,14 @@ function ViewList() {
                                 <div>
                                     {/* change 'key' to index which refers to array index of data provided if want to change easier */}
                                     {value.map((item) => {
+                                        return (
                                         <section className='imagebox' key={item.id}>
-                                        <div>
-                                            <img src={item.img} alt={item.name} className='baseimage'/>
-                                        </div>
-                                        <div>{item.name}</div>
-                                    </section>
+                                            <div>
+                                                <img src={item.img} alt={item.name} className='baseimage'/>
+                                            </div>
+                                            <div>{item.name}</div>
+                                        </section>
+                                    ) 
                                     })}
                                 </div>
                             )
