@@ -10,5 +10,6 @@ router.post("/verify_email", accountController.verifyEmail);
 router.post("/block_user", accountController.blockUser);
 router.post("/unblock_user", accountController.unblockUser);
 router.get("/get_follow_list", accountController.getFollowedUsers);
+router.get("/get_followed_by", accountController.getFollowedBy);
 
 module.exports = router;
