@@ -239,7 +239,7 @@ module.exports = {
   blockUserQuery,
   unblockUserQuery,
   followUserQuery,
-  unfollowUserQuery
+  unfollowUserQuery,
   addCalendarIdQuery,
   checkAccountFromUsernameQuery,
   getBlockListQuery,
