@@ -1,5 +1,3 @@
-import logo from './logo.svg';
-
 import Register from './Register';
 import Login from './Login';
 import Home from './Home';
@@ -11,11 +9,15 @@ import PasswordAuthCode from './PasswordAuthCode';
 import UserProfile from './UserProfile';
 import ViewProfile from './ViewProfile';
 import ViewList from './ViewList';
+import UsernameAuthCode from './UsernameAuthCode';
+import VerifyEmail from './VerifyEmail';
 
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 
 
 function App() {
+
+  sessionStorage.setItem('isLoggedIn', "false");
 
   return (
     <main className='App'>
@@ -29,8 +31,10 @@ function App() {
         <Route path='/changeusername' element={<ChangeUsername />} />
         <Route path='/changepassword' element={<ChangePassword />} />
         <Route path='/password-authentication-code' element={<PasswordAuthCode />} />
+        <Route path='/username-authentication-code' element={<UsernameAuthCode />} />
         <Route path='/userprofile' element={<UserProfile />} />
         <Route path='/viewprofile' element={<ViewProfile />} />
+        <Route path='/verify_email/:email' element={<VerifyEmail />} />
         <Route path='/viewlist' element={<ViewList />} />
       </Routes>
     </BrowserRouter>

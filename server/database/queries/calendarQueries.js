@@ -128,6 +128,19 @@ async function isCalendarEventInUseQuery(id) {
     }
 }
 
+async function deleteCalendarQuery(calendar_id) {
+    const query = "DELETE FROM calendars WHERE id = $1";
+    const data = [ calendar_id ];
+  
+    try {
+      await pool.query(query, data);
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
+
 module.exports = {
     getCalendarQuery,
     getCalendarEventsQuery,
@@ -138,4 +151,6 @@ module.exports = {
     removeCalendarEventsArrQuery,
     addCalendarEventsArrQuery,
     isCalendarEventInUseQuery,
+    createCalendarQuery,
+    deleteCalendarQuery,
 };

@@ -9,8 +9,7 @@ export const ChangeUsername = () => {
     const userRef = useRef();
     const errRef = useRef(); 
 
-    const user_id = "1";
-    // const user_id = localStorage.getItem('user_id');
+    const user_email = sessionStorage.getItem('user_email');
 
     const [user, setUser] = useState(''); 
     const [success, setSuccess] = useState(false);
@@ -47,12 +46,13 @@ export const ChangeUsername = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ "newUsername": user, "user_id": user_id }),
+                body: JSON.stringify({ "newUsername": user, "email": user_email }),
             });
 
             const data = await response.json();
 
             if (response.status === 200) {
+                sessionStorage.setItem('user_email', "");
                 navigate("/login");
             } else {
                 setErrMsg(data.error);
