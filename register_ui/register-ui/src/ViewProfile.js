@@ -142,6 +142,7 @@ function ViewProfile() {
             }
         }
     }
+    
   return (
     <div>
         <h1>{viewSetUser}'s Profile</h1>
@@ -150,6 +151,7 @@ function ViewProfile() {
             <h2>Username: {viewUser}</h2>
             <button onClick={toggleBlock}>{isBlocked ? 'Unblock' : 'Block'}</button>
             <button disabled={isBlocked ? true : false} onClick={toggleFollow}>{isFollow ? 'Unfollow' : 'Follow'}</button>
+            <button onClick={reportUser}>Report</button>
         </span>
         <p>Bio: {bio}</p>
  </div>
