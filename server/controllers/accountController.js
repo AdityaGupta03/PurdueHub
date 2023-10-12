@@ -313,6 +313,69 @@ async function getBlockList(req, res) {
   }
 }
 
+// DISPLAY USER PROFILE DATA FROM DATABASE
+
+async function displayProfileEmail(user_id) {
+    console.log("[Info] Display user email data");
+    try {
+        const db_return = await accountQueries.getUserInfoQuery(user_id);
+        const db_res = db_return.email;
+        return db_res;
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+// function to get user's username
+async function displayProfileUsername(user_id) {
+    console.log("[Info] Display user username data");
+    try {
+        const db_return = await accountQueries.getUserInfoQuery(user_id);
+        const db_res = db_return.username;
+        return db_res;
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+// function to get user's profile bio
+async function displayProfileBio(user_id) {
+    console.log("[Info] Display user profile bio data");
+    try {
+        const db_return = await accountQueries.getUserInfoQuery(user_id);
+        const db_res = db_return.bio;
+        return db_res;
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+// function to get user's birthday
+async function displayProfileBirthday(user_id) {
+    console.log("[Info] Display user birthday data");
+    try {
+        const db_return = await accountQueries.getUserInfoQuery(user_id);
+        const db_res = db_return.birthday;
+        return db_res;
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+// Gets an url of where the image is
+// images are stored in uploads/ and are user unique
+// call function to return URL
+async function displayProfilePicture(user_id) {
+    console.log("[Info] Display user profile picture path");
+    try {
+        const db_return = await accountQueries.getUserInfoQuery(user_id);
+        const db_res = db_return.profile_picture;
+        return db_res;
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
 module.exports = {
   createAccount,
   updateUsername,
@@ -323,4 +386,9 @@ module.exports = {
   followUser,
   unfollowUser,
   getBlockList,
+  displayProfileBio,
+  displayProfileBirthday,
+  displayProfileEmail,
+  displayProfilePicture,
+  displayProfileUsername
 };
