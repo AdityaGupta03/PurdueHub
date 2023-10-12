@@ -13,7 +13,39 @@ function ViewList() {
     const [nobodyBlocked, setNobodyBlocked] = useState(false); // if user doesn't have any blocked users
     const [nobodyFollows, setNobodyFollows] = useState(false); // if user doesn't have any followers
     const [nobodyFollowed, setNobodyFollowed] = useState(false); // if use doesn't have anyone added 
-    
+
+    const [user, setUser] = useState('');
+
+    const [blockedUsernames, setBlockedUsernames] = useState([]);
+
+    // Set focus on first user input when page initially updates
+    useEffect(async () => {
+        // ADD IN SIGN IN SESSION HERE, SET VAR TO TRUE OR FALSE, UPDATE CONDITIONAL RENDERING
+        // ... code ^
+        setUser('david'); // change username if they are signed in
+        setSignedIn(true); // change this true if they are signed in, false otherwise
+        // Fetch blocked users
+
+        try {
+            const response = await fetch("http://127.0.0.1:5000/api/get_block_list", {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "username": user }),
+            });
+            const data = await response.json();
+
+            if (response.status === 200) {
+                setBlockedUsernames(data.blocked);
+            } else {
+                const err_msg = "Error: " + data.error;
+            }
+        } catch (error) {
+            console.log('Error:', error);
+        }
+    }, [])
+
   return (
     <>
         {
@@ -34,13 +66,13 @@ function ViewList() {
                             nobodyFollowed === false && (
                                 <div>
                                     {/* change 'key' to index which refers to array index of data provided if want to change easier */}
-                                    {value.map((item) => {
+                                    {blockedUsernames.map((item) => {
                                         return (
-                                        <section className='imagebox' key={item.id}>
+                                        <section className='imagebox' key={index}>
                                             <div>
-                                                <img src={item.img} alt={item.name} className='baseimage'/>
+                                                <img src={temp} className='baseimage'/>
                                             </div>
-                                            <div>{item.name}</div>
+                                            <div>{item}</div>
                                         </section>
                                     ) 
                                     })}
@@ -62,8 +94,15 @@ function ViewList() {
                         {
                             nobodyFollows === false && (
                                 <div>
-                                    {value.map((item) => {
-                                        return <List {...item} key={item.id}/>
+                                    {blockedUsernames.map((item) => {
+                                        return (
+                                        <section className='imagebox' key={index}>
+                                            <div>
+                                                <img src={temp} className='baseimage'/>
+                                            </div>
+                                            <div>{item}</div>
+                                        </section>
+                                    ) 
                                     })}
                                 </div>
                             )
@@ -82,8 +121,15 @@ function ViewList() {
                         {
                             nobodyBlocked === false && (
                                 <div>
-                                    {value.map((item) => {
-                                        return <List {...item} key={item.id}/>
+                                    {blockedUsernames.map((item) => {
+                                        return (
+                                        <section className='imagebox' key={index}>
+                                            <div>
+                                                <img src={temp} className='baseimage'/>
+                                            </div>
+                                            <div>{item}</div>
+                                        </section>
+                                    ) 
                                     })}
                                 </div>
                             )
