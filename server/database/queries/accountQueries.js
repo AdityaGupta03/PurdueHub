@@ -44,6 +44,19 @@ async function updateUsernameQuery(email, newUsername) {
   }
 }
 
+async function updateUsernameFromIDQuery(user_id, newUsername) {
+  const query = "UPDATE users SET username = $1 WHERE user_id = $2";
+  const data = [ newUsername, user_id ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (err) {
+    console.log("[ERROR] " + err.message);
+    return false;
+  }
+}
+
 async function getUserInfoQuery(user_id) {
   const query = "SELECT username, profile_picture, bio FROM users WHERE user_id = $1";
   const data = [user_id];
@@ -229,6 +242,19 @@ async function deleteAccountQuery(user_id) {
   }
 }
 
+async function editBioQuery(bio, user_id) {
+  const query = "UPDATE users SET bio = $1 WHERE user_id = $2";
+  const data = [ bio, user_id ];
+
+  try {
+      await pool.query(query, data);
+      return true;
+    } catch (err) {
+      console.log("[ERROR] " + err.message);
+      return false;
+    }
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -239,11 +265,13 @@ module.exports = {
   blockUserQuery,
   unblockUserQuery,
   followUserQuery,
-  unfollowUserQuery
+  unfollowUserQuery,
   addCalendarIdQuery,
   checkAccountFromUsernameQuery,
   getBlockListQuery,
   updatePasswordQuery,
   loginQuery,
   deleteAccountQuery,
+  updateUsernameFromIDQuery,
+  editBioQuery,
 };

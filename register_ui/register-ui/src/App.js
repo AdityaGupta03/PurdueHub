@@ -33,7 +33,7 @@ function App() {
         <Route path='/password-authentication-code' element={<PasswordAuthCode />} />
         <Route path='/username-authentication-code' element={<UsernameAuthCode />} />
         <Route path='/userprofile' element={<UserProfile />} />
-        <Route path='/viewprofile' element={<ViewProfile />} />
+        <Route path='/viewprofile/:username' element={<ViewProfile />} />
         <Route path='/verify_email/:email' element={<VerifyEmail />} />
         <Route path='/viewlist' element={<ViewList />} />
       </Routes>

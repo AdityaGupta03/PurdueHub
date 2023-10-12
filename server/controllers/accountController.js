@@ -126,7 +126,6 @@ async function login(req, res) {
   return res.status(200).json({ message: "Successfully logged in", user_id: user_id });
 }
 
-
 async function updateUsername(req, res) {
   console.log("[INFO] Update username api.");
   try {
@@ -146,6 +145,36 @@ async function updateUsername(req, res) {
     }
 
     const db_res = await accountQueries.updateUsernameQuery(email, newUsername);
+    if (!db_res) {
+      return res.status(500).json({ error: "Internal server error" });
+    } else {
+      return res.status(200).json({ message: "Successfully updated username" });
+    }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ error: "Error updating username" });
+  }
+}
+
+async function updateUsernameFromID(req, res) {
+  console.log("[INFO] Update username api.");
+  try {
+    const { newUsername, user_id } = req.body;
+
+    if (!user_id) {
+      return res.status(400).json({ error: "Missing user_id" });
+    }
+
+    if (!newUsername) {
+      return res.status(400).json({ error: "Missing new username" });
+    }
+
+    const isUnique = await accountQueries.isUniqueUsernameQuery(newUsername);
+    if (!isUnique) {
+      return res.status(400).json({ error: "Not unique username" });
+    }
+
+    const db_res = await accountQueries.updateUsernameFromIDQuery(user_id, newUsername);
     if (!db_res) {
       return res.status(500).json({ error: "Internal server error" });
     } else {
@@ -513,75 +542,40 @@ async function updatePassword(req, res) {
   return res.status(200).json({ message: "Successfully updated password" });
 }
 
+async function getProfileData(req, res) {
+  console.log("[INFO] Get profile data api.");
+  const { username } = req.body;
 
-// DISPLAY USER PROFILE DATA FROM DATABASE
+  if (!username) {
+    return res.status(400).json({ error: "Missing username field" });
+  }
 
-// function to get user's email
-async function displayProfileEmail(req, res) {
-    console.log("[Info] Display user email data");
-    const { user_id } = req.body;
-    try {
-        const db_return = await accountQueries.getUserInfoQuery(user_id);
-        const db_res = db_return.email;
-        return db_res;
-    } catch (err) {
-        console.log(err.message);
-    }
+  const user_info = await accountQueries.getUserInfoFromUsernameQuery(username);
+  console.log(user_info);
+  if (user_info == null) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  return res.status(200).json({ message: "Got user info", user_info: user_info });
 }
 
-// function to get user's username
-async function displayProfileUsername(req, res) {
-    console.log("[Info] Display user username data");
-    const { user_id } = req.body;
-    try {
-        const db_return = await accountQueries.getUserInfoQuery(user_id);
-        const db_res = db_return.username;
-        return db_res;
-    } catch (err) {
-        console.log(err.message);
-    }
-}
+async function editProfileBio(req, res) {
+  console.log("[INFO] Edit profile page bio.");
+  try {
+      const { bio, user_id } = req.body;
+      const updateResult = await accountQueries.editBioQuery(bio, user_id);
+      if (updateResult == true) {
+          console.log("User Bio updated succesfully");
+      } else {
+          console.log("User bio updated failed!");
+          return res.status(500).json({ error: "Error updating bio" });
+      }
 
-// function to get user's profile bio
-async function displayProfileBio(req, res) {
-    console.log("[Info] Display user profile data");
-    const { user_id } = req.body;
-    try {
-        const db_return = await accountQueries.getUserInfoQuery(user_id);
-        const db_res = db_return.bio;
-        return db_res;
-    } catch (err) {
-        console.log(err.message);
-    }
-}
-
-// function to get user's birthday
-async function displayProfileBirthday(req, res) {
-    console.log("[Info] Display user profile data");
-    const { user_id } = req.body;
-    try {
-        const db_return = await accountQueries.getUserInfoQuery(user_id);
-        const db_res = db_return.birthday;
-        return db_res;
-    } catch (err) {
-        console.log(err.message);
-    }
-}
-
-
-// Gets an url of where the image is
-// images are stored in uploads/ and are user unique
-// call function to return URL
-async function displayProfilePicture(req, res) {
-    console.log("[Info] Display user profile data");
-    const { user_id } = req.body;
-    try {
-        const db_return = await accountQueries.getUserInfoQuery(user_id);
-        const db_res = db_return.profile_picture;
-        return db_res;
-    } catch (err) {
-        console.log(err.message);
-    }
+      return res.status(200).json({ message: "Successfully updated bio" });
+  } catch (err) {
+      console.log(err.message);
+      return res.status(500).json({ error: "Error updating bio" });
+  }
 }
 
 module.exports = {
@@ -599,9 +593,7 @@ module.exports = {
   verifyPasswordResetCode,
   updatePassword,
   login,
-  displayProfileBio,
-  displayProfileBirthday,
-  displayProfileEmail,
-  displayProfilePicture,
-  displayProfileUsername,
+  getProfileData,
+  updateUsernameFromID,
+  editProfileBio,
 };

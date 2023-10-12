@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import './Profile.css' // css pulled online
 import temp from './temporary-profile.jpeg' // temp picture
 
 
 function ViewProfile() {
-    const username = "Billy Joel";
-    const bio = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Et malesuada fames ac turpis egestas integer eget aliquet. Ipsum dolor sit amet consectetur adipiscing elit ut aliquam purus. Nunc sed blandit libero volutpat sed cras. At augue eget arcu dictum varius duis at consectetur. Ut consequat semper viverra nam libero. Mi eget mauris pharetra et ultrices neque ornare aenean. Tortor pretium viverra suspendisse potenti nullam ac tortor vitae purus. Pellentesque sit amet porttitor eget dolor morbi. Gravida in fermentum et sollicitudin ac orci phasellus. Et netus et malesuada fames ac turpis. Nec nam aliquam sem et tortor consequat. Sit amet nulla facilisi morbi tempus iaculis.'; // bio info s
+    const navigate = useNavigate();
+    const { username } = useParams();
+    const [bio, setBio] = useState(''); // bio is empty at first
     const[isBlocked, setIsBlocked] = useState(false); // not blocked yet
     const[isFollow, setIsFollow] = useState(false); // not followed yet
 
@@ -39,6 +41,43 @@ function ViewProfile() {
             setIsFollow(false);
         }
     }
+
+    async function fetchProfileData() {
+        try {
+            const response = await fetch("http://127.0.0.1:5000/api/get_profile_info", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "username": username }),
+            });
+
+            const data = await response.json();
+
+            if (response.status === 200) {
+                // setSuccess(true);
+                // setErrMsg('');
+                setBio(data.bio);
+                console.log(data);
+            } else {
+                console.log(data.error)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+
+        if (isLoggedIn == 'false') {
+            navigate("/login");
+        }
+
+        fetchProfileData();
+    }, [])
+
+    
   return (
     <div>
         <h1>{username}'s Profile</h1>
