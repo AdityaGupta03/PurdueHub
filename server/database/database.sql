@@ -23,12 +23,11 @@ CREATE TABLE calendar_events (
   organization_id INTEGER
 );
 
-
 CREATE TABLE calendars (
   id SERIAL PRIMARY KEY,
   user_id INTEGER UNIQUE,
   subscribed_cals INTEGER[] DEFAULT ARRAY[]::INTEGER[],
-  calendar_events_arr INTEGER[] DEFAULT ARRAY[]::INTEGER[]
+  calendar_events_arr INTEGER[] DEFAULT ARRAY[]::INTEGER[],
 );
 
 ALTER TABLE users
