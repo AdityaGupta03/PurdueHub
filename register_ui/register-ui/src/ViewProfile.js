@@ -89,14 +89,57 @@ function ViewProfile() {
         }
     }
     
-    const toggleFollow = () => {
+    const toggleFollow = async () => {
         if(isFollow === false) {
             // If user becomes followed logic here ...
             setIsFollow(true);
+
+            try {
+                const response = await fetch("http://127.0.0.1:5000/api/follow_user", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "user_id": user, "to_follow_username": viewUser}),
+                });
+    
+                console.log(response);
+                const data = await response.json();
+    
+                if (response.status === 200) {
+                    // SET LOGIC HERE FOR WHENEVER FOLLOW IS SUCCESSFUL
+                } else {
+                    const err_msg = "Error: " + data.error;
+                }
+            } catch (error) {
+                console.log('Error:', error);
+            }
+
         }
         else {
             // If user becomes unfollowed logic here ...
             setIsFollow(false);
+
+            try {
+                const response = await fetch("http://127.0.0.1:5000/api/unfollow_user", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "user_id": user, "to_follow_username": viewUser}),
+                });
+    
+                console.log(response);
+                const data = await response.json();
+    
+                if (response.status === 200) {
+                    // SET LOGIC HERE FOR WHENEVER UNFOLLOW IS SUCCESSFUL
+                } else {
+                    const err_msg = "Error: " + data.error;
+                }
+            } catch (error) {
+                console.log('Error:', error);
+            }
         }
     }
   return (
