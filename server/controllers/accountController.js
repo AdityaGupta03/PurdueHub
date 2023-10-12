@@ -2,6 +2,7 @@ const accountQueries = require("../database/queries/accountQueries");
 const calendarQueries = require("../database/queries/calendarQueries");
 const helperFuncs = require("./helperFunctions");
 const verificationQueries = require("../database/queries/verificationQueries");
+const { saveToDatabase } = require("../server");
 
 async function createAccount(req, res) {
   console.log("[INFO] Creating account api.");
@@ -578,6 +579,27 @@ async function editProfileBio(req, res) {
   }
 }
 
+async function editProfilePicture(req, res) {
+  const { username, file } = req.body
+  console.log(req.body);
+  
+  if (!username) {
+    return res.status(400).json({ error: "Missing username field" });
+  }
+
+  if (!file) {
+    return res.status(400).json({ error: "Missing file " });
+  }
+
+  let pathInDB = "uploads/" + saveToDatabase;
+  const db_res = await accountQueries.updateProfilePicQuery(pathInDB, username);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully updated profile picture" });
+}
+
 module.exports = {
   createAccount,
   updateUsername,
@@ -596,4 +618,5 @@ module.exports = {
   getProfileData,
   updateUsernameFromID,
   editProfileBio,
+  editProfilePicture,
 };

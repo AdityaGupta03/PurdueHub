@@ -255,6 +255,19 @@ async function editBioQuery(bio, user_id) {
     }
 }
 
+async function updateProfilePicQuery(profile_picture, username) {
+  const query = "UPDATE users SET profile_picture = $1 WHERE username = $2";
+  const data = [ profile_picture, username ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -274,4 +287,5 @@ module.exports = {
   deleteAccountQuery,
   updateUsernameFromIDQuery,
   editBioQuery,
+  updateProfilePicQuery,
 };

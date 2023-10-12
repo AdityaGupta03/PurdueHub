@@ -26,5 +26,6 @@ router.post("/login", accountController.login);
 router.post("/get_profile_info", accountController.getProfileData);
 router.post("/update_username_id", accountController.updateUsernameFromID);
 router.post("/update_bio", accountController.editProfileBio);
+// router.post("/update_profile_picture", accountController.editProfilePicture);
 
 module.exports = router;

@@ -76,6 +76,28 @@ const UserProfile = () => {
                 setErrMsg("Error: " + data.error);
                 return;
             }
+
+            if (profilePicture === undefined) {
+                setIsEditing(false);
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("username", user);
+            formData.append("user_id", user_id);
+            formData.append("file", profilePicture);
+
+            response = await fetch("http://127.0.0.1:5000/update_profile_picture", {
+                method: "POST",
+                body: formData,
+            });
+
+            data = await response.json();
+
+            if (response.status !== 200) {
+                setErrMsg("Error: " + data.error);
+                return;
+            }
         } catch (error) {
             console.log(error);
             setErrMsg("Error: Error editing account");
@@ -86,7 +108,10 @@ const UserProfile = () => {
     }
 
     const handleImageChange = (e) => {
+        console.log("handleImageChange");
+        console.log(e.target.files);
         const file = e.target.files[0];
+        console.log(file);
     
         if (file) {
           const reader = new FileReader();
@@ -97,6 +122,43 @@ const UserProfile = () => {
     
           reader.readAsDataURL(file);
         }
+
+        setProfilePictrue(file);
+    };
+
+    async function fetchProfileData() {
+        try {
+            const response = await fetch("http://127.0.0.1:5000/api/get_profile_info", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "username": username }),
+            });
+
+            const data = await response.json();
+
+            if (response.status === 200) {
+                console.log(data);
+                setUsername(user);
+                setBio(data.user_info.bio);
+                const profile_pic_path = "/Users/aditya/Programming/PurdueHub/server/" + data.user_info.profile_picture;
+                console.log(profile_pic_path);
+                const image = await fetch(profile_pic_path);
+                console.log(image);
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    setProfilePictrue(e.target.result);
+                };
+                reader.readAsDataURL(profile_pic_path);
+                setProfilePictrue(profile_pic_path);
+            } else {
+                console.log(data.error)
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     useEffect(() => {
@@ -105,6 +167,7 @@ const UserProfile = () => {
             navigate('/login');   
         }
 
+        fetchProfileData();
         setErrMsg('');
     }, [username])
     
@@ -163,8 +226,5 @@ const UserProfile = () => {
     </>
     )
 }
-
-
-
 
 export default UserProfile
