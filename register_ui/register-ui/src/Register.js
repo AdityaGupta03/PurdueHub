@@ -136,15 +136,13 @@ const Register = () => {
             });
 
             console.log(response);
+            const data = await response.json();
 
             if (response.status === 200) {
-                // Successful API call, do something with the response
-                const data = await response.json();
-                console.log(data);
                 navigate("/login");
             } else {
-                // Handle errors from the API
-                setErrMsg('Error creating the account');
+                const err_msg = "Error: " + data.error;
+                setErrMsg(err_msg);
             }
         } catch (error) {
             console.log('Error:', error);

@@ -11,15 +11,15 @@ async function isUniqueUsernameQuery(username) {
 }
 
 async function createAccountQuery(username, email, password) {
-  const query = "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)";
+  const query = "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING user_id";
   const data = [username, email, password];
 
   try {
-    await pool.query(query, data);
-    return true;
+    let { rows } = await pool.query(query, data);
+    return rows[0].user_id;
   } catch (err) {
     console.log("[ERROR] " + err.message);
-    return false;
+    return null;
   }
 }
 
@@ -114,6 +114,19 @@ async function unblockUserQuery(unblock_user_id, user_id) {
   }
 }
 
+async function addCalendarIdQuery(user_id, calendar_id) {
+  const query = "UPDATE users SET calendar_id = $1 WHERE user_id = $2";
+  const data = [ calendar_id, user_id ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.log("[ERROR] " + err.message);
+    return false;
+  }
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -123,4 +136,5 @@ module.exports = {
   getUserInfoFromUsernameQuery,
   blockUserQuery,
   unblockUserQuery,
+  addCalendarIdQuery,
 };
