@@ -63,7 +63,36 @@
         }
     </style>
 </head>
+
 <body>
+    <div id="current-date"></div>
+    <div id="eventSidebar">
+        <h2>Events</h2>
+        <ul id="eventList"></ul>
+        <div id="eventDetails" style="display: none;">
+            <h3>Event Details</h3>
+            <form id="eventForm">
+                <label for="eventName">Name:</label>
+                <input type="text" id="eventName">
+                <br>
+                <label for="eventDate">Date:</label>
+                <input type="text" id="eventDate">
+                <br>
+                <label for="eventTime">Time:</label>
+                <input type="text" id="eventTime">
+                <br>
+                <label for="eventDescription">Description:</label>
+                <input type="text" id="eventDescription">
+                <br>
+                <label for="eventLocation">Location:</label>
+                <input type="text" id="eventLocation">
+                <br>
+                <button type="button" id="saveEvent">Save</button>
+            </form>
+        </div>
+      </div>
+      <button id="addEventButton">Add Event</button>
+
     <div class="calendar">
         <div class="calendar-header">
             <button id="prevMonth">Previous Month</button>
@@ -88,9 +117,22 @@
     </div>
 
     <script>
+        function updateCurrentDate() {
+            const currentDateElement = document.getElementById('current-date');
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date().toLocaleDateString('en-US', options);
+            currentDateElement.textContent = today;
+        }
+
+        // Call the function to update the current date
+        updateCurrentDate();
         const currentDate = new Date();
+
         let currentYear = currentDate.getFullYear();
         let currentMonth = currentDate.getMonth();
+
+        let eventDetails = '';
+        let selectedEvent = null;
 
         // function to generate the calendar
         function generateCalendar(year, month) {
@@ -132,32 +174,73 @@
             }
         }
 
-        //ask the user for event details
-        function promptForEventDetails(date) {
-            const eventStartDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-            const eventEndDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-            eventEndDate.setDate(eventEndDate.getDate() + 1); 
+        document.getElementById('addEventButton').addEventListener('click', () => {
+            promptForEventDetails();
+        });
 
+        function promptForEventDetails() {
             const eventName = window.prompt('Enter Event Name:');
-            
+
             if (eventName) {
-                
-                    const eventDescription = window.prompt('Enter Event Description:');
-                    const eventStartTime = window.prompt('Enter Start Time:');
-                    const eventEndTime = window.prompt('Enter End Time:');
-                
-                    const eventDetails = `Event Name: ${eventName}\nDescription: ${eventDescription}\nStart Time: ${eventStartTime}\nEnd Time: ${eventEndTime}`;
-                    
-                    alert(`Event details for ${date.toLocaleDateString()}:\n\n${eventDetails}`);
-                    //display event details in the grid cell
-                    const cell = date.closest('td');
-                    const dateElement = cell.querySelector('.date-number');
-                    dateElement.insertAdjacentHTML('afterend', `<br>${eventDetails}`);
-                    cell.classList.add('event-day');
+                const eventDate = window.prompt('Enter Event Date:');
+                const eventTime = window.prompt('Enter Event Time:');
+                const eventDescription = window.prompt('Enter Event Description:');
+                const eventLocation = window.prompt('Enter Event Location:');
+
+                eventDetails = `Name: ${eventName}\nDate: ${eventDate}\nTime: ${eventTime}\nDescription: ${eventDescription}\nLocation: ${eventLocation}`;
+
+                alert(`Event details:\n\n${eventDetails}`);
+                displayEventInSidebar(eventDetails);
             } else {
                 alert('Error: no title');
             }
         }
+
+        function displayEventInSidebar(eventDetails) {
+            const eventList = document.getElementById('eventList');
+            const listItem = document.createElement('li');
+            listItem.textContent = eventDetails.split('\n')[0] + '\n' + eventDetails.split('\n')[1] + '\n' + eventDetails.split('\n')[2];
+            
+            listItem.addEventListener('click', () => {
+                showEditEventForm(eventDetails);
+            });
+            eventList.appendChild(listItem);
+        }
+
+        function showEditEventForm(eventDetails) {
+            selectedEvent = eventDetails;
+            const eventForm = document.getElementById('eventForm');
+            const [name, date, time, description, location] = eventDetails.split('\n').map((item) => {
+                return item.split(': ')[1];
+            });
+            document.getElementById('eventName').value = name;
+            document.getElementById('eventDate').value = date;
+            document.getElementById('eventTime').value = time;
+            document.getElementById('eventDescription').value = description;
+            document.getElementById('eventLocation').value = location;
+
+
+            document.getElementById('saveEvent').addEventListener('click', () => {
+            const eventName = document.getElementById('eventName').value;
+            const eventDate = document.getElementById('eventDate').value;
+            const eventTime = document.getElementById('eventTime').value;
+            const eventDescription = document.getElementById('eventDescription').value;
+            const eventLocation = document.getElementById('eventLocation').value;
+
+            selectedEvent = `Name: ${eventName}\nDate: ${eventDate}\nTime: ${eventTime}\nDescription: ${eventDescription}\nLocation: ${eventLocation}`;
+
+
+            const eventDetailsSection = document.getElementById('eventDetails');
+            eventDetailsSection.style.display = 'none';
+        });
+
+
+
+            const eventDetailsSection = document.getElementById('eventDetails');
+            eventDetailsSection.style.display = 'block';
+        }
+
+        
 
         generateCalendar(currentYear, currentMonth);
 
