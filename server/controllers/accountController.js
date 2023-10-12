@@ -1,4 +1,5 @@
 const accountQueries = require("../database/queries/accountQueries");
+const calendarQueries = require("../database/queries/calendarQueries");
 const helperFuncs = require("./helperFunctions");
 const { addEmailVerificationQuery, getAuthCodeQuery, removeEmailVerificationQuery } = require("../database/queries/verificationQueries");
 
@@ -25,10 +26,11 @@ async function createAccount(req, res) {
     }
 
     let db_res = await accountQueries.createAccountQuery(username, email, password);
-    if (!db_res) {
+    if (db_res === null) {
       return res.status(500).json({ error: "Internal server error" });
     }
 
+    const user_id = db_res;
     const authCode = helperFuncs.generateAuthCode();
     const email_status = await sendEmailVerification(email, authCode);
     if (!email_status) {
@@ -40,7 +42,17 @@ async function createAccount(req, res) {
       return res.status(500).json({ error: "Internal server error" });
     }
 
-    return res.status(201).json({ message: "Account successfully created" });
+    let calendar_id = await calendarQueries.createCalendarQuery(user_id);
+    if (calendar_id === null) {
+      return res.status(500).json({ error: "Internal server error" });
+    }
+
+    db_res = await accountQueries.addCalendarIdQuery(user_id, calendar_id);
+    if (!db_res) {
+      return res.status(500).json({ error: "Internal server error" });
+    }
+
+    return res.status(200).json({ message: "Account successfully created", user_id: user_id });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ error: "Error creating account" });
@@ -69,7 +81,7 @@ async function updateUsername(req, res) {
     if (!db_res) {
       return res.status(500).json({ error: "Internal server error" });
     } else {
-      return res.status(201).json({ message: "Successfully updated username" });
+      return res.status(200).json({ message: "Successfully updated username" });
     }
   } catch (err) {
     console.log(err.message);
@@ -207,7 +219,7 @@ async function resetUsername(req, res) {
   try {
     const sendemail_status = await helperFuncs.sendEmail(email, subject, text);
     if (sendemail_status) {
-      return res.status(201).json({ message: "Successfully sent email" });
+      return res.status(200).json({ message: "Successfully sent email" });
     } else {
       return res.status(500).json({ error: "Error sending email" });
     }
@@ -279,6 +291,28 @@ async function unfollowUser(req, res) {
   }
 }
 
+async function getBlockList(req, res) {
+  console.log("[INFO] Get block list api.");
+  const { username } = req.body;
+
+  const acc_exists = await accountQueries.checkAccountFromUsernameQuery(username);
+  if (!acc_exists) {
+    return res.status(404).json({ error: "No account found with username provided "});
+  }
+
+  try {
+    const usernames = await accountQueries.getBlockListQuery(username);
+    if (usernames === null) {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    return res.status(200).json({ blocked: usernames });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 module.exports = {
   createAccount,
   updateUsername,
@@ -288,4 +322,5 @@ module.exports = {
   resetUsername,
   followUser,
   unfollowUser,
+  getBlockList,
 };

@@ -11,15 +11,15 @@ async function isUniqueUsernameQuery(username) {
 }
 
 async function createAccountQuery(username, email, password) {
-  const query = "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)";
+  const query = "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING user_id";
   const data = [username, email, password];
 
   try {
-    await pool.query(query, data);
-    return true;
+    let { rows } = await pool.query(query, data);
+    return rows[0].user_id;
   } catch (err) {
     console.log("[ERROR] " + err.message);
-    return false;
+    return null;
   }
 }
 
@@ -117,15 +117,29 @@ async function unblockUserQuery(unblock_user_id, user_id) {
 async function followUserQuery(user_id, to_follow_user_id) {
   const query = "UPDATE users set follow = array_append(follow, $1) WHERE user_id = $2";
   const data = [ to_follow_user_id, user_id ];
+  
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+async function addCalendarIdQuery(user_id, calendar_id) {
+  const query = "UPDATE users SET calendar_id = $1 WHERE user_id = $2";
+  const data = [ calendar_id, user_id ];
 
   try {
     await pool.query(query, data);
     return true;
-  } catch (err) {
-    console.log("[ERROR] " + err.message);
+  } catch (error) {
+    console.log("[ERROR] " + error);
     return false;
   }
 }
+
 
 async function unfollowUserQuery(user_id, to_unfollow_user_id) {
   const query = "UPDATE users set follow = array_remove(follow, $1) WHERE user_id = $2";
@@ -140,6 +154,32 @@ async function unfollowUserQuery(user_id, to_unfollow_user_id) {
   }
 }
 
+async function checkAccountFromUsernameQuery(username) {
+  const query = "SELECT * FROM users where username = $1";
+  const data = [ username ];
+
+  try {
+    const db_res = await pool.query(query, data);
+    return db_res.rows.length > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function getBlockListQuery(user_id) {
+  const query = "SELECT username FROM users WHERE user_id = ANY(SELECT blocked FROM users WHERE user_id = $1)";
+  const data = [ user_id ];
+
+  try {
+    const usernames = await pool.query(query, data);
+    return usernames;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -151,4 +191,7 @@ module.exports = {
   unblockUserQuery,
   followUserQuery,
   unfollowUserQuery
+  addCalendarIdQuery,
+  checkAccountFromUsernameQuery,
+  getBlockListQuery,
 };
