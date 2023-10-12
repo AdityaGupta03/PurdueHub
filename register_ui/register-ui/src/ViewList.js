@@ -18,7 +18,7 @@ function ViewList() {
 
     const [blockedUsernames, setBlockedUsernames] = useState([]);
 
-    // Set focus on first user input when page initially updates
+    // Page renders intially logic...
     useEffect(async () => {
         // ADD IN SIGN IN SESSION HERE, SET VAR TO TRUE OR FALSE, UPDATE CONDITIONAL RENDERING
         // ... code ^
@@ -65,7 +65,6 @@ function ViewList() {
                         {
                             nobodyFollowed === false && (
                                 <div>
-                                    {/* change 'key' to index which refers to array index of data provided if want to change easier */}
                                     {blockedUsernames.map((item) => {
                                         return (
                                         <section className='imagebox' key={index}>
