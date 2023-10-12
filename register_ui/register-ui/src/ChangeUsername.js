@@ -1,15 +1,16 @@
 import {useRef, useState, useEffect} from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const ChangeUsername = () => {
-
-    const previousUsername = "david123"; // testing (check if the username already is the same)
-    const alreadyExistsUsername = "mikey54"; // testing (check if entered username already exists)
+    const navigate = useNavigate();
 
     const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;;
 
     const userRef = useRef();
     const errRef = useRef(); 
+
+    const user_id = "1";
+    // const user_id = localStorage.getItem('user_id');
 
     const [user, setUser] = useState(''); 
     const [success, setSuccess] = useState(false);
@@ -27,21 +28,8 @@ export const ChangeUsername = () => {
     const handleSubmit = async (e) => {
         e.preventDefault(); // avoid reloading the page as default
         const resultTemp = USER_REGEX.test(user); // test validity (has @purdue.edu in it)
-    
-        // INSERT BACKEND LOGIC HERE 
 
-        if(user === previousUsername) {
-            setErrMsg('Username was already used previously, set a new username');
-            setSuccess(false);
-            errRef.current.focus();
-
-        }
-        else if(user === alreadyExistsUsername) {
-            setErrMsg('Username already exists');
-            setSuccess(false);
-            errRef.current.focus();
-        }
-        else if(!resultTemp){
+        if (!resultTemp) { // if the username is not valid
             const str = <>
                 4 to 24 characters. <br/>
                 Must begin with a letter. <br/>
@@ -50,12 +38,31 @@ export const ChangeUsername = () => {
             setErrMsg(str);
             setSuccess(false);
             errRef.current.focus();
+            return;
         }
-        else {
-            setSuccess(true);
-        }
+    
+        try { // Make api call
+            const response = await fetch("http://127.0.0.1:5000/api/update_username", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "newUsername": user, "user_id": user_id }),
+            });
 
+            const data = await response.json();
+
+            if (response.status === 200) {
+                navigate("/login");
+            } else {
+                setErrMsg(data.error);
+            }
+        } catch (error) {
+            console.log('Error:', error);
+            setErrMsg('An error occurred while creating the account');
+        }
     }
+
     return (
         <>
             {success ? (
