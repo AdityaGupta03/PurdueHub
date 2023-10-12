@@ -104,6 +104,19 @@ async function removeUsernameVerificationQuery(email) {
   }
 }
 
+async function checkVerifiedEmail(email) {
+  const query = "SELECT * FROM email_verification WHERE email = $1";
+  const data = [ email ];
+
+  try {
+    const db_res = await pool.query(query, data);
+    return db_res.rows.length == 0;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
 module.exports = {
   addEmailVerificationQuery,
   getAuthCodeQuery,
@@ -113,4 +126,5 @@ module.exports = {
   removeUsernameVerificationQuery,
   addPasswordResetQuery,
   getPasswordAuthCodeQuery,
+  checkVerifiedEmail,
 };

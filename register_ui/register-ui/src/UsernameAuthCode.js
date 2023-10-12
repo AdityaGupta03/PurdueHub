@@ -66,7 +66,7 @@ export const UsernameAuthCode = () => {
         <section>
             {/* If errmsg is true, display an error and put focus on it*/}
             <p ref={errRef} className={errMsg ? "errmsg" : "offsreen"}>{errMsg}</p>
-            <h1> Enter Username Reset Authentication Code </h1>
+            <h1> Success! Check your email for an authentication code. Enter Username Reset Authentication Code </h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor='code'>Authentication Code:</label>
                     <input 

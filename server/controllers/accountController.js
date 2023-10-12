@@ -107,6 +107,17 @@ async function login(req, res) {
     return res.status(404).json({ error: "No account found with username provided "});
   }
 
+  const account = await accountQueries.getUserInfoFromUsernameQuery(username);
+  if (account === null) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+
+  const email = account.email;
+  const isVerified = await verificationQueries.checkVerifiedEmail(email);
+  if (!isVerified) {
+    return res.status(400).json({ error: "Email not yet verified. Check for email to your purdue email." });
+  }
+
   const user_id = await accountQueries.loginQuery(username, password);
   if (user_id === -1) {
     return res.status(400).json({ error: "Incorrect password" });
@@ -114,6 +125,7 @@ async function login(req, res) {
 
   return res.status(200).json({ message: "Successfully logged in", user_id: user_id });
 }
+
 
 async function updateUsername(req, res) {
   console.log("[INFO] Update username api.");

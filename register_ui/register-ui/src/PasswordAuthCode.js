@@ -67,7 +67,7 @@ export const PasswordAuthCode = () => {
         <section>
             {/* If errmsg is true, display an error and put focus on it*/}
             <p ref={errRef} className={errMsg ? "errmsg" : "offsreen"}>{errMsg}</p>
-            <h1> Enter Password Authentication Code </h1>
+            <h1> Success! Check your email for a authentication code! Enter Password Authentication Code </h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor='code'>Authentication Code:</label>
                     <input 
