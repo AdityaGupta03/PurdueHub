@@ -110,9 +110,6 @@ const Register = () => {
         setErrMsg('');
     }, [user, pwd, matchPwd, email])
 
-    
-    const existingUsername = "david123"; // fake data test to check what happens if a username is already taken
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         // avoid JS tricks from enabling user submit button,

@@ -1,5 +1,3 @@
-import logo from './logo.svg';
-
 import Register from './Register';
 import Login from './Login';
 import Home from './Home';
@@ -17,6 +15,8 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom';
 
 
 function App() {
+
+  sessionStorage.setItem('isLoggedIn', "false");
 
   return (
     <main className='App'>

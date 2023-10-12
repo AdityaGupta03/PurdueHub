@@ -20,5 +20,6 @@ router.post("/verify_username_reset_code", accountController.verifyUsernameReset
 router.post("/request_new_password", accountController.resetPassword);
 router.post("/verify_password_reset_code", accountController.verifyPasswordResetCode);
 router.post("/update_password", accountController.updatePassword);
+router.post("/login", accountController.login);
 
 module.exports = router;

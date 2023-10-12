@@ -141,6 +141,7 @@ async function checkAccountFromUsernameQuery(username) {
 
   try {
     const db_res = await pool.query(query, data);
+    console.log("Username exists: " + db_res.rows.length > 0);
     return db_res.rows.length > 0;
   } catch (error) {
     console.error(error);
@@ -174,6 +175,20 @@ async function updatePasswordQuery(username, password) {
   }
 }
 
+async function loginQuery(username, password) {
+  const query = "SELECT * FROM users WHERE username = $1 AND password = $2";
+  const data = [ username, password ];
+
+  try {
+    const db_res = await pool.query(query, data);
+    console.log("User to login: " + db_res.rows[0].user_id);
+    return db_res.rows[0].user_id;
+  } catch (error) {
+    console.error(error);
+    return -1;
+  }
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -187,4 +202,5 @@ module.exports = {
   checkAccountFromUsernameQuery,
   getBlockListQuery,
   updatePasswordQuery,
+  loginQuery,
 };

@@ -60,6 +60,32 @@ async function createAccount(req, res) {
   }
 }
 
+async function login(req, res) {
+  console.log("[INFO] Login api.");
+  const { username, password } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ error: "Missing username" });
+  }
+
+  if (!password) {
+    return res.status(400).json({ error: "Missing password" });
+  }
+
+  const acc_exists = await accountQueries.checkAccountFromUsernameQuery(username);
+  if (!acc_exists) {
+    return res.status(404).json({ error: "No account found with username provided "});
+  }
+
+  const user_id = await accountQueries.loginQuery(username, password);
+  if (user_id === -1) {
+    return res.status(400).json({ error: "Incorrect password" });
+  }
+
+  return res.status(200).json({ message: "Successfully logged in", user_id: user_id });
+  
+}
+
 async function updateUsername(req, res) {
   console.log("[INFO] Update username api.");
   try {
@@ -394,4 +420,5 @@ module.exports = {
   resetPassword,
   verifyPasswordResetCode,
   updatePassword,
+  login,
 };
