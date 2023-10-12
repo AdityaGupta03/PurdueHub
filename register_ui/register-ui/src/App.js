@@ -10,6 +10,7 @@ import UserProfile from './UserProfile';
 import ViewProfile from './ViewProfile';
 import ViewList from './ViewList';
 import UsernameAuthCode from './UsernameAuthCode';
+import VerifyEmail from './VerifyEmail';
 
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 
@@ -33,6 +34,7 @@ function App() {
         <Route path='/username-authentication-code' element={<UsernameAuthCode />} />
         <Route path='/userprofile' element={<UserProfile />} />
         <Route path='/viewprofile' element={<ViewProfile />} />
+        <Route path='/verify_email/:email' element={<VerifyEmail />} />
         <Route path='/viewlist' element={<ViewList />} />
       </Routes>
     </BrowserRouter>

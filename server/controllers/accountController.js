@@ -151,9 +151,11 @@ async function sendEmailVerification(email, authCode) {
   console.log("[INFO] Send email verification helper.");
   try {
     const text = `Your email verification code is ${authCode}`;
+    const link = `\n\nClick the link below to verify your email:\nhttp://localhost:3000/verify_email/${email}`;
+    const msg = text + link;
     const subject = "Purduehub - Email Verification";
     
-    const email_status = await helperFuncs.sendEmail(email, subject, text);
+    const email_status = await helperFuncs.sendEmail(email, subject, msg);
     console.log("[INFO] Sent verification email.");
     return email_status;
   } catch (err) {
