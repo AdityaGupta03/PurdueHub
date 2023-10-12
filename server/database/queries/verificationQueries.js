@@ -39,8 +39,50 @@ async function removeEmailVerificationQuery(email) {
   }
 }
 
+async function addUsernameResetQuery(email, authCode) {
+  const query = "INSERT INTO username_reset_verification (email, authcode) VALUES ($1, $2)";
+  const data = [ email, authCode ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+async function getUsernameAuthCodeQuery(email) {
+  const query = "SELECT authcode FROM username_reset_verification WHERE email = $1";
+  const data = [ email ];
+
+  try {
+    const db_res = await pool.query(query, data);
+    return db_res.rows[0].authcode;
+  } catch (err) {
+    console.log(err);
+    return "";
+  }
+}
+
+async function removeUsernameVerificationQuery(email) {
+  const query = "DELETE FROM username_reset_verification WHERE email = $1";
+  const data = [ email ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+}
+
 module.exports = {
   addEmailVerificationQuery,
   getAuthCodeQuery,
-  removeEmailVerificationQuery
+  removeEmailVerificationQuery,
+  addUsernameResetQuery,
+  getUsernameAuthCodeQuery,
+  removeUsernameVerificationQuery,
 };

@@ -1,7 +1,7 @@
 const accountQueries = require("../database/queries/accountQueries");
 const calendarQueries = require("../database/queries/calendarQueries");
 const helperFuncs = require("./helperFunctions");
-const { addEmailVerificationQuery, getAuthCodeQuery, removeEmailVerificationQuery } = require("../database/queries/verificationQueries");
+const verificationQueries = require("../database/queries/verificationQueries");
 
 async function createAccount(req, res) {
   console.log("[INFO] Creating account api.");
@@ -24,6 +24,7 @@ async function createAccount(req, res) {
     if (!isUnique) {
       return res.status(400).json({ error: "Not unique username" });
     }
+    console.log("Is a unique username");
 
     let db_res = await accountQueries.createAccountQuery(username, email, password);
     if (db_res === null) {
@@ -37,7 +38,7 @@ async function createAccount(req, res) {
       return res.status(500).json({ error: "Error sending verfication to email" });
     }
 
-    db_res = await addEmailVerificationQuery(email, authCode);
+    db_res = await verificationQueries.addEmailVerificationQuery(email, authCode);
     if (!db_res) {
       return res.status(500).json({ error: "Internal server error" });
     }
@@ -62,10 +63,10 @@ async function createAccount(req, res) {
 async function updateUsername(req, res) {
   console.log("[INFO] Update username api.");
   try {
-    const { newUsername, user_id } = req.body;
+    const { newUsername, email } = req.body;
 
-    if (!user_id) {
-      return res.status(400).json({ error: "Missing user_id" });
+    if (!email) {
+      return res.status(400).json({ error: "Missing email" });
     }
 
     if (!newUsername) {
@@ -77,7 +78,7 @@ async function updateUsername(req, res) {
       return res.status(400).json({ error: "Not unique username" });
     }
 
-    const db_res = await accountQueries.updateUsernameQuery(user_id, newUsername);
+    const db_res = await accountQueries.updateUsernameQuery(email, newUsername);
     if (!db_res) {
       return res.status(500).json({ error: "Internal server error" });
     } else {
@@ -102,14 +103,14 @@ async function verifyEmail(req, res) {
       return res.status(400).json({ error: "Missing authCode" });
     }
 
-    const actual_authCode = await getAuthCodeQuery(email);
+    const actual_authCode = await verificationQueries.getAuthCodeQuery(email);
     if (actual_authCode === "") {
       return res.status(500).json({ error: "Internal server error" });
     } else if (actual_authCode != authCode) {
       return res.status(400).json({ error: "Incorrect authentication code" });
     }
 
-    const db_res = await removeEmailVerificationQuery(email);
+    const db_res = await verificationQueries.removeEmailVerificationQuery(email);
     if (!db_res) {
       return res.status(500).json({ error: "Internal server error" });
     }
@@ -213,16 +214,22 @@ async function resetUsername(req, res) {
   }
 
   const authCode = helperFuncs.generateAuthCode();
-  const text = `Your authentication code for your requested username reset is ${authCode}`
-  const subject = "PurdueHub - Username Account Reset"
+  const text = `Your authentication code for your requested username reset is ${authCode}`;
+  const subject = "PurdueHub - Username Account Reset";
 
   try {
     const sendemail_status = await helperFuncs.sendEmail(email, subject, text);
-    if (sendemail_status) {
-      return res.status(200).json({ message: "Successfully sent email" });
-    } else {
+    if (!sendemail_status) {
       return res.status(500).json({ error: "Error sending email" });
     }
+    console.log("[INFO] Sent verification email.");
+
+    const db_res = await verificationQueries.addUsernameResetQuery(email, authCode);
+    if (!db_res) {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    return res.status(200).json({ message: "Successfully sent email" });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -251,6 +258,33 @@ async function getBlockList(req, res) {
   }
 }
 
+async function verifyUsernameResetCode(req, res) {
+  console.log("[INFO] Verify username reset code api.");
+  const { email, authCode } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: "Missing email field" });
+  }
+
+  if (!authCode) {
+    return res.status(400).json({ error: "Missing authCode field" });
+  }
+
+  const actual_authCode = await verificationQueries.getUsernameAuthCodeQuery(email);
+  if (actual_authCode === "") {
+    return res.status(500).json({ error: "Internal server error" });
+  } else if (actual_authCode != authCode) {
+    return res.status(400).json({ error: "Incorrect authentication code" });
+  }
+
+  const db_res = await verificationQueries.removeUsernameVerificationQuery(email);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully entered authentication code" });
+}
+
 module.exports = {
   createAccount,
   updateUsername,
@@ -259,4 +293,5 @@ module.exports = {
   unblockUser,
   resetUsername,
   getBlockList,
+  verifyUsernameResetCode,
 };

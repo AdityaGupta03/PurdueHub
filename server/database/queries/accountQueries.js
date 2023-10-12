@@ -2,12 +2,21 @@ const pool = require("../db");
 
 async function isUniqueUsernameQuery(username) {
   const query = "SELECT COUNT(*) FROM users WHERE username = $1";
-  const data = [username];
+  const data = [ username ];
 
-  const db_res = await pool.query(query, data);
-  const numFound = db_res.rows[0].count;
+  console.log(query);
+  console.log(data);
+  try {
+    const db_res = await pool.query(query, data);
+    const numFound = db_res.rows[0].count;
+    console.log(numFound);
+    
+    return numFound == 0;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
   
-  return numFound == 0;
 }
 
 async function createAccountQuery(username, email, password) {
@@ -23,9 +32,9 @@ async function createAccountQuery(username, email, password) {
   }
 }
 
-async function updateUsernameQuery(user_id, newUsername) {
-  const query = "UPDATE users SET username = $1 WHERE user_id = $2";
-  const data = [newUsername, user_id];
+async function updateUsernameQuery(email, newUsername) {
+  const query = "UPDATE users SET username = $1 WHERE email = $2";
+  const data = [newUsername, email];
 
   try {
     await pool.query(query, data);

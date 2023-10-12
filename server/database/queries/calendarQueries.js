@@ -138,4 +138,5 @@ module.exports = {
     removeCalendarEventsArrQuery,
     addCalendarEventsArrQuery,
     isCalendarEventInUseQuery,
+    createCalendarQuery,
 };
