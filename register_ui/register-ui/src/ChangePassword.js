@@ -4,8 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 export const ChangePassword = () => {
     const navigate = useNavigate();
     
-    const user_id = "1";
-    // const user_id = localStorage.getItem('user_id');
+    const username = sessionStorage.getItem('username');
 
     const PWD_REGEX = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
@@ -46,7 +45,7 @@ export const ChangePassword = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ "newPassword": pwd, "user_id": user_id }),
+                body: JSON.stringify({ "password": pwd, "username": username }),
             });
 
             const data = await response.json();

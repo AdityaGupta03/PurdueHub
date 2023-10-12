@@ -2,7 +2,7 @@ import {useRef, useState, useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 export const PasswordAuthCode = () => {
-    const user_email = sessionStorage.getItem('user_email');
+    const username = sessionStorage.getItem('username');
 
     const navigate = useNavigate();
 
@@ -32,12 +32,12 @@ export const PasswordAuthCode = () => {
         }
 
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/", {
+            const response = await fetch("http://127.0.0.1:5000/api/verify_password_reset_code", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ "authCode": code }),
+                body: JSON.stringify({ "authCode": code, "username": username }),
             });
 
             const data = await response.json();

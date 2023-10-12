@@ -16,7 +16,6 @@ async function isUniqueUsernameQuery(username) {
     console.log(error);
     return false;
   }
-  
 }
 
 async function createAccountQuery(username, email, password) {
@@ -162,6 +161,19 @@ async function getBlockListQuery(user_id) {
   }
 }
 
+async function updatePasswordQuery(username, password) {
+  const query = "UPDATE users SET password = $1 WHERE username = $2";
+  const data = [ password, username ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -174,4 +186,5 @@ module.exports = {
   addCalendarIdQuery,
   checkAccountFromUsernameQuery,
   getBlockListQuery,
+  updatePasswordQuery,
 };

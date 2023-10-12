@@ -1,5 +1,4 @@
 const express = require("express");
-const accountRouter = require("./accountRouter");
 const calendarController = require("../controllers/calendarController");
 const accountController = require("../controllers/accountController");
 
@@ -18,5 +17,8 @@ router.post("/delete_calendar_event", calendarController.deleteCalendarEvent);
 router.post("/add_calendar_event", calendarController.addCalendarEvent);
 router.post("/request_new_username", accountController.resetUsername);
 router.post("/verify_username_reset_code", accountController.verifyUsernameResetCode);
+router.post("/request_new_password", accountController.resetPassword);
+router.post("/verify_password_reset_code", accountController.verifyPasswordResetCode);
+router.post("/update_password", accountController.updatePassword);
 
 module.exports = router;

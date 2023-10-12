@@ -52,8 +52,34 @@ async function addUsernameResetQuery(email, authCode) {
   }
 }
 
+async function addPasswordResetQuery(email, authCode) {
+  const query = "INSERT INTO password_reset_verification (email, authcode) VALUES ($1, $2)";
+  const data = [ email, authCode ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
 async function getUsernameAuthCodeQuery(email) {
   const query = "SELECT authcode FROM username_reset_verification WHERE email = $1";
+  const data = [ email ];
+
+  try {
+    const db_res = await pool.query(query, data);
+    return db_res.rows[0].authcode;
+  } catch (err) {
+    console.log(err);
+    return "";
+  }
+}
+
+async function getPasswordAuthCodeQuery(email) {
+  const query = "SELECT authcode FROM password_reset_verification WHERE email = $1";
   const data = [ email ];
 
   try {
@@ -85,4 +111,6 @@ module.exports = {
   addUsernameResetQuery,
   getUsernameAuthCodeQuery,
   removeUsernameVerificationQuery,
+  addPasswordResetQuery,
+  getPasswordAuthCodeQuery,
 };

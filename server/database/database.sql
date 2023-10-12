@@ -49,3 +49,10 @@ CREATE TABLE username_reset_verification (
   authCode VARCHAR(255) NOT NULL,
   FOREIGN KEY (email) REFERENCES users (email)
 );
+
+CREATE TABLE password_reset_verification (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  authCode VARCHAR(255) NOT NULL,
+  FOREIGN KEY (email) REFERENCES users (email)
+);

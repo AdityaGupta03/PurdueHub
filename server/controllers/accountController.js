@@ -285,6 +285,103 @@ async function verifyUsernameResetCode(req, res) {
   return res.status(200).json({ message: "Successfully entered authentication code" });
 }
 
+async function resetPassword(req, res) {
+  console.log("[INFO] Reset password api.");
+  const { username } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ error: "Missing username field" });
+  }
+
+  const acc_exists = await accountQueries.checkAccountFromUsernameQuery(username);
+  if (!acc_exists) {
+    return res.status(404).json({ error: "No account found with username provided "});
+  }
+
+  const user = await accountQueries.getUserInfoFromUsernameQuery(username);
+  if (!user) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+
+  const email = user.email;
+
+  const authCode = helperFuncs.generateAuthCode();
+  const text = `Your authentication code for your requested password reset is ${authCode}`;
+  const subject = "PurdueHub - Password Account Reset";
+
+  try {
+    const sendemail_status = await helperFuncs.sendEmail(email, subject, text);
+    if (!sendemail_status) {
+      return res.status(500).json({ error: "Error sending email" });
+    }
+    console.log("[INFO] Sent verification email.");
+
+    const db_res = await verificationQueries.addPasswordResetQuery(email, authCode);
+    if (!db_res) {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    return res.status(200).json({ message: "Successfully sent email" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+async function verifyPasswordResetCode(req, res) {
+  console.log("[INFO] Verify username reset code api.");
+  const { username, authCode } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ error: "Missing username field" });
+  }
+
+  const user = await accountQueries.getUserInfoFromUsernameQuery(username);
+  if (!user) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+
+  const email = user.email;
+
+  if (!authCode) {
+    return res.status(400).json({ error: "Missing authCode field" });
+  }
+
+  const actual_authCode = await verificationQueries.getPasswordAuthCodeQuery(email);
+  if (actual_authCode === "") {
+    return res.status(500).json({ error: "Internal server error" });
+  } else if (actual_authCode != authCode) {
+    return res.status(400).json({ error: "Incorrect authentication code" });
+  }
+
+  const db_res = await verificationQueries.removeUsernameVerificationQuery(email);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully entered authentication code" });
+}
+
+async function updatePassword(req, res) {
+  console.log("[INFO] Update password api.");
+  const { username, password } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ error: "Missing username field" });
+  }
+
+  if (!password) {
+    return res.status(400).json({ error: "Missing password field" });
+  }
+
+  const db_res = await accountQueries.updatePasswordQuery(username, password);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully updated password" });
+}
+
 module.exports = {
   createAccount,
   updateUsername,
@@ -294,4 +391,7 @@ module.exports = {
   resetUsername,
   getBlockList,
   verifyUsernameResetCode,
+  resetPassword,
+  verifyPasswordResetCode,
+  updatePassword,
 };
