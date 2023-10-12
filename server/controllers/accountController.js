@@ -513,6 +513,77 @@ async function updatePassword(req, res) {
   return res.status(200).json({ message: "Successfully updated password" });
 }
 
+
+// DISPLAY USER PROFILE DATA FROM DATABASE
+
+// function to get user's email
+async function displayProfileEmail(req, res) {
+    console.log("[Info] Display user email data");
+    const { user_id } = req.body;
+    try {
+        const db_return = await accountQueries.getUserInfoQuery(user_id);
+        const db_res = db_return.email;
+        return db_res;
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+// function to get user's username
+async function displayProfileUsername(req, res) {
+    console.log("[Info] Display user username data");
+    const { user_id } = req.body;
+    try {
+        const db_return = await accountQueries.getUserInfoQuery(user_id);
+        const db_res = db_return.username;
+        return db_res;
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+// function to get user's profile bio
+async function displayProfileBio(req, res) {
+    console.log("[Info] Display user profile data");
+    const { user_id } = req.body;
+    try {
+        const db_return = await accountQueries.getUserInfoQuery(user_id);
+        const db_res = db_return.bio;
+        return db_res;
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+// function to get user's birthday
+async function displayProfileBirthday(req, res) {
+    console.log("[Info] Display user profile data");
+    const { user_id } = req.body;
+    try {
+        const db_return = await accountQueries.getUserInfoQuery(user_id);
+        const db_res = db_return.birthday;
+        return db_res;
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+
+// Gets an url of where the image is
+// images are stored in uploads/ and are user unique
+// call function to return URL
+async function displayProfilePicture(req, res) {
+    console.log("[Info] Display user profile data");
+    const { user_id } = req.body;
+    try {
+        const db_return = await accountQueries.getUserInfoQuery(user_id);
+        const db_res = db_return.profile_picture;
+        return db_res;
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
 module.exports = {
   createAccount,
   updateUsername,
@@ -528,4 +599,9 @@ module.exports = {
   verifyPasswordResetCode,
   updatePassword,
   login,
+  displayProfileBio,
+  displayProfileBirthday,
+  displayProfileEmail,
+  displayProfilePicture,
+  displayProfileUsername,
 };
