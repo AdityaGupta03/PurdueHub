@@ -189,6 +189,19 @@ async function loginQuery(username, password) {
   }
 }
 
+async function deleteAccountQuery(user_id) {
+  const query = "DELETE FROM users WHERE user_id = $1";
+  const data = [ user_id ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -203,4 +216,5 @@ module.exports = {
   getBlockListQuery,
   updatePasswordQuery,
   loginQuery,
+  deleteAccountQuery,
 };

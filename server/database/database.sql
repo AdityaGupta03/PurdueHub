@@ -33,9 +33,6 @@ CREATE TABLE calendars (
 ALTER TABLE users
 ADD FOREIGN KEY (calendar_id) REFERENCES calendars (id);
 
-ALTER TABLE calendars
-ADD FOREIGN KEY (user_id) REFERENCES users (user_id);
-
 CREATE TABLE email_verification (
   id SERIAL PRIMARY KEY,
   email VARCHAR(255) NOT NULL UNIQUE,

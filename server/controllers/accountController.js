@@ -32,16 +32,6 @@ async function createAccount(req, res) {
     }
 
     const user_id = db_res;
-    const authCode = helperFuncs.generateAuthCode();
-    const email_status = await sendEmailVerification(email, authCode);
-    if (!email_status) {
-      return res.status(500).json({ error: "Error sending verfication to email" });
-    }
-
-    db_res = await verificationQueries.addEmailVerificationQuery(email, authCode);
-    if (!db_res) {
-      return res.status(500).json({ error: "Internal server error" });
-    }
 
     let calendar_id = await calendarQueries.createCalendarQuery(user_id);
     if (calendar_id === null) {
@@ -53,11 +43,51 @@ async function createAccount(req, res) {
       return res.status(500).json({ error: "Internal server error" });
     }
 
+    const authCode = helperFuncs.generateAuthCode();
+    const email_status = await sendEmailVerification(email, authCode);
+    if (!email_status) {
+      const delete_acc_status = deleteAccount(username);
+      if (!delete_acc_status) {
+        return res.status(500).json({ error: "Internal server error" });
+      }
+      return res.status(500).json({ error: "Error sending verfication to email. Deleted account." });
+    }
+
+    db_res = await verificationQueries.addEmailVerificationQuery(email, authCode);
+    if (!db_res) {
+      return res.status(500).json({ error: "Internal server error" });
+    }
+
     return res.status(200).json({ message: "Account successfully created", user_id: user_id });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ error: "Error creating account" });
   }
+}
+
+async function deleteAccount(username) {
+  console.log("[INFO] Deleting account helper.")
+  let account = await accountQueries.getUserInfoFromUsernameQuery(username);
+  if (account === null) {
+    return false;
+  }
+  console.log(account);
+
+  const user_id = account.user_id;
+  let db_res = await accountQueries.deleteAccountQuery(user_id);
+  if (!db_res) {
+    return false;
+  }
+  console.log("Deleted account: " + user_id);
+
+  const calendar_id = account.calendar_id;
+  db_res = await calendarQueries.deleteCalendarQuery(calendar_id);
+  if (!db_res) {
+    return false;
+  }
+  console.log("Deleted calendar: " + calendar_id);
+
+  return true;
 }
 
 async function login(req, res) {
@@ -83,7 +113,6 @@ async function login(req, res) {
   }
 
   return res.status(200).json({ message: "Successfully logged in", user_id: user_id });
-  
 }
 
 async function updateUsername(req, res) {
