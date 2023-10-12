@@ -127,6 +127,32 @@ async function addCalendarIdQuery(user_id, calendar_id) {
   }
 }
 
+async function checkAccountFromUsernameQuery(username) {
+  const query = "SELECT * FROM users where username = $1";
+  const data = [ username ];
+
+  try {
+    const db_res = await pool.query(query, data);
+    return db_res.rows.length > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function getBlockListQuery(user_id) {
+  const query = "SELECT username FROM users WHERE user_id = ANY(SELECT blocked FROM users WHERE user_id = $1)";
+  const data = [ user_id ];
+
+  try {
+    const usernames = await pool.query(query, data);
+    return usernames;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -137,4 +163,6 @@ module.exports = {
   blockUserQuery,
   unblockUserQuery,
   addCalendarIdQuery,
+  checkAccountFromUsernameQuery,
+  getBlockListQuery,
 };
