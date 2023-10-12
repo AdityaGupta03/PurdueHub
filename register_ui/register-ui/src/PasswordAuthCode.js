@@ -1,9 +1,10 @@
 import {useRef, useState, useEffect} from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const PasswordAuthCode = () => {
+    const user_email = sessionStorage.getItem('user_email');
 
-    const test_code = "123456"
+    const navigate = useNavigate();
 
     const authCode_regex = /^[0-9]{6}$/;
 
@@ -23,21 +24,36 @@ export const PasswordAuthCode = () => {
         e.preventDefault(); // avoid reloading the page as default
         const isValidCode = authCode_regex.test(code); // test validity (has @purdue.edu in it)
     
-        // INSERT BACKEND LOGIC HERE 
-
-        if (!isValidCode) {
+        if (!isValidCode) { // Is invalid code
             setErrMsg("Please enter a valid authentication code (6 digits).");
             setSuccess(false);
             errRef.current.focus();
-        } else if (code !== test_code) {
-            setErrMsg("Please enter the correct authentication code.");
-            setSuccess(false);
-            errRef.current.focus();
-        } else {
-            setSuccess(true);
+            return;
         }
 
+        try {
+            const response = await fetch("http://127.0.0.1:5000/api/", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "authCode": code }),
+            });
+
+            const data = await response.json();
+
+            if (response.status === 200) {
+                navigate("/changepassword");
+            } else {
+                const error_msg = "Error: " + data.error;
+                setErrMsg(error_msg);
+            }
+        } catch (error) {
+            console.log('Error:', error);
+            setErrMsg('Error occurred when changing password');
+        }
     }
+
     return (
         <>
             {success ? (

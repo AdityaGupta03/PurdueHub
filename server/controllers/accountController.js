@@ -1,4 +1,5 @@
 const accountQueries = require("../database/queries/accountQueries");
+const calendarQueries = require("../database/queries/calendarQueries");
 const helperFuncs = require("./helperFunctions");
 const { addEmailVerificationQuery, getAuthCodeQuery, removeEmailVerificationQuery } = require("../database/queries/verificationQueries");
 
@@ -25,10 +26,11 @@ async function createAccount(req, res) {
     }
 
     let db_res = await accountQueries.createAccountQuery(username, email, password);
-    if (!db_res) {
+    if (db_res === null) {
       return res.status(500).json({ error: "Internal server error" });
     }
 
+    const user_id = db_res;
     const authCode = helperFuncs.generateAuthCode();
     const email_status = await sendEmailVerification(email, authCode);
     if (!email_status) {
@@ -40,7 +42,17 @@ async function createAccount(req, res) {
       return res.status(500).json({ error: "Internal server error" });
     }
 
-    return res.status(200).json({ message: "Account successfully created" });
+    let calendar_id = await calendarQueries.createCalendarQuery(user_id);
+    if (calendar_id === null) {
+      return res.status(500).json({ error: "Internal server error" });
+    }
+
+    db_res = await accountQueries.addCalendarIdQuery(user_id, calendar_id);
+    if (!db_res) {
+      return res.status(500).json({ error: "Internal server error" });
+    }
+
+    return res.status(200).json({ message: "Account successfully created", user_id: user_id });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ error: "Error creating account" });
