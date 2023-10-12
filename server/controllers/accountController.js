@@ -40,7 +40,7 @@ async function createAccount(req, res) {
       return res.status(500).json({ error: "Internal server error" });
     }
 
-    return res.status(201).json({ message: "Account successfully created" });
+    return res.status(200).json({ message: "Account successfully created" });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ error: "Error creating account" });
@@ -69,7 +69,7 @@ async function updateUsername(req, res) {
     if (!db_res) {
       return res.status(500).json({ error: "Internal server error" });
     } else {
-      return res.status(201).json({ message: "Successfully updated username" });
+      return res.status(200).json({ message: "Successfully updated username" });
     }
   } catch (err) {
     console.log(err.message);
@@ -207,7 +207,7 @@ async function resetUsername(req, res) {
   try {
     const sendemail_status = await helperFuncs.sendEmail(email, subject, text);
     if (sendemail_status) {
-      return res.status(201).json({ message: "Successfully sent email" });
+      return res.status(200).json({ message: "Successfully sent email" });
     } else {
       return res.status(500).json({ error: "Error sending email" });
     }
