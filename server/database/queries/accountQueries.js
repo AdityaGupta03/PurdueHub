@@ -114,6 +114,19 @@ async function unblockUserQuery(unblock_user_id, user_id) {
   }
 }
 
+async function followUserQuery(user_id, to_follow_user_id) {
+  const query = "UPDATE users set follow = array_append(follow, $1) WHERE user_id = $2";
+  const data = [ to_follow_user_id, user_id ];
+  
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
 async function addCalendarIdQuery(user_id, calendar_id) {
   const query = "UPDATE users SET calendar_id = $1 WHERE user_id = $2";
   const data = [ calendar_id, user_id ];
@@ -122,6 +135,20 @@ async function addCalendarIdQuery(user_id, calendar_id) {
     await pool.query(query, data);
     return true;
   } catch (error) {
+    console.log("[ERROR] " + error);
+    return false;
+  }
+}
+
+
+async function unfollowUserQuery(user_id, to_unfollow_user_id) {
+  const query = "UPDATE users set follow = array_remove(follow, $1) WHERE user_id = $2";
+  const data = [ to_unfollow_user_id, user_id ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (err) {
     console.log("[ERROR] " + err.message);
     return false;
   }
@@ -162,6 +189,8 @@ module.exports = {
   getUserInfoFromUsernameQuery,
   blockUserQuery,
   unblockUserQuery,
+  followUserQuery,
+  unfollowUserQuery
   addCalendarIdQuery,
   checkAccountFromUsernameQuery,
   getBlockListQuery,

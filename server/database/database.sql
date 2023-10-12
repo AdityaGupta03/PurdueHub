@@ -7,7 +7,7 @@ CREATE TABLE users (
   password VARCHAR(255) NOT NULL,
   bio TEXT,
   blocked INTEGER[] DEFAULT ARRAY[]::INTEGER[],
-  friends INTEGER[] DEFAULT ARRAY[]::INTEGER[],
+  follow INTEGER[] DEFAULT ARRAY[]::INTEGER[],
   saved_courses INTEGER[] DEFAULT ARRAY[]::INTEGER[],
   saved_orgs INTEGER[] DEFAULT ARRAY[]::INTEGER[],
   calendar_id INTEGER UNIQUE
