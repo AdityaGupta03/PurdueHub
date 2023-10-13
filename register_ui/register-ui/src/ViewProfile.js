@@ -17,8 +17,8 @@ function ViewProfile() {
     useEffect( () => {
         // ADD IN SIGN IN SESSION HERE, SET VAR TO TRUE OR FALSE, UPDATE CONDITIONAL RENDERING
         // ... code ^
-        setUser('david'); // change username if they are signed in
-        setSignedIn(true); // change this true if they are signed in, false otherwise
+        //setUser('david'); // change username if they are signed in
+        //setSignedIn(true); // change this true if they are signed in, false otherwise
 
     }, [])
 
@@ -40,7 +40,7 @@ function ViewProfile() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ "user_id": user, "unblock_username": viewUser}),
+                    //body: JSON.stringify({ "user_id": user, "unblock_username": viewUser}),
                 });
     
                 console.log(response);
@@ -67,7 +67,7 @@ function ViewProfile() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ "user_id": user, "unblock_username": viewUser}),
+                    //body: JSON.stringify({ "user_id": user, "unblock_username": viewUser}),
                 });
     
                 console.log(response);
@@ -95,7 +95,7 @@ function ViewProfile() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ "user_id": user, "to_follow_username": viewUser}),
+                    //body: JSON.stringify({ "user_id": user, "to_follow_username": viewUser}),
                 });
     
                 console.log(response);
@@ -121,7 +121,7 @@ function ViewProfile() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ "user_id": user, "to_follow_username": viewUser}),
+                    //body: JSON.stringify({ "user_id": user, "to_follow_username": viewUser}),
                 });
     
                 console.log(response);
@@ -140,13 +140,13 @@ function ViewProfile() {
     
   return (
     <div>
-        <h1>{viewSetUser}'s Profile</h1>
+        <h1>'s Profile</h1>
         <img className='landscape' src={temp} alt="Profile Picture"/>
         <span>
-            <h2>Username: {viewUser}</h2>
+            <h2>Username: </h2>
             <button onClick={toggleBlock}>{isBlocked ? 'Unblock' : 'Block'}</button>
             <button disabled={isBlocked ? true : false} onClick={toggleFollow}>{isFollow ? 'Unfollow' : 'Follow'}</button>
-            <button onClick={reportUser}>Report</button>
+            <button>Report</button>
         </span>
         <p>Bio: {bio}</p>
  </div>

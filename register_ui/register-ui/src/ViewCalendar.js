@@ -42,12 +42,21 @@ const events = [
 
 export default function ViewCalendar() {
     const[newEvent, setNewEvent] = useState({title: "", start: "", end: ""})
+    
     const [allEvents, setAllEvents] = useState(events);
-
     // pushes new event onto the array of all events so far
     function handleAddEvent() {
         setAllEvents([...allEvents, newEvent])
+        console.log(newEvent.start);
+        console.log(newEvent.end);
     }
+
+    const filterPassedTime = (time) => {
+        const currentDate = new Date();
+        const selectedDate = new Date(time);
+    
+        return currentDate.getTime() < selectedDate.getTime();
+    };
 
     return (
     <div className="App">
@@ -63,11 +72,15 @@ export default function ViewCalendar() {
                 )}
                 />
             <DatePicker placeholderText="Start Date" 
+            showTimeSelect
+            filterTime={filterPassedTime}
             style={{marginRight: "10px"}}
             selected={newEvent.start} 
             onChange={(start) => setNewEvent ({...newEvent, start})}
             />
-             <DatePicker placeholderText="End Date" 
+            <DatePicker placeholderText="End Date" 
+            showTimeSelect
+            filterTime={filterPassedTime}
             style={{marginRight: "10px"}}
             selected={newEvent.end} 
             onChange={(end) => setNewEvent ({...newEvent, end})}
