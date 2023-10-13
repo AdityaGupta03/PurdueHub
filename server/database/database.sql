@@ -6,6 +6,10 @@ CREATE TABLE users (
   profile_picture VARCHAR(255),
   password VARCHAR(255) NOT NULL,
   bio TEXT,
+  banned INTEGER DEFAULT 0,
+  banEmail INTEGER DEFAULT 0,
+  markDeleted INTEGER DEFAULT 0,
+  deleteEmail INTEGER DEFAULT 0,
   blocked INTEGER[] DEFAULT ARRAY[]::INTEGER[],
   follow INTEGER[] DEFAULT ARRAY[]::INTEGER[],
   saved_courses INTEGER[] DEFAULT ARRAY[]::INTEGER[],
@@ -28,6 +32,13 @@ CREATE TABLE calendars (
   user_id INTEGER UNIQUE,
   subscribed_cals INTEGER[] DEFAULT ARRAY[]::INTEGER[],
   calendar_events_arr INTEGER[] DEFAULT ARRAY[]::INTEGER[]
+);
+
+CREATE TABLE reports (
+  id SERIAL PRIMARY KEY,
+  reported_username VARCHAR(255) NOT NULL,
+  reporter_username VARCHAR(255) NOT NULL,
+  reason TEXT NOT NULL
 );
 
 ALTER TABLE users

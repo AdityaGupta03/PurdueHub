@@ -18,6 +18,9 @@ export default function Home() {
       <h1>Welcome to PurdueHub!</h1>
       <p>An application targeted to students of Purdue University</p>
       <Link to="/userprofile">View Profile</Link>
+      <Link to="/viewlist">View your user lists!</Link>
+      <Link to="/viewprofile/testing">View testing's profile</Link>
+      <Link to="/viewprofile/banned">View banned's profile</Link>
     </section>
   )
 }

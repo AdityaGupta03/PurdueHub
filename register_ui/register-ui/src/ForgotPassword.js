@@ -62,7 +62,6 @@ export const ForgotPassword = () => {
             console.log('Error:', error);
             setErrMsg('Error occurred when changing password');
         }
-        setSuccess(true);
     }
 
 

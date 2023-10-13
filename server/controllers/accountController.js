@@ -2,6 +2,7 @@ const accountQueries = require("../database/queries/accountQueries");
 const calendarQueries = require("../database/queries/calendarQueries");
 const helperFuncs = require("./helperFunctions");
 const verificationQueries = require("../database/queries/verificationQueries");
+const reportQueries = require("../database/queries/reportQueries");
 const { saveToDatabase } = require("../server");
 
 async function createAccount(req, res) {
@@ -106,6 +107,16 @@ async function login(req, res) {
   const acc_exists = await accountQueries.checkAccountFromUsernameQuery(username);
   if (!acc_exists) {
     return res.status(404).json({ error: "No account found with username provided "});
+  }
+
+  const isBanned = await accountQueries.checkBannedQuery(username);
+  if (isBanned) {
+    return res.status(400).json({ error: "Account is banned" });
+  }
+
+  const isDelete = await accountQueries.checkDeleteQuery(username);
+  if (isDelete) {
+    return res.status(400).json({ error: "Account is deleted" });
   }
 
   const account = await accountQueries.getUserInfoFromUsernameQuery(username);
@@ -281,11 +292,13 @@ async function unblockUser(req, res) {
 
   try {
     const unblocked_user_info = await accountQueries.getUserInfoFromUsernameQuery(unblock_username);
+    console.log(unblocked_user_info);
     if (unblocked_user_info === null) {
       return res.status(404).json({ error: "User not found" });
     }
 
     const unblock_user_id = unblocked_user_info.user_id;
+    console.log(unblock_user_id);
 
     const db_res = await accountQueries.unblockUserQuery(unblock_user_id, user_id);
     if (!db_res) {
@@ -350,16 +363,12 @@ async function getFollowedUsers(req, res) {
 
   try {
     const follow_ids = await accountQueries.getFollowedUsersQuery(username);
-    if (follow_ids === null) {
-      return res.status(500).json({ error: "Internal Server Error" });
+    console.log(follow_ids.rows[0].following);
+    if (follow_ids.rows[0].following === null) {
+      return res.status(200).json({ following: [] });
     }
 
-    const follow_usernames = await accountQueries.getUsernamesFromIDSQuery(follow_ids);
-    if (follow_usernames === null) {
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
-
-    return res.status(200).json({ following: follow_usernames });
+    return res.status(200).json({ following: follow_ids.rows[0].following });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Error getting follow list" });
@@ -379,13 +388,22 @@ async function getFollowedBy(req, res) {
     return res.status(404).json({ error: "No account found with username provided."});
   }
 
-  try {
-    const usernames = await accountQueries.getFollowedByUsersQuery(username);
-    if (ids === null) {
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
+  const account_info = await accountQueries.getUserInfoFromUsernameQuery(username);
+  if (account_info === null) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+  const user_id = account_info.user_id;
 
-    return res.status(200).json({ followed_by: usernames });
+  try {
+    console.log(user_id);
+    const usernames = await accountQueries.getFollowedByUsersQuery(user_id);
+    console.log(usernames.rows[0].followers);
+    if (usernames.rows[0].followers === null) {
+      return res.status(200).json({ followed_by: [] });
+    }
+    console.log(usernames);
+
+    return res.status(200).json({ followed_by: usernames.rows[0].followers });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Error getting people who follow user" });
@@ -458,9 +476,11 @@ async function getBlockList(req, res) {
   console.log("[INFO] Get block list api.");
   const { username } = req.body;
 
+  console.log("username: " + username);
+
   const acc_exists = await accountQueries.checkAccountFromUsernameQuery(username);
   if (!acc_exists) {
-    return res.status(404).json({ error: "No account found with username provided "});
+    return res.status(404).json({ error: "No account found with username provided" });
   }
 
   try {
@@ -468,8 +488,11 @@ async function getBlockList(req, res) {
     if (usernames === null) {
       return res.status(500).json({ error: "Internal Server Error" });
     }
-
-    return res.status(200).json({ blocked: usernames });
+    console.log(usernames.rows[0].blocked_username);
+    if (usernames.rows[0].blocked_username == null) {
+      return res.status(200).json({ blocked: [] });
+    }
+    return res.status(200).json({ blocked: usernames.rows[0].blocked_username });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -657,6 +680,159 @@ async function editProfilePicture(req, res) {
   return res.status(200).json({ message: "Successfully updated profile picture" });
 }
 
+async function banAccount(req, res) {
+  const { user_id, email } = req.body;
+
+  if (!user_id) {
+    return res.status(400).json({ error: "Missing user_id field" });
+  }
+
+  const subject = 'Your Purdue account has been banned';
+  const msg = "Your account has been banned";
+  await helperFuncs.sendEmail(email, subject, msg);
+
+  const db_res = await accountQueries.banAccountQuery(user_id);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully banned account" });
+}
+
+async function markDeleteAccount(req, res) {
+  const { user_id, email } = req.body;
+
+  if (!user_id) {
+    return res.status(400).json({ error: "Missing user_id field" });
+  }
+
+  const subject = 'Your Purdue account has been marked deleted';
+  const msg = "Your account has been marked deleted";
+  await helperFuncs.sendEmail(email, subject, msg);
+
+  const db_res = await accountQueries.markDeleteAccountQuery(user_id);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully marked deleted account" });
+}
+
+async function revokeBan(req, res) {
+  const { user_id, email } = req.body;
+
+  if (!user_id) {
+    return res.status(400).json({ error: "Missing user_id field" });
+  }
+
+  const subject = 'Your Purdue account ban/deletion has been revoked';
+  const msg = "Your account ban/deletion has been revoked!";
+  await helperFuncs.sendEmail(email, subject, msg);
+
+  const db_res = await accountQueries.revokeBanQuery(user_id);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully revoked ban on account" });
+}
+
+async function reportUser(req, res) {
+  const { reported, reportee, msg } = req.body;
+
+  if (!reported) {
+    return res.status(400).json({ error: "Missing reported field" });
+  }
+
+  if (!reportee) {
+    return res.status(400).json({ error: "Missing reportee field" });
+  }
+
+  if (!msg || msg == "") {
+    return res.status(400).json({ error: "Missing msg field" });
+  }
+
+  const account = await accountQueries.getUserInfoFromUsernameQuery(reported);
+  if (account == null) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  const subject = 'Your Purdue account has been reported.';
+  const em_msg = "Your account has been reported for the following reason: " + msg + "\n\nPlease contact the PurdueHub team for more information.";
+  const email = account.email;
+  await helperFuncs.sendEmail(email, subject, em_msg);
+
+  const db_res = await reportQueries.addReportQuery(reported, reportee, msg);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully reported user" });
+}
+
+async function ignoreReport(req, res) {
+  const { id, email } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ error: "Missing id field" });
+  }
+
+  if (!email) {
+    return res.status(400).json({ error: "Missing email field" });
+  }
+
+  const subject = 'Your Purdue  report has been ignored.';
+  const msg = "Your report has been ignored.";
+  await helperFuncs.sendEmail(email, subject, msg);
+
+  const db_res = await reportQueries.deleteReportQuery(id);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully ignored report" });
+}
+
+async function banFromReport(req, res) {
+  const { id, ban_id, reported_email, reporter_email } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ error: "Missing id field" });
+  }
+
+  if (!ban_id) {
+    return res.status(400).json({ error: "Missing ban_id field" });
+  }
+
+  if (!reported_email) {
+    return res.status(400).json({ error: "Missing reported_email field" });
+  }
+
+  if (!reporter_email) {
+    return res.status(400).json({ error: "Missing reporter_email field" });
+  }
+
+  let subject = 'Your Purdue report has been resulted in a ban!';
+  let msg = "Your report has been resulted in a ban!";
+  await helperFuncs.sendEmail(reporter_email, subject, msg);
+
+  subject = "Your Purdue account has been banned from a previous report";
+  msg = "Your account has been banned from a previous report";
+  await helperFuncs.sendEmail(reported_email, subject, msg);
+
+  let db_res = await reportQueries.deleteReportQuery(id);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  db_res = await accountQueries.banAccountQuery(ban_id);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully banned user" });
+}
+
 module.exports = {
   createAccount,
   updateUsername,
@@ -678,4 +854,10 @@ module.exports = {
   updateUsernameFromID,
   editProfileBio,
   editProfilePicture,
+  banAccount,
+  markDeleteAccount,
+  revokeBan,
+  reportUser,
+  ignoreReport,
+  banFromReport,
 };
