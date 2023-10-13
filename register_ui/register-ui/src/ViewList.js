@@ -1,49 +1,103 @@
 import React, { useState, useEffect } from 'react'
 import data from './friend-data';
-import List from './List';
 import temp from './temporary-profile.jpeg' // temp picture
 
 import './Profile.css' // css pulled online
 
 function ViewList() {
-    const [value, setValue] = useState(data);
-
     const [signedIn, setSignedIn] = useState(true); // if user isn't signed in
-
     const [nobodyBlocked, setNobodyBlocked] = useState(false); // if user doesn't have any blocked users
     const [nobodyFollows, setNobodyFollows] = useState(false); // if user doesn't have any followers
     const [nobodyFollowed, setNobodyFollowed] = useState(false); // if use doesn't have anyone added 
 
-    const [user, setUser] = useState('');
 
     const [blockedUsernames, setBlockedUsernames] = useState([]);
+    const [ followedUsernames, setFollowedUsernames ] = useState([]);
+    const [ followersUsernames, setFollowersUsernames ] = useState([]);
 
-    // Page renders intially logic...
-    useEffect(async () => {
-        // ADD IN SIGN IN SESSION HERE, SET VAR TO TRUE OR FALSE, UPDATE CONDITIONAL RENDERING
-        // ... code ^
-        setUser('david'); // change username if they are signed in
-        setSignedIn(true); // change this true if they are signed in, false otherwise
-        // Fetch blocked users
+    async function fetchData() {
+        const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+        console.log(isLoggedIn);
+        if (isLoggedIn == 'false') {
+            setSignedIn(false);
+            return;
+        }
+        setSignedIn(true);
+        const username = sessionStorage.getItem('username');
 
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/get_block_list", {
-                method: "GET",
+            let response = await fetch("http://127.0.0.1:5000/api/get_block_list", {
+                method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ "username": user }),
+                body: JSON.stringify({ "username": username }),
             });
-            const data = await response.json();
+
+            let data = await response.json();
+            console.log(data.blocked.length);
 
             if (response.status === 200) {
+                if (data.blocked.length === 0) {
+                    setNobodyBlocked(true);
+                }
                 setBlockedUsernames(data.blocked);
             } else {
                 const err_msg = "Error: " + data.error;
+                console.log(err_msg);
+            }
+
+            response = await fetch("http://127.0.0.1:5000/api/get_follow_list", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "username": username }),
+            });
+
+            data = await response.json();
+            console.log(data);
+            console.log(data.following.length);
+
+            if (response.status === 200) {
+                if (data.following.length === 0) {
+                    setFollowedUsernames(true);
+                }
+                setFollowedUsernames(data.following);
+            } else {
+                const err_msg = "Error: " + data.error;
+                console.log(err_msg);
+            }
+
+            response = await fetch("http://127.0.0.1:5000/api/get_followed_by", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "username": username }),
+            });
+
+            data = await response.json();
+            console.log(data);
+            console.log(data.followed_by.length);
+
+            if (response.status === 200) {
+                if (data.followed_by.length === 0) {
+                    setNobodyFollows(true);
+                }
+                setFollowersUsernames(data.followed_by);
+            } else {
+                const err_msg = "Error: " + data.error;
+                console.log(err_msg);
             }
         } catch (error) {
-            console.log('Error:', error);
+            console.log(error);
         }
+    }
+
+
+    useEffect(() => {
+        fetchData();
     }, [])
 
   return (
@@ -52,7 +106,7 @@ function ViewList() {
             signedIn && (
                 <div>
                     <div className='container'>
-                        <h2>Friend's List</h2>
+                        <h2>Followed By List:</h2>
 
                         <div>
                         {
@@ -65,14 +119,9 @@ function ViewList() {
                         {
                             nobodyFollowed === false && (
                                 <div>
-                                    {blockedUsernames.map((item, index) => {
+                                    {followersUsernames.map((item, index) => {
                                         return (
-                                        <section className='imagebox' key={ index }>
-                                            <div>
-                                                <img src={temp} className='baseimage'/>
-                                            </div>
                                             <div>{item}</div>
-                                        </section>
                                     ) 
                                     })}
                                 </div>
@@ -81,7 +130,7 @@ function ViewList() {
                         </div>
                 </div>
                 <div className='container'>
-                    <h2>Followers List</h2>
+                    <h2>Followers List:</h2>
                     <div>
                         {
                             nobodyFollows && (
@@ -93,15 +142,10 @@ function ViewList() {
                         {
                             nobodyFollows === false && (
                                 <div>
-                                    {blockedUsernames.map((item,  index) => {
+                                    {followedUsernames.map((item,  index) => {
                                         return (
-                                        <section className='imagebox' key={index}>
-                                            <div>
-                                                <img src={temp} className='baseimage'/>
-                                            </div>
                                             <div>{item}</div>
-                                        </section>
-                                    ) 
+                                        ) 
                                     })}
                                 </div>
                             )
@@ -113,7 +157,7 @@ function ViewList() {
                         {
                             nobodyBlocked && (
                                 <div>
-                                    <p>Nobody Users Blocked!</p>
+                                    <p>No Users Blocked!</p>
                                 </div>
                             )
                         }
@@ -122,13 +166,8 @@ function ViewList() {
                                 <div>
                                     {blockedUsernames.map((item,  index) => {
                                         return (
-                                        <section className='imagebox' key={index}>
-                                            <div>
-                                                <img src={temp} className='baseimage'/>
-                                            </div>
                                             <div>{item}</div>
-                                        </section>
-                                    ) 
+                                        ) 
                                     })}
                                 </div>
                             )

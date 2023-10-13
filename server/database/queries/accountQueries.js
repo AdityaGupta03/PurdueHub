@@ -89,6 +89,7 @@ async function checkAccountFromUsernameQuery(username) {
 
   try {
     const db_res = await pool.query(query, data);
+    console.log("Username exists: " + db_res.rows.length > 0);
     return db_res.rows.length > 0;
   } catch (error) {
     console.error(error);
@@ -149,7 +150,7 @@ async function unblockUserQuery(unblock_user_id, user_id) {
 }
 
 async function getFollowedUsersQuery(user_id) {
-  const query = "SELECT follow FROM users WHERE user_id = $1";
+  const query = "SELECT array_agg(username) AS following FROM users WHERE user_id = ANY(SELECT unnest(follow) FROM users WHERE username = $1)";
   const data = [ user_id ];
 
   try {
@@ -229,7 +230,7 @@ async function checkAccountFromUsernameQuery(username) {
 }
 
 async function getBlockListQuery(user_id) {
-  const query = "SELECT username FROM users WHERE user_id = ANY(SELECT blocked FROM users WHERE user_id = $1)";
+  const query = "SELECT array_agg(username) AS blocked_username FROM users WHERE user_id = ANY(SELECT unnest(blocked) FROM users WHERE username = $1);";
   const data = [ user_id ];
 
   try {
@@ -243,7 +244,7 @@ async function getBlockListQuery(user_id) {
 
 
 async function getFollowedByUsersQuery(user_id) {
-  const query = "SELECT username FROM users WHERE user_id = ANY(SELECT follow FROM users WHERE user_id = $1)";
+  const query = "SELECT array_agg(u.username) AS followers FROM users AS u WHERE u.user_id = ANY(SELECT user_id FROM users WHERE $1 = ANY(users.follow))";
   const data = [ user_id ];
 
   try {

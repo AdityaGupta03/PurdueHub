@@ -350,16 +350,12 @@ async function getFollowedUsers(req, res) {
 
   try {
     const follow_ids = await accountQueries.getFollowedUsersQuery(username);
-    if (follow_ids === null) {
-      return res.status(500).json({ error: "Internal Server Error" });
+    console.log(follow_ids.rows[0].following);
+    if (follow_ids.rows[0].following === null) {
+      return res.status(200).json({ following: [] });
     }
 
-    const follow_usernames = await accountQueries.getUsernamesFromIDSQuery(follow_ids);
-    if (follow_usernames === null) {
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
-
-    return res.status(200).json({ following: follow_usernames });
+    return res.status(200).json({ following: follow_ids.rows[0].following });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Error getting follow list" });
@@ -379,13 +375,22 @@ async function getFollowedBy(req, res) {
     return res.status(404).json({ error: "No account found with username provided."});
   }
 
-  try {
-    const usernames = await accountQueries.getFollowedByUsersQuery(username);
-    if (ids === null) {
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
+  const account_info = await accountQueries.getUserInfoFromUsernameQuery(username);
+  if (account_info === null) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+  const user_id = account_info.user_id;
 
-    return res.status(200).json({ followed_by: usernames });
+  try {
+    console.log(user_id);
+    const usernames = await accountQueries.getFollowedByUsersQuery(user_id);
+    console.log(usernames.rows[0].followers);
+    if (usernames.rows[0].followers === null) {
+      return res.status(200).json({ followed_by: [] });
+    }
+    console.log(usernames);
+
+    return res.status(200).json({ followed_by: usernames.rows[0].followers });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Error getting people who follow user" });
@@ -458,9 +463,11 @@ async function getBlockList(req, res) {
   console.log("[INFO] Get block list api.");
   const { username } = req.body;
 
+  console.log("username: " + username);
+
   const acc_exists = await accountQueries.checkAccountFromUsernameQuery(username);
   if (!acc_exists) {
-    return res.status(404).json({ error: "No account found with username provided "});
+    return res.status(404).json({ error: "No account found with username provided" });
   }
 
   try {
@@ -468,8 +475,11 @@ async function getBlockList(req, res) {
     if (usernames === null) {
       return res.status(500).json({ error: "Internal Server Error" });
     }
-
-    return res.status(200).json({ blocked: usernames });
+    console.log(usernames.rows[0].blocked_username);
+    if (usernames.rows[0].blocked_username == null) {
+      return res.status(200).json({ blocked: [] });
+    }
+    return res.status(200).json({ blocked: usernames.rows[0].blocked_username });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
