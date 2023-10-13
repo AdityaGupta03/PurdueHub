@@ -16,6 +16,7 @@ import ReportSubmission from './Report';
 
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './App.css' // This is a temporary file pulled from tutorial
+import ReportSubmission from './ReportSubmission';
 
 function App() {
 
@@ -40,7 +41,8 @@ function App() {
         <Route path='/verify_email/:email' element={<VerifyEmail />} />
         <Route path='/viewlist' element={<ViewList />} />
         <Route path='/calendar' element={<ViewCalendar />} />
-        <Route path='/report/' element={<ReportSubmission />} />
+
+        <Route path='/report' element={<ReportSubmission />} />
       </Routes>
     </BrowserRouter>
     </main>
