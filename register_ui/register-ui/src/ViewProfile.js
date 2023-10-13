@@ -12,6 +12,7 @@ function ViewProfile() {
     const user_id = localStorage.getItem('user_id');
     const [bio, setBio] = useState(''); // bio is empty at first
     const [ isBlocked, setIsBlocked ] = useState(false); // not blocked yet
+    const [ isBanned, setIsBanned ] = useState(false); // not banned yet
     const[isFollow, setIsFollow] = useState(false); // not followed yet
 
     // INITIAL RENDERING 
@@ -42,6 +43,9 @@ function ViewProfile() {
             if (response.status === 200) {
                 console.log(data);
                 setBio(data.user_info.bio);
+                if (data.user_info.banned == 1) {
+                    setIsBanned(true);
+                }
             } else {
                 console.log(data.error)
             }
@@ -244,6 +248,9 @@ function ViewProfile() {
         <h1>{username}'s Profile</h1>
         {
             isBlocked ? null : <img className='landscape' src={temp} alt="Profile Picture"/>
+        }
+        {
+            isBanned ? <h2>Account has been banned!</h2> : null
         }
         <span>
             <h2>Username: {username}</h2>
