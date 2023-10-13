@@ -16,7 +16,6 @@ import ReportSubmission from './Report';
 
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './App.css' // This is a temporary file pulled from tutorial
-import ReportSubmission from './ReportSubmission';
 
 function App() {
 
