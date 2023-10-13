@@ -47,6 +47,15 @@
     box-sizing: border-box;
 }
 
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; 
+  padding: 1rem 0.5rem;
+}
+
 html {
     font-family: 'Nunito', sans-serif;
     font-size: 22px;
@@ -56,15 +65,6 @@ html {
 body {
     min-height: 100vh;
     background-color: #CEB888;
-}
-
-.App {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh; 
-  padding: 1rem 0.5rem;
 }
 
 section {

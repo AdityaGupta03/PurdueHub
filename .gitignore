@@ -6,3 +6,26 @@
 
 # NPM specific
 *package-lock.json
+
+# Front-end specific (React, etc.)
+*.pnp
+*.pnp.js
+
+# testing
+*coverage
+
+# production
+*build
+*uploads
+*uploads*
+
+# misc
+*.DS_Store
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+
+*npm-debug.log*
+*yarn-debug.log*
+*yarn-error.log*

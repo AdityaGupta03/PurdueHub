@@ -6,10 +6,11 @@
 
 import {useRef, useState, useEffect} from 'react';
 import React from 'react'
-import { Link, Route } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
+    // Helps us route pages
+    const navigate = useNavigate();
     /* 
      * useRef understanding: ref doesn't reupdate when it gets changed,
      * has a 'current' property, as opposed to rerendering with state, ref 
@@ -109,9 +110,6 @@ const Register = () => {
         setErrMsg('');
     }, [user, pwd, matchPwd, email])
 
-    
-    const existingUsername = "david123"; // fake data test to check what happens if a username is already taken
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         // avoid JS tricks from enabling user submit button,
@@ -124,17 +122,31 @@ const Register = () => {
             return; 
         }
         
-        // INSERT DATA TO SEND TO BACKEND HERE 
+        // INSERT DATA TO SEND TO BACKEND HERE
+        try {
+            const response = await fetch("http://127.0.0.1:5000/api/create_account", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "username": user, "email": email, "password": pwd }),
+            });
 
-        if(user === existingUsername) {
-            setErrMsg('Username is already taken, create a new username');
-            errRef.current.focus();
-        }
-        else {
-            setSuccess(true);
-        }
+            console.log(response);
+            const data = await response.json();
 
-    }  
+            if (response.status === 200) {
+                navigate("/login");
+            } else {
+                const err_msg = "Error: " + data.error;
+                setErrMsg(err_msg);
+            }
+        } catch (error) {
+            console.log('Error:', error);
+            setErrMsg('An error occurred while creating the account');
+        }
+    }
+    
 
 
     return (

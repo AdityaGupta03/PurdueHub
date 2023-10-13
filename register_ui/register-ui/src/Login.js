@@ -1,13 +1,11 @@
 import React from 'react';
 import {useRef, useState, useEffect} from 'react';
-import { Link, Route } from 'react-router-dom';
-
-import Register from './Register';
-import Home from './Home';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 export const Login = () => {
-    
+    const navigate = useNavigate();
+
     const userRef = useRef(); // set user focus on first input when the form loads 
     const errRef = useRef(); // set focus on errors if they occur, good for accessibility pursposes as well
     
@@ -29,12 +27,33 @@ export const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault(); // avoid reloading the page as default
 
-        // INSERT BACKEND LOGIC HERE 
+        try {
+            const response = await fetch("http://127.0.0.1:5000/api/login", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "username": user, "password": pwd }),
+            });
 
-        console.log(user, pwd);
-        setUser('');
-        setPwd('');
-        setSuccess(true);
+            const data = await response.json();
+
+            if (response.status === 200) {
+                sessionStorage.setItem("user_id", data.user_id);
+                sessionStorage.setItem("username", user);
+                sessionStorage.setItem("isLoggedIn", "true");
+                setSuccess(true);
+            } else {
+                const error_msg = "Error: " + data.error;
+                console.log(error_msg);
+                setErrMsg(error_msg);
+                setSuccess(false);
+                errRef.current.focus();
+            }
+        } catch (error) {
+            console.log('Error:', error);
+            setErrMsg('Error occurred when logging in');
+        }
     }
     return (
         <>

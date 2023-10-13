@@ -1,8 +1,8 @@
 import {useRef, useState, useEffect} from 'react';
-import { Link } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
 
 export const ForgotUsername = () => {
+    const navigate = useNavigate();
 
     const EMAIL_REGEX = /^[A-Za-z0-9._%+-]+@purdue\.edu$/; // regex for email validity (has @purdue.edu in it)
 
@@ -31,23 +31,35 @@ export const ForgotUsername = () => {
         e.preventDefault(); // avoid reloading the page as default
         const resultTemp = EMAIL_REGEX.test(email); // test validity (has @purdue.edu in it)
 
-        // INSERT BACKEND LOGIC HERE 
-
-        // if it isnt temp email = not exists error
-        // if it isnt @purdue.edu = error 
-        if(email === TEMP_EMAIL) {
-            setEmail('');
-            setSuccess(true);
-        }
-        else if(resultTemp){
-            setErrMsg("Email Does Not Exist");
+        if (!resultTemp) { // Is invalid email
+            setErrMsg("Invalid email, please enter a valid @purdue.edu email");
             errRef.current.focus();
+            return;
         }   
-        else {
-            setErrMsg("Email is not valid, lacks @purdue.edu");
-            errRef.current.focus();
+        
+        try {
+            const response = await fetch("http://127.0.0.1:5000/api/request_new_username", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "email": email }),
+            });
+
+            const data = await response.json();
+
+            if (response.status === 200) {
+                sessionStorage.setItem('user_email', email);
+                navigate("/username-authentication-code");
+            } else {
+                const error_msg = "Error: " + data.error;
+                setErrMsg(error_msg);
+            }
+        } catch (error) {
+            console.log('Error:', error);
+            setErrMsg('Error occurred when changing username');
         }
-}
+    }
 
   return (
     <>

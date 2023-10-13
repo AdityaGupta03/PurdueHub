@@ -1,9 +1,11 @@
 import {useRef, useState, useEffect} from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
 
 export const ChangePassword = () => {
-
-    const previousPassword = "pass123!"; // testing (check if the password already is the same)
+    const navigate = useNavigate();
+    
+    const username = sessionStorage.getItem('username');
 
     const PWD_REGEX = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
@@ -27,14 +29,7 @@ export const ChangePassword = () => {
         e.preventDefault(); // avoid reloading the page as default
         const resultTemp = PWD_REGEX.test(pwd); // test validity (has @purdue.edu in it)
     
-        // INSERT BACKEND LOGIC HERE 
-
-        if(pwd === previousPassword) {
-            setErrMsg('Password was already used before, try again');
-            setSuccess(false);
-            errRef.current.focus();
-        }
-        else if(!resultTemp) {
+        if (!resultTemp) { // Not a valid password
             const str = <>
                 8 to 24 characters. <br/>
                 Must include uppercase and lowercase letters, a number, and a special character (!@#$%)<br />
@@ -42,11 +37,29 @@ export const ChangePassword = () => {
             setErrMsg(str);
             setSuccess(false);
             errRef.current.focus();
-        }
-        else {
-            setSuccess(true);
+            return;
         }
 
+        try {
+            const response = await fetch("http://127.0.0.1:5000/api/update_password", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "password": pwd, "username": username }),
+            });
+
+            const data = await response.json();
+
+            if (response.status === 200) {
+                navigate("/login");
+            } else {
+                setErrMsg(data.error);
+            }
+        } catch (error) {
+            console.log('Error:', error);
+            setErrMsg('Error occurred when changing password');
+        }
     }
     return (
         <>
