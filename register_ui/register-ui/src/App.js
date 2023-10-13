@@ -19,6 +19,7 @@ import './App.css' // This is a temporary file pulled from tutorial
 function App() {
 
   sessionStorage.setItem('isLoggedIn', "false");
+  localStorage.setItem('isLoggedIn', "false");
 
   return (
     <main className='App'>
