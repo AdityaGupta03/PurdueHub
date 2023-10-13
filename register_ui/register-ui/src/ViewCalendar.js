@@ -47,6 +47,9 @@ export default function ViewCalendar() {
     const[newEvent, setNewEvent] = useState({title: "", start: "", end: ""})
     const[isCreating, setisCreating] = useState(false);
 
+    const[startTime, setStartTime] = useState(0);
+    const[endTime, setEndTime] = useState(0);
+
     useEffect(() => {
         setErrMsg('');
     }, [newEvent.title, newEvent.start, newEvent.end])
@@ -67,8 +70,10 @@ export default function ViewCalendar() {
             return;
         }
         setAllEvents([...allEvents, newEvent])
-        const check = new Date(newEvent.start);
-        console.log(check);
+        //const check = new Date(newEvent.start);
+        //console.log(check);
+        console.log(startTime);
+        console.log(endTime);
     }
 
     const filterPassedTime = (time) => {
@@ -79,6 +84,25 @@ export default function ViewCalendar() {
         return currentDate.getTime() < selectedDate.getTime();
     };
 
+    const grabStartTIme = (time) => {
+        setStartTime(time.getHours());
+    }
+
+    const grabEndTime = (time) => {
+        setEndTime(time.getHours());
+    }
+
+    // REMOVE EVENTS LOGIC
+    const handleRemove = (e) => {
+        console.log('Hello')
+        const r = window.confirm("Would you like to remove this event?")
+        if(r === true){
+             const events = allEvents;
+             const idx = events.indexOf(e);
+             events.splice(idx, 1);
+             setAllEvents(events);
+          }
+    }
     return (
     <div className="App">
         <h1>Your Calendar</h1>
@@ -96,6 +120,8 @@ export default function ViewCalendar() {
             <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</p>
             <DatePicker placeholderText="Start Date" 
             showTimeSelect
+            //timeClassName={grabStartTIme}
+            minDate={new Date()}
             filterTime={filterPassedTime}
             style={{marginRight: "10px"}}
             selected={newEvent.start} 
@@ -104,6 +130,8 @@ export default function ViewCalendar() {
             <DatePicker placeholderText="End Date" 
             showTimeSelect
             filterTime={filterPassedTime}
+            minDate={new Date()}
+            //timeClassName={grabEndTime}
             style={{marginRight: "10px"}}
             selected={newEvent.end} 
             onChange={(end) => setNewEvent ({...newEvent, end})}
@@ -114,7 +142,9 @@ export default function ViewCalendar() {
         </div>
         <Calendar localizer={localizer} events={allEvents} 
         startAccessor="start" endAccessor="end" 
-        style={{height: 500, margin:"50px"}}/>
+        style={{height: 500, margin:"50px"}}
+        onSelectEvent={handleRemove}
+        />
     </div>
   )
 }
