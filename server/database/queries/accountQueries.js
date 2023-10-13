@@ -138,7 +138,7 @@ async function blockUserQuery(block_user_id, user_id) {
 
 async function unblockUserQuery(unblock_user_id, user_id) {
   const query = "UPDATE users SET blocked = array_remove(blocked, $1) WHERE user_id = $2";
-  const data = [ block_user_id, user_id ];
+  const data = [ unblock_user_id, user_id ];
 
   try {
     await pool.query(query, data);

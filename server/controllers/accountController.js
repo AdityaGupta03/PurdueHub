@@ -281,11 +281,13 @@ async function unblockUser(req, res) {
 
   try {
     const unblocked_user_info = await accountQueries.getUserInfoFromUsernameQuery(unblock_username);
+    console.log(unblocked_user_info);
     if (unblocked_user_info === null) {
       return res.status(404).json({ error: "User not found" });
     }
 
     const unblock_user_id = unblocked_user_info.user_id;
+    console.log(unblock_user_id);
 
     const db_res = await accountQueries.unblockUserQuery(unblock_user_id, user_id);
     if (!db_res) {
