@@ -2,6 +2,7 @@ const accountQueries = require("../database/queries/accountQueries");
 const calendarQueries = require("../database/queries/calendarQueries");
 const helperFuncs = require("./helperFunctions");
 const verificationQueries = require("../database/queries/verificationQueries");
+const { saveToDatabase } = require("../server");
 
 async function createAccount(req, res) {
   console.log("[INFO] Creating account api.");
@@ -126,7 +127,6 @@ async function login(req, res) {
   return res.status(200).json({ message: "Successfully logged in", user_id: user_id });
 }
 
-
 async function updateUsername(req, res) {
   console.log("[INFO] Update username api.");
   try {
@@ -146,6 +146,36 @@ async function updateUsername(req, res) {
     }
 
     const db_res = await accountQueries.updateUsernameQuery(email, newUsername);
+    if (!db_res) {
+      return res.status(500).json({ error: "Internal server error" });
+    } else {
+      return res.status(200).json({ message: "Successfully updated username" });
+    }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ error: "Error updating username" });
+  }
+}
+
+async function updateUsernameFromID(req, res) {
+  console.log("[INFO] Update username api.");
+  try {
+    const { newUsername, user_id } = req.body;
+
+    if (!user_id) {
+      return res.status(400).json({ error: "Missing user_id" });
+    }
+
+    if (!newUsername) {
+      return res.status(400).json({ error: "Missing new username" });
+    }
+
+    const isUnique = await accountQueries.isUniqueUsernameQuery(newUsername);
+    if (!isUnique) {
+      return res.status(400).json({ error: "Not unique username" });
+    }
+
+    const db_res = await accountQueries.updateUsernameFromIDQuery(user_id, newUsername);
     if (!db_res) {
       return res.status(500).json({ error: "Internal server error" });
     } else {
@@ -513,6 +543,63 @@ async function updatePassword(req, res) {
   return res.status(200).json({ message: "Successfully updated password" });
 }
 
+async function getProfileData(req, res) {
+  console.log("[INFO] Get profile data api.");
+  const { username } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ error: "Missing username field" });
+  }
+
+  const user_info = await accountQueries.getUserInfoFromUsernameQuery(username);
+  console.log(user_info);
+  if (user_info == null) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  return res.status(200).json({ message: "Got user info", user_info: user_info });
+}
+
+async function editProfileBio(req, res) {
+  console.log("[INFO] Edit profile page bio.");
+  try {
+      const { bio, user_id } = req.body;
+      const updateResult = await accountQueries.editBioQuery(bio, user_id);
+      if (updateResult == true) {
+          console.log("User Bio updated succesfully");
+      } else {
+          console.log("User bio updated failed!");
+          return res.status(500).json({ error: "Error updating bio" });
+      }
+
+      return res.status(200).json({ message: "Successfully updated bio" });
+  } catch (err) {
+      console.log(err.message);
+      return res.status(500).json({ error: "Error updating bio" });
+  }
+}
+
+async function editProfilePicture(req, res) {
+  const { username, file } = req.body
+  console.log(req.body);
+  
+  if (!username) {
+    return res.status(400).json({ error: "Missing username field" });
+  }
+
+  if (!file) {
+    return res.status(400).json({ error: "Missing file " });
+  }
+
+  let pathInDB = "uploads/" + saveToDatabase;
+  const db_res = await accountQueries.updateProfilePicQuery(pathInDB, username);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully updated profile picture" });
+}
+
 module.exports = {
   createAccount,
   updateUsername,
@@ -528,4 +615,8 @@ module.exports = {
   verifyPasswordResetCode,
   updatePassword,
   login,
+  getProfileData,
+  updateUsernameFromID,
+  editProfileBio,
+  editProfilePicture,
 };

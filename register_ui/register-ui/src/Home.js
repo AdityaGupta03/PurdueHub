@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 export default function Home() {
@@ -17,6 +17,7 @@ export default function Home() {
     <section>
       <h1>Welcome to PurdueHub!</h1>
       <p>An application targeted to students of Purdue University</p>
+      <Link to="/userprofile">View Profile</Link>
     </section>
   )
 }
