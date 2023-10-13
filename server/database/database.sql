@@ -34,6 +34,13 @@ CREATE TABLE calendars (
   calendar_events_arr INTEGER[] DEFAULT ARRAY[]::INTEGER[]
 );
 
+CREATE TABLE reports (
+  id SERIAL PRIMARY KEY,
+  reported_username VARCHAR(255) NOT NULL,
+  reporter_username VARCHAR(255) NOT NULL,
+  reason TEXT NOT NULL
+);
+
 ALTER TABLE users
 ADD FOREIGN KEY (calendar_id) REFERENCES calendars (id);
 

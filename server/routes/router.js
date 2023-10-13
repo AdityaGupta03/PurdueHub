@@ -31,5 +31,8 @@ router.post("/update_bio", accountController.editProfileBio);
 router.post("/ban_account", accountController.banAccount);
 router.post("/mark_delete_account", accountController.markDeleteAccount);
 router.post("/revoke_ban", accountController.revokeBan);
+router.post("/report_user", accountController.reportUser);
+router.post("/ignore_report", accountController.ignoreReport);
+router.post("/ban_report", accountController.banFromReport);
 
 module.exports = router;

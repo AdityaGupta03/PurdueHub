@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 
 import './Profile.css' // css pulled online
 import temp from './temporary-profile.jpeg' // temp picture
-
 
 function ViewProfile() {
     const navigate = useNavigate();
@@ -246,6 +245,7 @@ function ViewProfile() {
   return (
     <div>
         <h1>{username}'s Profile</h1>
+        <Link to="/report">Report user</Link>
         {
             isBlocked ? null : <img className='landscape' src={temp} alt="Profile Picture"/>
         }

@@ -2,6 +2,7 @@ const accountQueries = require("../database/queries/accountQueries");
 const calendarQueries = require("../database/queries/calendarQueries");
 const helperFuncs = require("./helperFunctions");
 const verificationQueries = require("../database/queries/verificationQueries");
+const reportQueries = require("../database/queries/reportQueries");
 const { saveToDatabase } = require("../server");
 
 async function createAccount(req, res) {
@@ -736,6 +737,102 @@ async function revokeBan(req, res) {
   return res.status(200).json({ message: "Successfully revoked ban on account" });
 }
 
+async function reportUser(req, res) {
+  const { reported, reportee, msg } = req.body;
+
+  if (!reported) {
+    return res.status(400).json({ error: "Missing reported field" });
+  }
+
+  if (!reportee) {
+    return res.status(400).json({ error: "Missing reportee field" });
+  }
+
+  if (!msg || msg == "") {
+    return res.status(400).json({ error: "Missing msg field" });
+  }
+
+  const account = await accountQueries.getUserInfoFromUsernameQuery(reported);
+  if (account == null) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  const subject = 'Your Purdue account has been reported.';
+  const em_msg = "Your account has been reported for the following reason: " + msg + "\n\nPlease contact the PurdueHub team for more information.";
+  const email = account.email;
+  await helperFuncs.sendEmail(email, subject, em_msg);
+
+  const db_res = await reportQueries.addReportQuery(reported, reportee, msg);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully reported user" });
+}
+
+async function ignoreReport(req, res) {
+  const { id, email } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ error: "Missing id field" });
+  }
+
+  if (!email) {
+    return res.status(400).json({ error: "Missing email field" });
+  }
+
+  const subject = 'Your Purdue  report has been ignored.';
+  const msg = "Your report has been ignored.";
+  await helperFuncs.sendEmail(email, subject, msg);
+
+  const db_res = await reportQueries.deleteReportQuery(id);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully ignored report" });
+}
+
+async function banFromReport(req, res) {
+  const { id, ban_id, reported_email, reporter_email } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ error: "Missing id field" });
+  }
+
+  if (!ban_id) {
+    return res.status(400).json({ error: "Missing ban_id field" });
+  }
+
+  if (!reported_email) {
+    return res.status(400).json({ error: "Missing reported_email field" });
+  }
+
+  if (!reporter_email) {
+    return res.status(400).json({ error: "Missing reporter_email field" });
+  }
+
+  let subject = 'Your Purdue report has been resulted in a ban!';
+  let msg = "Your report has been resulted in a ban!";
+  await helperFuncs.sendEmail(reporter_email, subject, msg);
+
+  subject = "Your Purdue account has been banned from a previous report";
+  msg = "Your account has been banned from a previous report";
+  await helperFuncs.sendEmail(reported_email, subject, msg);
+
+  let db_res = await reportQueries.deleteReportQuery(id);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  db_res = await accountQueries.banAccountQuery(ban_id);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully banned user" });
+}
+
 module.exports = {
   createAccount,
   updateUsername,
@@ -760,4 +857,7 @@ module.exports = {
   banAccount,
   markDeleteAccount,
   revokeBan,
+  reportUser,
+  ignoreReport,
+  banFromReport,
 };
