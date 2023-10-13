@@ -17,6 +17,8 @@ const UserProfile = () => {
     const [errMsg, setErrMsg] = useState('');
     const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;;
 
+    const [validUserName, setValidUserName] = useState(false);
+    const [userFocus, setUserFocus] = useState(false);
 
     // FAKE DATA
     // Be able to set functions for buttons: save and edit
@@ -162,11 +164,13 @@ const UserProfile = () => {
     };
 
     useEffect(() => {
+        const result = USER_REGEX.test(username); // peforms boolean to see if user follows the user_regex pattern
+        setValidUserName(result); 
         const isLoggedIn = sessionStorage.getItem('isLoggedIn');
         if (isLoggedIn == "false") {
             navigate('/login');   
         }
-
+        
         fetchProfileData();
         setErrMsg('');
     }, [username])
@@ -175,6 +179,12 @@ const UserProfile = () => {
         <>
         {isEditing ? (
             <section>
+                <p className={userFocus && username && !validUserName
+                     ? "instructions": "offscreen"}>
+                    4 to 24 characters. <br/>
+                    Must begin with a letter. <br/>
+                    Letters, numbers, underscores, hyphens allowed.
+                </p>
                 <p className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</p>
                 <label htmlFor='username'> 
                     Username: 
@@ -186,6 +196,8 @@ const UserProfile = () => {
                     value={username}
                     autoComplete='off'
                     onChange={(e) => setUsername(e.target.value)}
+                    onFocus={() => setUserFocus(true)} // 
+                    onBlur={() => setUserFocus(false)} // 
                 />
                 <label htmlFor='profilePic'> 
                     Profile Picture: 
