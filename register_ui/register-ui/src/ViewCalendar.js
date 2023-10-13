@@ -2,7 +2,7 @@ import format from "date-fns/format";
 import getDay from "date-fns/getDay";
 import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect} from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DatePicker from "react-datepicker";
@@ -41,27 +41,49 @@ const events = [
 ];
 
 export default function ViewCalendar() {
+    const errRef = useRef(); /* Set focus on an error, to allow accessibility purposes */
+
+    const[errMsg, setErrMsg] = useState('');
     const[newEvent, setNewEvent] = useState({title: "", start: "", end: ""})
-    
+    const[isCreating, setisCreating] = useState(false);
+
+    useEffect(() => {
+        setErrMsg('');
+    }, [newEvent.title, newEvent.start, newEvent.end])
+
     const [allEvents, setAllEvents] = useState(events);
     // pushes new event onto the array of all events so far
     function handleAddEvent() {
+        if(newEvent.title === "") {
+            setErrMsg('Event Not Possible: Empty Title!');
+            return;
+        }
+        if(newEvent.start === "") {
+            setErrMsg('Event Not Possible: Empty Start Date!');
+            return;
+        }
+        if(newEvent.end === "") {
+            setErrMsg('Event Not Possible: Empty End Date!');
+            return;
+        }
         setAllEvents([...allEvents, newEvent])
-        console.log(newEvent.start);
-        console.log(newEvent.end);
+        const check = new Date(newEvent.start);
+        console.log(check);
     }
 
     const filterPassedTime = (time) => {
         const currentDate = new Date();
         const selectedDate = new Date(time);
-    
+        
+        
         return currentDate.getTime() < selectedDate.getTime();
     };
 
     return (
     <div className="App">
-        <h1>Calendar</h1>
-        <h2>Add New Event</h2>
+        <h1>Your Calendar</h1>
+        <br />
+        <h2>Add New Event:</h2>
         <div>
             <input type="text"
                 placeholder="Add Title"
@@ -71,6 +93,7 @@ export default function ViewCalendar() {
                     {...newEvent, title: e.target.value}
                 )}
                 />
+            <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</p>
             <DatePicker placeholderText="Start Date" 
             showTimeSelect
             filterTime={filterPassedTime}
