@@ -322,6 +322,73 @@ async function updateProfilePicQuery(profile_picture, username) {
   }
 }
 
+async function checkBannedQuery(username) {
+  const query = "SELECT banned FROM users WHERE username = $1";
+  const data = [ username ];
+
+  try {
+    const db_res = await pool.query(query, data);
+    console.log(db_res.rows[0].banned);
+    return db_res.rows[0].banned == 1;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function checkDeleteQuery(username) {
+  const query = "SELECT markdeleted FROM users WHERE username = $1";
+  const data = [ username ];
+
+  try {
+    const db_res = await pool.query(query, data);
+    console.log(db_res.rows[0].markdeleted);
+    return db_res.rows[0].markdeleted == 1;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function banAccountQuery(user_id) {
+  const query = "UPDATE users SET banned = 1, banemail = 1 WHERE user_id = $1";
+  const data = [ user_id ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function markDeleteAccountQuery(user_id) {
+  const query = "UPDATE users SET markdeleted = 1, deleteemail = 1 WHERE user_id = $1";
+  const data = [ user_id ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function revokeBanQuery(user_id) {
+  const query = "UPDATE users SET banned = 0, banemail = 0, markdeleted = 0, deleteemail = 0 WHERE user_id = $1";
+  const data = [user_id];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -346,4 +413,9 @@ module.exports = {
   updateUsernameFromIDQuery,
   editBioQuery,
   updateProfilePicQuery,
+  checkBannedQuery,
+  checkDeleteQuery,
+  banAccountQuery,
+  markDeleteAccountQuery,
+  revokeBanQuery,
 };

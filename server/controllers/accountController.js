@@ -108,6 +108,16 @@ async function login(req, res) {
     return res.status(404).json({ error: "No account found with username provided "});
   }
 
+  const isBanned = await accountQueries.checkBannedQuery(username);
+  if (isBanned) {
+    return res.status(400).json({ error: "Account is banned" });
+  }
+
+  const isDelete = await accountQueries.checkDeleteQuery(username);
+  if (isDelete) {
+    return res.status(400).json({ error: "Account is deleted" });
+  }
+
   const account = await accountQueries.getUserInfoFromUsernameQuery(username);
   if (account === null) {
     return res.status(500).json({ error: "Internal Server Error" });
@@ -669,6 +679,63 @@ async function editProfilePicture(req, res) {
   return res.status(200).json({ message: "Successfully updated profile picture" });
 }
 
+async function banAccount(req, res) {
+  const { user_id, email } = req.body;
+
+  if (!user_id) {
+    return res.status(400).json({ error: "Missing user_id field" });
+  }
+
+  const subject = 'Your Purdue account has been banned';
+  const msg = "Your account has been banned";
+  await helperFuncs.sendEmail(email, subject, msg);
+
+  const db_res = await accountQueries.banAccountQuery(user_id);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully banned account" });
+}
+
+async function markDeleteAccount(req, res) {
+  const { user_id, email } = req.body;
+
+  if (!user_id) {
+    return res.status(400).json({ error: "Missing user_id field" });
+  }
+
+  const subject = 'Your Purdue account has been marked deleted';
+  const msg = "Your account has been marked deleted";
+  await helperFuncs.sendEmail(email, subject, msg);
+
+  const db_res = await accountQueries.markDeleteAccountQuery(user_id);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully marked deleted account" });
+}
+
+async function revokeBan(req, res) {
+  const { user_id, email } = req.body;
+
+  if (!user_id) {
+    return res.status(400).json({ error: "Missing user_id field" });
+  }
+
+  const subject = 'Your Purdue account ban/deletion has been revoked';
+  const msg = "Your account ban/deletion has been revoked!";
+  await helperFuncs.sendEmail(email, subject, msg);
+
+  const db_res = await accountQueries.revokeBanQuery(user_id);
+  if (!db_res) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully revoked ban on account" });
+}
+
 module.exports = {
   createAccount,
   updateUsername,
@@ -690,4 +757,7 @@ module.exports = {
   updateUsernameFromID,
   editProfileBio,
   editProfilePicture,
+  banAccount,
+  markDeleteAccount,
+  revokeBan,
 };
