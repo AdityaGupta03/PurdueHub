@@ -55,6 +55,7 @@ export default function ViewCalendar() {
     }, [newEvent.title, newEvent.start, newEvent.end])
 
     const [allEvents, setAllEvents] = useState(events);
+
     // pushes new event onto the array of all events so far
     function handleAddEvent() {
         if(newEvent.title === "") {
@@ -92,59 +93,149 @@ export default function ViewCalendar() {
         setEndTime(time.getHours());
     }
 
-    // REMOVE EVENTS LOGIC
-    const handleRemove = (e) => {
-        console.log('Hello')
-        const r = window.confirm("Would you like to remove this event?")
+    const [editedEvent, setEditedEvent] = useState({title: "", start: "", end: ""});
+
+    const handleTitleChange = (e) => {
+        setEditedEvent({ ...editedEvent, title: e.target.value });
+      };
+    
+      const handleStartChange = (date) => {
+        setEditedEvent({ ...editedEvent, start: date });
+      };
+    
+      const handleEndChange = (date) => {
+        setEditedEvent({ ...editedEvent, end: date });
+      };
+    
+      const handleSave = () => {
+        if(editedEvent.title === "") {
+            setErrMsg('Event Not Possible: Empty Title!');
+            return;
+        }
+        if(editedEvent.start === "") {
+            setErrMsg('Event Not Possible: Empty Start Date!');
+            return;
+        }
+        if(editedEvent.end === "") {
+            setErrMsg('Event Not Possible: Empty End Date!');
+            return;
+        }
+        setAllEvents([...allEvents, editedEvent])
+        setisCreating(false);
+    };
+      const onCancel = () => {
+        setAllEvents([...allEvents, editedEvent])        
+        setisCreating(false);
+    };
+    const onDelete = () => {
+        const events = allEvents;
+        const idx = events.indexOf(editedEvent);
+        events.splice(idx, 1);
+        setAllEvents(events);
+        setisCreating(false);
+    };
+    // click on it
+    // edit = remove it initially, cancel = add back it into allevents
+    // save = add new event into all events
+    // remove = remove it
+    
+    {/*const r = window.confirm("Would you like to remove this event?")
         if(r === true){
              const events = allEvents;
              const idx = events.indexOf(e);
              events.splice(idx, 1);
              setAllEvents(events);
-          }
+        }
+        else {
+
+        } */}
+
+    // REMOVE EVENTS LOGIC
+    const handleRemove = (e) => {
+        console.log('Hello')
+        setEditedEvent(e);
+        // delete here 
+        const events = allEvents;
+        const idx = events.indexOf(e);
+        events.splice(idx, 1);
+        setAllEvents(events);
+
+        setisCreating(true);
+        // EDITING INFO 
     }
+
     return (
-    <div className="App">
-        <h1>Your Calendar</h1>
-        <br />
-        <h2>Add New Event:</h2>
-        <div>
-            <input type="text"
-                placeholder="Add Title"
-                style={{width: "20%", marginRight: "10px"}}
-                value={newEvent.title} 
-                onChange={(e) => setNewEvent(
-                    {...newEvent, title: e.target.value}
-                )}
+        <>
+            {isCreating == false && (
+                <div className="App">
+                <h1>Your Calendar</h1>
+                <br />
+                <h2>Add New Event:</h2>
+                <div>
+                    <input type="text"
+                        placeholder="Add Title"
+                        style={{width: "20%", marginRight: "10px"}}
+                        value={newEvent.title} 
+                        onChange={(e) => setNewEvent(
+                            {...newEvent, title: e.target.value}
+                        )}
+                        />
+                    <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</p>
+                    <DatePicker placeholderText="Start Date" 
+                    showTimeSelect
+                    //timeClassName={grabStartTIme}
+                    minDate={new Date()}
+                    filterTime={filterPassedTime}
+                    style={{marginRight: "10px"}}
+                    selected={newEvent.start} 
+                    onChange={(start) => setNewEvent ({...newEvent, start})}
+                    />
+                    <DatePicker placeholderText="End Date" 
+                    showTimeSelect
+                    filterTime={filterPassedTime}
+                    minDate={new Date()}
+                    //timeClassName={grabEndTime}
+                    style={{marginRight: "10px"}}
+                    selected={newEvent.end} 
+                    onChange={(end) => setNewEvent ({...newEvent, end})}
+                    />
+                    <button style={{marginTop: "10px"}} onClick={handleAddEvent}>
+                        Add Event
+                    </button>
+                </div>
+                <Calendar localizer={localizer} events={allEvents} 
+                startAccessor="start" endAccessor="end" 
+                style={{height: 500, margin:"50px"}}
+                onSelectEvent={handleRemove}
                 />
-            <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</p>
-            <DatePicker placeholderText="Start Date" 
-            showTimeSelect
-            //timeClassName={grabStartTIme}
-            minDate={new Date()}
-            filterTime={filterPassedTime}
-            style={{marginRight: "10px"}}
-            selected={newEvent.start} 
-            onChange={(start) => setNewEvent ({...newEvent, start})}
-            />
-            <DatePicker placeholderText="End Date" 
-            showTimeSelect
-            filterTime={filterPassedTime}
-            minDate={new Date()}
-            //timeClassName={grabEndTime}
-            style={{marginRight: "10px"}}
-            selected={newEvent.end} 
-            onChange={(end) => setNewEvent ({...newEvent, end})}
-            />
-            <button style={{marginTop: "10px"}} onClick={handleAddEvent}>
-                Add Event
-            </button>
-        </div>
-        <Calendar localizer={localizer} events={allEvents} 
-        startAccessor="start" endAccessor="end" 
-        style={{height: 500, margin:"50px"}}
-        onSelectEvent={handleRemove}
-        />
-    </div>
+            </div>
+            )}
+            {
+                isCreating == true && (
+                    <div>
+                        <input type="text" 
+                        value={editedEvent.title} 
+                        onChange={handleTitleChange} 
+                        filterTime={filterPassedTime}
+                        placeholder={editedEvent.title}/>
+                        <DatePicker 
+                        minDate={new Date()}
+                        showTimeSelect
+                        selected={editedEvent.start} 
+                        onChange={handleStartChange} />
+                        <DatePicker 
+                        showTimeSelect
+                        selected={editedEvent.end} 
+                        filterTime={filterPassedTime}
+                        minDate={new Date()}
+                        onChange={handleEndChange} />
+                        <button onClick={handleSave}>Save</button>
+                        <button onClick={onDelete}>Delete</button>
+                        <button onClick={onCancel}>Cancel</button>
+                    </div>
+                ) 
+            }
+        </>
+    
   )
 }
