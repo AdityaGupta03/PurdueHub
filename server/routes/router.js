@@ -10,6 +10,8 @@ router.post("/reset_username", accountController.updateUsername);
 router.post("/verify_email", accountController.verifyEmail);
 router.post("/block_user", accountController.blockUser);
 router.post("/unblock_user", accountController.unblockUser);
+router.get("/get_follow_list", accountController.getFollowedUsers);
+router.get("/get_followed_by", accountController.getFollowedBy);
 router.post("/follow_user", accountController.followUser);
 router.post("/unfollow_user", accountController.unfollowUser);
 router.get("/get_block_list", accountController.getBlockList);
@@ -26,6 +28,5 @@ router.post("/login", accountController.login);
 router.post("/get_profile_info", accountController.getProfileData);
 router.post("/update_username_id", accountController.updateUsernameFromID);
 router.post("/update_bio", accountController.editProfileBio);
-// router.post("/update_profile_picture", accountController.editProfilePicture);
 
 module.exports = router;

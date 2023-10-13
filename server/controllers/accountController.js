@@ -335,6 +335,63 @@ async function resetUsername(req, res) {
   }
 }
 
+async function getFollowedUsers(req, res) {
+  console.log("[INFO] Get followed users api.");
+  const { username } = req.body;
+  
+  if (!username) {
+    return res.status(400).json({ error: "Missing username" });
+  }
+
+  const acc_exists = await accountQueries.checkAccountFromUsernameQuery(username);
+  if (!acc_exists) {
+    return res.status(404).json({ error: "No account found with username provided."});
+  }
+
+  try {
+    const follow_ids = await accountQueries.getFollowedUsersQuery(username);
+    if (follow_ids === null) {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    const follow_usernames = await accountQueries.getUsernamesFromIDSQuery(follow_ids);
+    if (follow_usernames === null) {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    return res.status(200).json({ following: follow_usernames });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Error getting follow list" });
+  }
+}
+
+async function getFollowedBy(req, res) {
+  console.log("[INFO] Get people who follow user api.");
+  const { username } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ error: "Missing username" });
+  }
+
+  const acc_exists = await accountQueries.checkAccountFromUsernameQuery(username);
+  if (!acc_exists) {
+    return res.status(404).json({ error: "No account found with username provided."});
+  }
+
+  try {
+    const usernames = await accountQueries.getFollowedByUsersQuery(username);
+    if (ids === null) {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    return res.status(200).json({ followed_by: usernames });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Error getting people who follow user" });
+  }
+}
+
 async function followUser(req, res) {
   console.log("[INFO] Follow user api.");
   const { user_id, to_follow_username } = req.body;
@@ -607,6 +664,8 @@ module.exports = {
   blockUser,
   unblockUser,
   resetUsername,
+  getFollowedUsers,
+  getFollowedBy,
   followUser,
   unfollowUser,
   getBlockList,
