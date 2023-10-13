@@ -43,9 +43,13 @@ const events = [
 export default function ViewCalendar() {
     const errRef = useRef(); /* Set focus on an error, to allow accessibility purposes */
 
+    const ref = useRef(null);
+
     const[errMsg, setErrMsg] = useState('');
     const[newEvent, setNewEvent] = useState({title: "", start: "", end: ""})
     const[isCreating, setisCreating] = useState(false);
+
+    const[isAdding, setisAdding] = useState(false);
 
     const[startTime, setStartTime] = useState(0);
     const[endTime, setEndTime] = useState(0);
@@ -75,6 +79,7 @@ export default function ViewCalendar() {
         //console.log(check);
         console.log(startTime);
         console.log(endTime);
+        setisAdding(false);
     }
 
     const filterPassedTime = (time) => {
@@ -131,6 +136,9 @@ export default function ViewCalendar() {
         // already previously deleted, no need to delete again
         setisCreating(false);
     };
+    const onAddCancel = () => {
+        setisAdding(false);
+    }
     // click on it
     // edit = remove it initially, cancel = add back it into allevents
     // save = add new event into all events
@@ -160,15 +168,54 @@ export default function ViewCalendar() {
         setisCreating(true);
         // EDITING INFO 
     }
+    const addNewEvent = () => {
+        setisAdding(true);
+    }
 
     return (
         <>
-            {isCreating == false && (
+            {isCreating == false && isAdding === false && (
                 <div className="App">
                 <h1>Your Calendar</h1>
                 <br />
-                <h2>Add New Event:</h2>
+                <button onClick={addNewEvent}>Add New Event</button>
+                <Calendar localizer={localizer} events={allEvents} 
+                startAccessor="start" endAccessor="end" 
+                style={{height: 500, margin:"50px"}}
+                onSelectEvent={handleEdit}
+                />
+            </div>
+            )}
+            {
+                isCreating === true && (
+                    <div>
+                        <h2>Editing Event:</h2>
+                        <input type="text" 
+                        value={editedEvent.title} 
+                        onChange={handleTitleChange} 
+                        filterTime={filterPassedTime}
+                        placeholder={editedEvent.title}/>
+                        <DatePicker 
+                        minDate={new Date()}
+                        showTimeSelect
+                        selected={editedEvent.start} 
+                        onChange={handleStartChange} />
+                        <DatePicker 
+                        showTimeSelect
+                        selected={editedEvent.end} 
+                        filterTime={filterPassedTime}
+                        minDate={new Date()}
+                        onChange={handleEndChange} />
+                        <button onClick={handleSave}>Save</button>
+                        <button onClick={onDelete}>Delete</button>
+                        <button onClick={onCancel}>Cancel</button>
+                    </div>
+                ) 
+            }
+            { isAdding === true && (
                 <div>
+                    <h2>Add New Event:</h2>
+                    <div>
                     <input type="text"
                         placeholder="Add Title"
                         style={{width: "20%", marginRight: "10px"}}
@@ -199,39 +246,10 @@ export default function ViewCalendar() {
                     <button style={{marginTop: "10px"}} onClick={handleAddEvent}>
                         Add Event
                     </button>
+                    <button onClick={onAddCancel}>Cancel</button>
                 </div>
-                <Calendar localizer={localizer} events={allEvents} 
-                startAccessor="start" endAccessor="end" 
-                style={{height: 500, margin:"50px"}}
-                onSelectEvent={handleEdit}
-                />
-            </div>
+                </div>
             )}
-            {
-                isCreating == true && (
-                    <div>
-                        <input type="text" 
-                        value={editedEvent.title} 
-                        onChange={handleTitleChange} 
-                        filterTime={filterPassedTime}
-                        placeholder={editedEvent.title}/>
-                        <DatePicker 
-                        minDate={new Date()}
-                        showTimeSelect
-                        selected={editedEvent.start} 
-                        onChange={handleStartChange} />
-                        <DatePicker 
-                        showTimeSelect
-                        selected={editedEvent.end} 
-                        filterTime={filterPassedTime}
-                        minDate={new Date()}
-                        onChange={handleEndChange} />
-                        <button onClick={handleSave}>Save</button>
-                        <button onClick={onDelete}>Delete</button>
-                        <button onClick={onCancel}>Cancel</button>
-                    </div>
-                ) 
-            }
         </>
     
   )
