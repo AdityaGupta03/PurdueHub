@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import './App.css' // This is a temporary file pulled from tutorial
+//import './App.css' // This is a temporary file pulled from tutorial
 import App from './App';
 
 import reportWebVitals from './reportWebVitals';

@@ -11,9 +11,10 @@ import ViewProfile from './ViewProfile';
 import ViewList from './ViewList';
 import UsernameAuthCode from './UsernameAuthCode';
 import VerifyEmail from './VerifyEmail';
+import ViewCalendar from './ViewCalendar';
 
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-
+import './App.css' // This is a temporary file pulled from tutorial
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
         <Route path='/viewprofile/:username' element={<ViewProfile />} />
         <Route path='/verify_email/:email' element={<VerifyEmail />} />
         <Route path='/viewlist' element={<ViewList />} />
+        <Route path='/calendar' element={<ViewCalendar />} />
       </Routes>
     </BrowserRouter>
     </main>

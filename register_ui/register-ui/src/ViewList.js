@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import data from './friend-data';
 import List from './List';
 import temp from './temporary-profile.jpeg' // temp picture
@@ -65,9 +65,9 @@ function ViewList() {
                         {
                             nobodyFollowed === false && (
                                 <div>
-                                    {blockedUsernames.map((item) => {
+                                    {blockedUsernames.map((item, index) => {
                                         return (
-                                        <section className='imagebox' key={index}>
+                                        <section className='imagebox' key={ index }>
                                             <div>
                                                 <img src={temp} className='baseimage'/>
                                             </div>
@@ -93,7 +93,7 @@ function ViewList() {
                         {
                             nobodyFollows === false && (
                                 <div>
-                                    {blockedUsernames.map((item) => {
+                                    {blockedUsernames.map((item,  index) => {
                                         return (
                                         <section className='imagebox' key={index}>
                                             <div>
@@ -120,7 +120,7 @@ function ViewList() {
                         {
                             nobodyBlocked === false && (
                                 <div>
-                                    {blockedUsernames.map((item) => {
+                                    {blockedUsernames.map((item,  index) => {
                                         return (
                                         <section className='imagebox' key={index}>
                                             <div>
