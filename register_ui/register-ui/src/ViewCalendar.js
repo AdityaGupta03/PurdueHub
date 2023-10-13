@@ -128,10 +128,7 @@ export default function ViewCalendar() {
         setisCreating(false);
     };
     const onDelete = () => {
-        const events = allEvents;
-        const idx = events.indexOf(editedEvent);
-        events.splice(idx, 1);
-        setAllEvents(events);
+        // already previously deleted, no need to delete again
         setisCreating(false);
     };
     // click on it
@@ -151,10 +148,10 @@ export default function ViewCalendar() {
         } */}
 
     // REMOVE EVENTS LOGIC
-    const handleRemove = (e) => {
+    const handleEdit = (e) => {
         console.log('Hello')
         setEditedEvent(e);
-        // delete here 
+        // deletes here
         const events = allEvents;
         const idx = events.indexOf(e);
         events.splice(idx, 1);
@@ -206,7 +203,7 @@ export default function ViewCalendar() {
                 <Calendar localizer={localizer} events={allEvents} 
                 startAccessor="start" endAccessor="end" 
                 style={{height: 500, margin:"50px"}}
-                onSelectEvent={handleRemove}
+                onSelectEvent={handleEdit}
                 />
             </div>
             )}
