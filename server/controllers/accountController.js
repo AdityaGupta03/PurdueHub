@@ -645,7 +645,7 @@ async function editProfileBio(req, res) {
   try {
       const { bio, user_id } = req.body;
       const updateResult = await accountQueries.editBioQuery(bio, user_id);
-      if (updateResult == true) {
+      if (updateResult) {
           console.log("User Bio updated succesfully");
       } else {
           console.log("User bio updated failed!");
