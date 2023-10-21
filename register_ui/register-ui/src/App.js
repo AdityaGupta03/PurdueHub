@@ -17,6 +17,7 @@ import Feedback from './Feedback';
 
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './App.css' // This is a temporary file pulled from tutorial
+import DeleteAccount from './DeleteAccount';
 
 function App() {
 
@@ -44,6 +45,7 @@ function App() {
         
         <Route path='/report' element={<ReportSubmission />} />
         <Route path='/feedback' element={<Feedback />} />
+        <Route path='/delete' element={<DeleteAccount />} />
 
       </Routes>
     </BrowserRouter>
