@@ -19,9 +19,10 @@ export default function Home() {
       <p>An application targeted to students of Purdue University</p>
       <Link to="/userprofile">View Profile</Link>
       <Link to="/viewlist">View your user lists!</Link>
-      <Link to="/feedback">Provide Feedback</Link>
       <Link to="/viewprofile/testing">View testing's profile</Link>
       <Link to="/viewprofile/banned">View banned's profile</Link>
+      <Link to="/feedback">Provide Feedback</Link>
+      <Link to="/delete">Delete Account</Link>
     </section>
   )
 }

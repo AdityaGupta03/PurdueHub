@@ -18,6 +18,7 @@ import Feedback from './Feedback';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './App.css' // This is a temporary file pulled from tutorial
 import DeleteAccount from './DeleteAccount';
+import Settings from './Settings';
 
 function App() {
 
