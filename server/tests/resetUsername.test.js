@@ -6,7 +6,7 @@ const accountController = require("../controllers/accountController");
 const accountQueries = require("../database/queries/accountQueries");
 const verificationQueries = require("../database/queries/verificationQueries");
 
-describe("resetUsername API", () => {
+describe("Testing updateUsername:", () => {
   let consoleLogSpy;
 
   beforeAll(async () => {

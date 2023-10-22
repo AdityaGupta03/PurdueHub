@@ -110,7 +110,7 @@ async function login(req, res) {
 
   const acc_exists = await accountQueries.checkAccountFromUsernameQuery(username);
   if (!acc_exists) {
-    return res.status(404).json({ error: "No account found with username provided "});
+    return res.status(404).json({ error: "No account found with username provided"});
   }
 
   const isBanned = await accountQueries.checkBannedQuery(username);
@@ -124,7 +124,7 @@ async function login(req, res) {
   }
 
   const account = await accountQueries.getUserInfoFromUsernameQuery(username);
-  if (account === null) {
+  if (account == null) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 
@@ -135,7 +135,7 @@ async function login(req, res) {
   }
 
   const user_id = await accountQueries.loginQuery(username, password);
-  if (user_id === -1) {
+  if (user_id == -1) {
     return res.status(400).json({ error: "Incorrect password" });
   }
 
