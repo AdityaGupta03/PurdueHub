@@ -1,13 +1,10 @@
 const request = require("supertest");
 const { app } = require("../server");
 const pool = require("../database/db");
-const helperFuncs = require("../controllers/helperFunctions");
-const accountController = require("../controllers/accountController");
 const accountQueries = require("../database/queries/accountQueries");
-const calendarQueries = require("../database/queries/calendarQueries"); 
 const verificationQueries = require("../database/queries/verificationQueries");
 
-describe("Testing login:", () => {
+describe("Testing login API:", () => {
   let consoleLogSpy, consoleErrSpy;
 
   beforeAll(async () => {

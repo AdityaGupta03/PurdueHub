@@ -7,7 +7,7 @@ const accountQueries = require("../database/queries/accountQueries");
 const calendarQueries = require("../database/queries/calendarQueries"); 
 const verificationQueries = require("../database/queries/verificationQueries");
 
-describe("Testing createAccount:", () => {
+describe("Testing createAccount API:", () => {
   let consoleLogSpy, consoleErrSpy;
 
   beforeAll(async () => {

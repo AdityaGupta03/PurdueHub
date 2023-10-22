@@ -540,7 +540,7 @@ async function resetPassword(req, res) {
 
   const acc_exists = await accountQueries.checkAccountFromUsernameQuery(username);
   if (!acc_exists) {
-    return res.status(404).json({ error: "No account found with username provided "});
+    return res.status(404).json({ error: "No account found with username provided"});
   }
 
   const user = await accountQueries.getUserInfoFromUsernameQuery(username);
@@ -593,7 +593,7 @@ async function verifyPasswordResetCode(req, res) {
   }
 
   const actual_authCode = await verificationQueries.getPasswordAuthCodeQuery(email);
-  if (actual_authCode === "") {
+  if (actual_authCode == "") {
     return res.status(500).json({ error: "Internal server error" });
   } else if (actual_authCode != authCode) {
     return res.status(400).json({ error: "Incorrect authentication code" });
