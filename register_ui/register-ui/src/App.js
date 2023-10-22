@@ -47,6 +47,7 @@ function App() {
         <Route path='/report' element={<ReportSubmission />} />
         <Route path='/feedback' element={<Feedback />} />
         <Route path='/delete' element={<DeleteAccount />} />
+        <Route path='/settings' element={<Settings />} />
 
       </Routes>
     </BrowserRouter>

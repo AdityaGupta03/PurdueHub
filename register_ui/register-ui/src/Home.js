@@ -22,6 +22,7 @@ export default function Home() {
       <Link to="/viewprofile/testing">View testing's profile</Link>
       <Link to="/viewprofile/banned">View banned's profile</Link>
       <Link to="/feedback">Provide Feedback</Link>
+      <Link to="/settings">Settings</Link>
       <Link to="/delete">Delete Account</Link>
     </section>
   )

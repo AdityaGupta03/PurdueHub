@@ -154,3 +154,12 @@ button {
     display: inline-block;
 }
 
+.link {
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Style for a hover effect */
+.link:hover {
+  text-decoration: underline;
+}
