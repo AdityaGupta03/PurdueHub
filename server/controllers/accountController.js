@@ -216,7 +216,7 @@ async function verifyEmail(req, res) {
     }
 
     const actual_authCode = await verificationQueries.getAuthCodeQuery(email);
-    if (actual_authCode === "") {
+    if (actual_authCode == "") {
       return res.status(500).json({ error: "Internal server error" });
     } else if (actual_authCode != authCode) {
       return res.status(400).json({ error: "Incorrect authentication code" });
