@@ -26,10 +26,10 @@ async function createAccount(req, res) {
     if (!isUnique) {
       return res.status(400).json({ error: "Not unique username" });
     }
-    console.log("Is a unique username");
+    console.log("Is a unique username: " + username);
 
     let db_res = await accountQueries.createAccountQuery(username, email, password);
-    if (db_res === null) {
+    if (db_res == -1) {
       return res.status(500).json({ error: "Internal server error" });
     }
 
@@ -45,15 +45,20 @@ async function createAccount(req, res) {
       return res.status(500).json({ error: "Internal server error" });
     }
 
+    console.log("Sending email verification.");
+
     const authCode = helperFuncs.generateAuthCode();
     const email_status = await sendEmailVerification(email, authCode);
+    console.log("email_status: " + email_status);
     if (!email_status) {
       const delete_acc_status = deleteAccount(username);
       if (!delete_acc_status) {
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ error: "Internal server error." });
       }
       return res.status(500).json({ error: "Error sending verfication to email. Deleted account." });
     }
+
+    console.log("Sent email verification.");
 
     db_res = await verificationQueries.addEmailVerificationQuery(email, authCode);
     if (!db_res) {
@@ -70,10 +75,9 @@ async function createAccount(req, res) {
 async function deleteAccount(username) {
   console.log("[INFO] Deleting account helper.")
   let account = await accountQueries.getUserInfoFromUsernameQuery(username);
-  if (account === null) {
+  if (account == null) {
     return false;
   }
-  console.log(account);
 
   const user_id = account.user_id;
   let db_res = await accountQueries.deleteAccountQuery(user_id);
@@ -860,4 +864,6 @@ module.exports = {
   reportUser,
   ignoreReport,
   banFromReport,
+  sendEmailVerification,
+  deleteAccount,
 };

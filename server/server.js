@@ -39,9 +39,11 @@ const upload = multer({
   },
 });
 
-app.listen(port, () => {
-  console.log(`Server has started on port ${port}\n`);
-});
+if (!process.env.TEST_ENV) {
+  app.listen(port, () => {
+    console.log(`Server has started on port ${port}\n`);
+  });
+}
 
 app.post("/update_profile_picture", upload.single('file'), async (req, res) => {
   console.log("[Info] Received request to update profile picture");
@@ -67,4 +69,5 @@ module.exports = {
   storage,
   multer,
   saveToDatabase,
+  app,
 }

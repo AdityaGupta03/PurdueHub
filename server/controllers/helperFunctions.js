@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const pool = require('../database/db.js');
 
 // Our email address: purduehub.org@gmail.com
 // Our email login password: purduehub-org-123
@@ -34,7 +35,6 @@ function generateAuthCode() {
 }
 
 async function printAllAccounts() {
-  console.log("Print all accounts");
   let query = 'SELECT * FROM users';
   
   try { 

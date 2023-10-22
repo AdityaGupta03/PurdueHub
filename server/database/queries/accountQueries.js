@@ -27,7 +27,7 @@ async function createAccountQuery(username, email, password) {
     return rows[0].user_id;
   } catch (err) {
     console.log("[ERROR] " + err.message);
-    return null;
+    return -1;
   }
 }
 

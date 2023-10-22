@@ -8,7 +8,7 @@ async function createCalendarQuery(user_id) {
     const { rows } = await pool.query(query, data);
     return rows[0].id;
   } catch (err) {
-    console.log("[ERROR] " + err.message);
+    console.log(err);
     return null;
   }
 }
