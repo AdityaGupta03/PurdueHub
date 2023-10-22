@@ -27,7 +27,7 @@ async function createAccountQuery(username, email, password) {
     return rows[0].user_id;
   } catch (err) {
     console.log("[ERROR] " + err.message);
-    return null;
+    return -1;
   }
 }
 
@@ -123,19 +123,6 @@ async function blockUserQuery(block_user_id, user_id) {
   }
 }
 
-async function blockUserQuery(block_user_id, user_id) {
-  const query = "UPDATE users SET blocked = array_append(blocked, $1) WHERE user_id = $2";
-  const data = [ block_user_id, user_id ];
-
-  try {
-    await pool.query(query, data);
-    return true;
-  } catch (err) {
-    console.log("[ERROR] " + err.message);
-    return false;
-  }
-}
-
 async function unblockUserQuery(unblock_user_id, user_id) {
   const query = "UPDATE users SET blocked = array_remove(blocked, $1) WHERE user_id = $2";
   const data = [ unblock_user_id, user_id ];
@@ -211,20 +198,6 @@ async function unfollowUserQuery(user_id, to_unfollow_user_id) {
     return true;
   } catch (err) {
     console.log("[ERROR] " + err.message);
-    return false;
-  }
-}
-
-async function checkAccountFromUsernameQuery(username) {
-  const query = "SELECT * FROM users where username = $1";
-  const data = [ username ];
-
-  try {
-    const db_res = await pool.query(query, data);
-    console.log("Username exists: " + db_res.rows.length > 0);
-    return db_res.rows.length > 0;
-  } catch (error) {
-    console.error(error);
     return false;
   }
 }
@@ -405,7 +378,6 @@ module.exports = {
   followUserQuery,
   unfollowUserQuery,
   addCalendarIdQuery,
-  checkAccountFromUsernameQuery,
   getBlockListQuery,
   updatePasswordQuery,
   loginQuery,

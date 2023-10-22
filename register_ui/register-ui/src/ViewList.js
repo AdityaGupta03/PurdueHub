@@ -61,8 +61,9 @@ function ViewList() {
 
             if (response.status === 200) {
                 if (data.following.length === 0) {
-                    setFollowedUsernames(true);
+                    setNobodyFollowed(true);
                 }
+                console.log(data.following);
                 setFollowedUsernames(data.following);
             } else {
                 const err_msg = "Error: " + data.error;
@@ -106,20 +107,21 @@ function ViewList() {
             signedIn && (
                 <div>
                     <div className='container'>
-                        <h2>Followed By List:</h2>
+                        <h2>Followers List:</h2>
 
                         <div>
                         {
-                            nobodyFollowed && (
+                            nobodyFollows && (
                                 <div>
-                                    <p>You are following no one!</p>
+                                    <p>Nobody Follows You!</p>
                                 </div>
                             )
                         }
                         {
-                            nobodyFollowed === false && (
+                            nobodyFollows === false && (
                                 <div>
                                     {followersUsernames.map((item, index) => {
+                                        console.log(item);
                                         return (
                                             <div>{item}</div>
                                     ) 
@@ -130,17 +132,17 @@ function ViewList() {
                         </div>
                 </div>
                 <div className='container'>
-                    <h2>Followers List:</h2>
+                    <h2>Followed List:</h2>
                     <div>
                         {
-                            nobodyFollows && (
+                            nobodyFollowed && (
                                 <div>
-                                    <p>Nobody Follows You!</p>
+                                    <p>You are following nobody!</p>
                                 </div>
                             )
                         }
                         {
-                            nobodyFollows === false && (
+                            nobodyFollowed === false && (
                                 <div>
                                     {followedUsernames.map((item,  index) => {
                                         return (

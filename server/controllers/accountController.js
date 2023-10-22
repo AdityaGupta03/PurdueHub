@@ -26,10 +26,10 @@ async function createAccount(req, res) {
     if (!isUnique) {
       return res.status(400).json({ error: "Not unique username" });
     }
-    console.log("Is a unique username");
+    console.log("Is a unique username: " + username);
 
     let db_res = await accountQueries.createAccountQuery(username, email, password);
-    if (db_res === null) {
+    if (db_res == -1) {
       return res.status(500).json({ error: "Internal server error" });
     }
 
@@ -45,15 +45,20 @@ async function createAccount(req, res) {
       return res.status(500).json({ error: "Internal server error" });
     }
 
+    console.log("Sending email verification.");
+
     const authCode = helperFuncs.generateAuthCode();
     const email_status = await sendEmailVerification(email, authCode);
+    console.log("email_status: " + email_status);
     if (!email_status) {
       const delete_acc_status = deleteAccount(username);
       if (!delete_acc_status) {
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ error: "Internal server error." });
       }
       return res.status(500).json({ error: "Error sending verfication to email. Deleted account." });
     }
+
+    console.log("Sent email verification.");
 
     db_res = await verificationQueries.addEmailVerificationQuery(email, authCode);
     if (!db_res) {
@@ -70,10 +75,9 @@ async function createAccount(req, res) {
 async function deleteAccount(username) {
   console.log("[INFO] Deleting account helper.")
   let account = await accountQueries.getUserInfoFromUsernameQuery(username);
-  if (account === null) {
+  if (account == null) {
     return false;
   }
-  console.log(account);
 
   const user_id = account.user_id;
   let db_res = await accountQueries.deleteAccountQuery(user_id);
@@ -106,7 +110,7 @@ async function login(req, res) {
 
   const acc_exists = await accountQueries.checkAccountFromUsernameQuery(username);
   if (!acc_exists) {
-    return res.status(404).json({ error: "No account found with username provided "});
+    return res.status(404).json({ error: "No account found with username provided"});
   }
 
   const isBanned = await accountQueries.checkBannedQuery(username);
@@ -120,7 +124,7 @@ async function login(req, res) {
   }
 
   const account = await accountQueries.getUserInfoFromUsernameQuery(username);
-  if (account === null) {
+  if (account == null) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 
@@ -131,7 +135,7 @@ async function login(req, res) {
   }
 
   const user_id = await accountQueries.loginQuery(username, password);
-  if (user_id === -1) {
+  if (user_id == -1) {
     return res.status(400).json({ error: "Incorrect password" });
   }
 
@@ -212,7 +216,7 @@ async function verifyEmail(req, res) {
     }
 
     const actual_authCode = await verificationQueries.getAuthCodeQuery(email);
-    if (actual_authCode === "") {
+    if (actual_authCode == "") {
       return res.status(500).json({ error: "Internal server error" });
     } else if (actual_authCode != authCode) {
       return res.status(400).json({ error: "Incorrect authentication code" });
@@ -536,7 +540,7 @@ async function resetPassword(req, res) {
 
   const acc_exists = await accountQueries.checkAccountFromUsernameQuery(username);
   if (!acc_exists) {
-    return res.status(404).json({ error: "No account found with username provided "});
+    return res.status(404).json({ error: "No account found with username provided"});
   }
 
   const user = await accountQueries.getUserInfoFromUsernameQuery(username);
@@ -589,7 +593,7 @@ async function verifyPasswordResetCode(req, res) {
   }
 
   const actual_authCode = await verificationQueries.getPasswordAuthCodeQuery(email);
-  if (actual_authCode === "") {
+  if (actual_authCode == "") {
     return res.status(500).json({ error: "Internal server error" });
   } else if (actual_authCode != authCode) {
     return res.status(400).json({ error: "Incorrect authentication code" });
@@ -645,7 +649,7 @@ async function editProfileBio(req, res) {
   try {
       const { bio, user_id } = req.body;
       const updateResult = await accountQueries.editBioQuery(bio, user_id);
-      if (updateResult == true) {
+      if (updateResult) {
           console.log("User Bio updated succesfully");
       } else {
           console.log("User bio updated failed!");
@@ -860,4 +864,6 @@ module.exports = {
   reportUser,
   ignoreReport,
   banFromReport,
+  sendEmailVerification,
+  deleteAccount,
 };
