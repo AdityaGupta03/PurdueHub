@@ -19,7 +19,7 @@ async function messageUser(req, res) {
 
   let sender = await accountQueries.getUserInfoQuery(user_id);
   if (!sender) {
-    return res.status(404).json({ error: "Internal Server Error!" });
+    return res.status(500).json({ error: "Internal Server Error!" });
   }
 
   let reciever = await accountQueries.getUserInfoFromUsernameQuery(username);
@@ -67,6 +67,8 @@ async function toggleDM(req, res) {
   if (option != 0 && option != 1) {
     return res.status(400).json({ error: "Invalid option." });
   }
+
+  console.log("User: " + user_id + " Option: " + option);
 
   let status = await accountQueries.toggleDM(user_id, option);
   if (!status) {
