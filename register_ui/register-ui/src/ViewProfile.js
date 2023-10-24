@@ -13,11 +13,10 @@ function ViewProfile() {
     const [ isBlocked, setIsBlocked ] = useState(false); // not blocked yet
     const [ isBanned, setIsBanned ] = useState(false); // not banned yet
     const[isFollow, setIsFollow] = useState(false); // not followed yet
-
     // INITIAL RENDERING 
 
     // test 
-    
+
     useEffect(() => {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         if (isLoggedIn == "false") {
