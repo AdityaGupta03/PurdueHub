@@ -96,10 +96,18 @@ async function deleteAccountAPI(req, res) {
 }
 
 async function deleteAccount(username) {
-  console.log("[INFO] Deleting account helper.")
+  console.log("[INFO] Deleting account helper for user: " + username);
   let account = await accountQueries.getUserInfoFromUsernameQuery(username);
   if (account == null) {
     return false;
+  }
+
+  let email = account.email;
+  let isVerified = await verificationQueries.checkVerifiedEmail(email);
+  if (!isVerified) {
+    let status = await verificationQueries.removeEmailVerificationQuery(email);
+    if (!status) return false;
+    console.log("Deleted verification row: " + email);
   }
 
   const user_id = account.user_id;
