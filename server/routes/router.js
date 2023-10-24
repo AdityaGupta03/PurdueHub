@@ -1,6 +1,7 @@
 const express = require("express");
 const calendarController = require("../controllers/calendarController");
 const accountController = require("../controllers/accountController");
+const messagingController = require("../controllers/messagingController");
 
 const router = express.Router();
 
@@ -34,5 +35,7 @@ router.post("/revoke_ban", accountController.revokeBan);
 router.post("/report_user", accountController.reportUser);
 router.post("/ignore_report", accountController.ignoreReport);
 router.post("/ban_report", accountController.banFromReport);
+router.post("/toggle_dm", messagingController.toggleDM);
+router.post("/msg_user", messagingController.messageUser);
 
 module.exports = router;
