@@ -16,6 +16,8 @@ function ViewProfile() {
 
     // INITIAL RENDERING 
 
+    // test 
+    
     useEffect(() => {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         if (isLoggedIn == "false") {
