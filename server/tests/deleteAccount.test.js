@@ -17,6 +17,7 @@ describe("Testing deleteAccount API:", () => {
   afterAll(async () => {
     await pool.query("DELETE FROM email_verification WHERE email IN (SELECT email FROM users)");
     await pool.query("DELETE FROM users");
+    await pool.query("DELETE FROM calendars");
     await pool.end();
   });
 
@@ -48,7 +49,7 @@ describe("Testing deleteAccount API:", () => {
     expect(res.body.error).toEqual("Account not found.");
   });
 
-  it("should return 500 if some error occurs", async () => {
+  it("should return 500 if some deleteAccount fails", async () => {
     jest.spyOn(accountQueries, "checkAccountFromUsernameQuery").mockReturnValue(true);
     jest.spyOn(accountController, "deleteAccount").mockReturnValue(false);
     
