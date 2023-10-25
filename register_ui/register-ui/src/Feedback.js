@@ -18,6 +18,7 @@ function Feedback() {
     }, [title, message])
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
         if(title === '') {
             setErrMsg('Emtpy Title')
             return 
@@ -26,7 +27,6 @@ function Feedback() {
             setErrMsg('Emtpy Message')
             return 
         }
-        e.preventDefault();
         setSuccess(true);
     }
     return (
