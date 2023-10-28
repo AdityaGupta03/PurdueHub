@@ -362,6 +362,19 @@ async function revokeBanQuery(user_id) {
   }
 }
 
+async function getMutualFriendsQuery(user_id, other_user_id) {
+  const query = "SELECT array_agg(username) AS mutual_friends FROM users WHERE user_id = ANY(SELECT unnest(follow) FROM users WHERE user_id = $1) AND user_id = ANY(SELECT unnest(follow) FROM users WHERE user_id = $2)";
+  const data = [ user_id, other_user_id ];
+
+  try {
+    const mutual_friends = await pool.query(query, data);
+    return mutual_friends;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -390,4 +403,5 @@ module.exports = {
   banAccountQuery,
   markDeleteAccountQuery,
   revokeBanQuery,
+  getMutualFriendsQuery,
 };
