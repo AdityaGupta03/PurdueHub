@@ -21,6 +21,7 @@ import './App.css' // This is a temporary file pulled from tutorial
 import DeleteAccount from './DeleteAccount';
 import Settings from './Settings';
 import TestProfile from './TestProfile';
+import ClubPage from './ClubPage';
 
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
         <Route path='/settings' element={<Settings />} />
         <Route path='/testpf' element={<TestProfile />} />
         <Route path='/message-user' element={<MessagePage/>} />
+        <Route path='/club' element={<ClubPage/>} />
 
       </Routes>
     </BrowserRouter>
