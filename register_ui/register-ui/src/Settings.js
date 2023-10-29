@@ -9,6 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import React from 'react'
 
 import {useRef, useState, useEffect} from 'react';
+import './Club.css' // css pulled online
 
 
 function Settings() {
@@ -49,7 +50,7 @@ function Settings() {
   return (
     <>
         { checkNotifs ? (
-            <div>
+            <div className='whole'>
             <h1>Notifications:</h1>
             <br/>
             <h3>General:</h3>
@@ -100,9 +101,12 @@ function Settings() {
             <Link className='link' onClick={viewNotif}>Back To Settings</Link>
         </div>
         ):(
-            <div>
+            <div className='whole'>
                 <h1>Settings:</h1>
                 <Link className='link' onClick={viewNotif}>Notifications</Link>
+                <Link className='link' to="/forgotpass">Reset Password</Link>
+                <Link className='link' to="/forgotusername">Reset Username</Link>
+                <Link className='link' to="/userprofile">View Profile</Link>
             </div>
         )}
 
