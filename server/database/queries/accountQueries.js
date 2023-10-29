@@ -375,6 +375,19 @@ async function getMutualFriendsQuery(user_id, other_user_id) {
   }
 }
 
+async function getMutualOrgsQuery(user_id, other_user_id) {
+  const query = "SELECT array_agg(name) AS mutual_orgs FROM organization WHERE org_id = ANY(SELECT unnest(saved_orgs) FROM users WHERE user_id = $1) AND org_id = ANY(SELECT unnest(saved_orgs) FROM users WHERE user_id = $2)";
+  const data = [ user_id, other_user_id ];
+
+  try {
+    const mutual_orgs = await pool.query(query, data);
+    return mutual_orgs;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -404,4 +417,5 @@ module.exports = {
   markDeleteAccountQuery,
   revokeBanQuery,
   getMutualFriendsQuery,
+  getMutualOrgsQuery,
 };

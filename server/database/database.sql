@@ -34,6 +34,9 @@ CREATE TABLE calendars (
   calendar_events_arr INTEGER[] DEFAULT ARRAY[]::INTEGER[]
 );
 
+ALTER TABLE users
+ADD FOREIGN KEY (calendar_id) REFERENCES calendars (id);
+
 CREATE TABLE reports (
   id SERIAL PRIMARY KEY,
   reported_username VARCHAR(255) NOT NULL,
@@ -41,8 +44,12 @@ CREATE TABLE reports (
   reason TEXT NOT NULL
 );
 
-ALTER TABLE users
-ADD FOREIGN KEY (calendar_id) REFERENCES calendars (id);
+CREATE TABLE organization (
+  org_id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE,
+  description TEXT,
+  officers INTEGER[] DEFAULT ARRAY[]::INTEGER[]
+);
 
 CREATE TABLE email_verification (
   id SERIAL PRIMARY KEY,
