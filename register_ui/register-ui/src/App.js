@@ -13,6 +13,7 @@ import UsernameAuthCode from './UsernameAuthCode';
 import VerifyEmail from './VerifyEmail';
 import ViewCalendar from './ViewCalendar';
 import ReportSubmission from './Report';
+import ViewMutuals from './ViewMutuals';
 
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './App.css' // This is a temporary file pulled from tutorial
@@ -42,6 +43,7 @@ function App() {
         <Route path='/calendar' element={<ViewCalendar />} />
 
         <Route path='/report' element={<ReportSubmission />} />
+        <Route path='/viewmutuals/:username' element={<ViewMutuals />} />
       </Routes>
     </BrowserRouter>
     </main>

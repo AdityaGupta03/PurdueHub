@@ -243,24 +243,27 @@ function ViewProfile() {
     }
     
   return (
-    <div>
-        <h1>{username}'s Profile</h1>
-        <Link to="/report">Report user</Link>
+    <div style={{ background: 'black', padding: '20px' }}>
+        {/* <h1>{username}'s Profile</h1> */}
         {
-            isBlocked ? null : <img className='landscape' src={temp} alt="Profile Picture"/>
+            isBlocked ? null : <img className='landscape' src={temp} alt="Profile Picture" style={{ display: 'block', margin: '0 auto', padding: '10px' }}/>
         }
         {
             isBanned ? <h2>Account has been banned!</h2> : null
         }
-        <span>
+        
+        <span style={{ display: 'block', margin: '0 auto', padding: '10px' }} >
             <h2>Username: {username}</h2>
             <button onClick={toggleBlock}>{isBlocked ? 'Unblock' : 'Block'}</button>
             <button disabled={isBlocked ? true : false} onClick={toggleFollow}>{isFollow ? 'Unfollow' : 'Follow'}</button>
-            {/* <button onClick={reportUser}>Report</button> */}
         </span>
         {   
-            isBlocked ? null : <p>Bio: {bio}</p>
+            isBlocked ? null : <p style={{ padding: '25px' }}>Bio: {bio}</p>
         }
+        <div style={{ padding: '20px' }}>
+            <Link to="/report" style={{ display: 'block' }}>Report user</Link>
+            <Link to={`/viewmutuals/${username}`} style={{ display: 'block' }}>View Mutual Friends/Clubs</Link>
+        </div>
  </div>
   )
 }
