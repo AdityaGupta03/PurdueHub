@@ -17,31 +17,34 @@ function ClubPage() {
     const [clubName, setClubName] = useState('Firework Connoisseurs'); // club name for general page
     const [clubDescription, setClubDescription] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. exercitation ullamco laboris nisi ut  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
     const [clubTags, setClubTags] = useState([]);
-    const [indexOfEvent, setIndexOfEvent] = useState(0);
 
     const [isFollowingClub, setIsFollowingClub] = useState(false);
-
+    const [indexOfEvent, setIndexOfEvent] = useState(0);
     // example
     const data = [
         {
             eventName:'Calling Out Firework Fanatics!',
             description: 'We have our first meeting, come join us and let us get to using gunpowder!',
-            tags: ["Club Callout", "Cops", "Crazy"]
+            tags: ["Club Callout", "Cops", "Crazy"],
+            interest: false
         },
         {
             eventName:'Sightseeing',
             description: 'We are viewing fireworks near the Wabash river at 9PM, October 31st 9PM!',
-            tags: [""]
+            tags: [""],
+            interest: false
         },
         {
             eventName:'DIY',
             description: 'We are building our own fireworks, this is not illegal haha, November 32nd, 1AM',
-            tags: ["Club Callout", "Fun"]
+            tags: ["Fun", "DIY"],
+            interest: false
         },
         {
             eventName:'Blowing Up',
             description: 'We are lighting up the DIY fireworks, bring your Bomb suit, a lot of gunpowder and explosions, December 1st, 5AM',
-            tags: ["Professional Development"]
+            tags: ["Professional Development"],
+            interest: false
         }
     ];
     const [ events, setEvents ] = useState(data);
@@ -50,6 +53,7 @@ function ClubPage() {
     const followEvent = () => {
         if(isInterested) {
             setIsInterested(false);
+
         }
         else {
             setIsInterested(true)
@@ -66,16 +70,18 @@ function ClubPage() {
         }
     }
 
-    const viewEventPageClick = (name, description, tags) => {
-    
+    const viewEventPageClick = (name, description, tags, interest, indexOf) => {
+        
         if(viewingEvent) {
             setEventName('');
             setEventDescription('');
             setViewingEvent(false);
         }
         else {
+            //setIndexOfEvent(indexOf); //find a way to change this better and modify interest in the backend
             setEventName(name);
             setClubTags(tags);
+            //setIsInterested(interest); //find a way to change this better and modify interest in the backend
             setEventDescription(description);
             setViewingEvent(true);
         }
@@ -145,7 +151,7 @@ function ClubPage() {
                     <div>
                         {data.map((item, index) => {
                             return (
-                                <Link style={{textDecorationLine: 'none'}} onClick={() => viewEventPageClick(item.eventName, item.description, item.tags)}>
+                                <Link style={{textDecorationLine: 'none'}} onClick={() => viewEventPageClick(item.eventName, item.description, item.tags, item.interest, index)}>
                                     <div key={index} className='event'>
                                         <h3>Event Name:</h3>
                                         <p>{item.eventName}</p>
