@@ -5,6 +5,7 @@ import './Profile.css' // css pulled online
 
 import { ToastContainer, toast } from 'react-toastify'; // NEW
 import 'react-toastify/dist/ReactToastify.css'; // NEW
+import './Club.css' 
 
 function TestProfile() {
     const navigate = useNavigate();
@@ -142,7 +143,7 @@ function TestProfile() {
                     </section>
                 </div>
             ): (
-                <div>
+                <div style={{alignContent: 'center'}}className='whole'>
                     <h1>{username}'s Profile</h1>
                     <Link to="/report">Report user</Link>
                     {
