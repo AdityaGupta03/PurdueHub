@@ -47,7 +47,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    background-color: #CEB888;; /* Set the button background color */
+    background-color: #CEB888; /* Set the button background color */
     color: #fff; /* Set the button text color */
     border: none;
     padding: 10px 20px;
@@ -75,3 +75,13 @@
     display: block;
     padding-top: 20px;
 }
+
+.actualTag {
+    display: inline-block;
+    padding: 4px 8px;
+    margin-right: 8px;
+    background-color: #c9a453; /* Change the background color to your preference */
+    color: #fff; /* Text color */
+    border-radius: 4px;
+    font-size: 30px;
+  }

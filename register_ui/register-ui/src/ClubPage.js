@@ -4,7 +4,6 @@ import './Club.css' // css pulled online
 
 import temp from './temporary-profile.jpeg' // temp picture
 import works from './fireworks-shape.jpg' // temp picture
-import eventDATA from './ClubEventData'
 
 
 function ClubPage() {
@@ -17,22 +16,32 @@ function ClubPage() {
 
     const [clubName, setClubName] = useState('Firework Connoisseurs'); // club name for general page
     const [clubDescription, setClubDescription] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. exercitation ullamco laboris nisi ut  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+    const [clubTags, setClubTags] = useState([]);
+    const [indexOfEvent, setIndexOfEvent] = useState(0);
 
     const [isFollowingClub, setIsFollowingClub] = useState(false);
 
     // example
     const data = [
         {
+            eventName:'Calling Out Firework Fanatics!',
+            description: 'We have our first meeting, come join us and let us get to using gunpowder!',
+            tags: ["Club Callout", "Cops", "Crazy"]
+        },
+        {
             eventName:'Sightseeing',
-            description: 'We are viewing fireworks near the Wabash river at 9PM, October 31st 9PM!'
+            description: 'We are viewing fireworks near the Wabash river at 9PM, October 31st 9PM!',
+            tags: [""]
         },
         {
             eventName:'DIY',
-            description: 'We are building our own fireworks, this is not illegal haha, November 32nd, 1AM'
+            description: 'We are building our own fireworks, this is not illegal haha, November 32nd, 1AM',
+            tags: ["Club Callout", "Fun"]
         },
         {
             eventName:'Blowing Up',
-            description: 'We are lighting up the DIY fireworks, bring your Bomb suit, a lot of gunpowder and explosions, December 1st, 5AM'
+            description: 'We are lighting up the DIY fireworks, bring your Bomb suit, a lot of gunpowder and explosions, December 1st, 5AM',
+            tags: ["Professional Development"]
         }
     ];
     const [ events, setEvents ] = useState(data);
@@ -57,9 +66,8 @@ function ClubPage() {
         }
     }
 
-    const viewEventPageClick = (name, description) => {
-
-        console.log(viewingEvent);
+    const viewEventPageClick = (name, description, tags) => {
+    
         if(viewingEvent) {
             setEventName('');
             setEventDescription('');
@@ -67,6 +75,7 @@ function ClubPage() {
         }
         else {
             setEventName(name);
+            setClubTags(tags);
             setEventDescription(description);
             setViewingEvent(true);
         }
@@ -88,11 +97,26 @@ function ClubPage() {
                     <div className='summaryText'>
                         <h3>Description:</h3>
                         <p>{eventDescription}</p>
+                        <br/>
+                    </div>
+
+                    <div className='summaryText'>
+                        <h3>Associated Tags:</h3>
+                        <br />
+                        {clubTags.map((item, index) => {
+                            return (
+                                <div className='tags' style={{paddingBottom: '10px'}}>
+                                    <p className={ item.length === 0 ? "tags" : 'actualTag'}>{item.length === 0 ? "No Tags Associated With Event" : item}</p>
+                                </div>
+                            )
+                            }
+                        )}
                     </div>
 
                     <div className='containbtn' style={{paddingBottom: '100px'}}>
                         <button className={isFollowingClub ? "disabled" : "actualbtn"} onClick={followEvent} disabled={isFollowingClub ? true : false}>{isInterested ? "Unfollow Event": "Follow Event"}</button>
                     </div>
+
                 </div>                
             ) : (
                 <div className='whole'>
@@ -121,7 +145,7 @@ function ClubPage() {
                     <div>
                         {data.map((item, index) => {
                             return (
-                                <Link style={{textDecorationLine: 'none'}} onClick={() => viewEventPageClick(item.eventName, item.description)}>
+                                <Link style={{textDecorationLine: 'none'}} onClick={() => viewEventPageClick(item.eventName, item.description, item.tags)}>
                                     <div key={index} className='event'>
                                         <h3>Event Name:</h3>
                                         <p>{item.eventName}</p>
