@@ -3,7 +3,7 @@
     border-radius: 25px;
     padding: 20px;
     width: 750px;
-    height: 750px;
+    height: auto;
 }
 .intro {
     display: block;
@@ -55,6 +55,23 @@
     cursor: pointer;
 }
 
+.disabled {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #ccc; /* Change the background color */
+    color: #666;           /* Change the text color */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: not-allowed;   /* Change the cursor style */
+}
 .eventCtn {
     padding-top: 25px;
+}
+
+
+.event {
+    display: block;
+    padding-top: 20px;
 }
