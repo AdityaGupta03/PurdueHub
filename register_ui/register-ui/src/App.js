@@ -22,7 +22,7 @@ import DeleteAccount from './DeleteAccount';
 import Settings from './Settings';
 import TestProfile from './TestProfile';
 import ClubPage from './ClubPage';
-
+import EventsInterestedPage from './EventsInterestedPage';
 
 function App() {
 
@@ -55,6 +55,7 @@ function App() {
         <Route path='/testpf' element={<TestProfile />} />
         <Route path='/message-user' element={<MessagePage/>} />
         <Route path='/club' element={<ClubPage/>} />
+        <Route path='/interested-events' element={<EventsInterestedPage/>} />
 
       </Routes>
     </BrowserRouter>

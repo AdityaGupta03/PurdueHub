@@ -68,8 +68,15 @@
 }
 .eventCtn {
     padding-top: 25px;
+    width: 500px;
 }
 
+.wrapText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 600px;
+}
 
 .event {
     display: block;
