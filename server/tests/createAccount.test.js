@@ -16,6 +16,7 @@ describe("Testing createAccount API:", () => {
 
   afterAll(async () => {
     await pool.query("DELETE FROM email_verification WHERE email IN (SELECT email FROM users)");
+    await pool.query("DELETE FROM calendars");
     await pool.query("DELETE FROM users");
     await pool.end();
 

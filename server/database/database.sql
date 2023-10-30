@@ -14,7 +14,8 @@ CREATE TABLE users (
   follow INTEGER[] DEFAULT ARRAY[]::INTEGER[],
   saved_courses INTEGER[] DEFAULT ARRAY[]::INTEGER[],
   saved_orgs INTEGER[] DEFAULT ARRAY[]::INTEGER[],
-  calendar_id INTEGER UNIQUE
+  calendar_id INTEGER UNIQUE,
+  toggleMsgs INTEGER DEFAULT 0  /* 0 is everyone, 1 is only following people */
 );
 
 CREATE TABLE calendar_events (

@@ -388,6 +388,59 @@ async function getMutualOrgsQuery(user_id, other_user_id) {
   }
 }
 
+async function checkUserBlocked(sender_id, reciever_id) {
+  const query = "SELECT * FROM users WHERE user_id = $1 AND $2 = ANY(blocked)";
+  const data = [ reciever_id, sender_id ];
+
+  try {
+    let db_res = await pool.query(query, data);
+    return db_res.rows.length > 0;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+async function isFollowing(first_id, second_id) {
+  const query = "SELECT * FROM users WHERE user_id = $1 AND $2 = ANY(follow)";
+  const data = [ first_id, second_id ];
+
+  try {
+    let db_res = await pool.query(query, data);
+    return db_res.rows.length > 0;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+async function toggleDM(user_id, option) {
+  const query = "UPDATE users SET togglemsgs = $1 WHERE user_id = $2";
+  const data = [ option, user_id ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function isOnlyFollowing(user_id) {
+  const query = "SELECT togglemsgs FROM users WHERE user_id = $1";
+  const data = [ user_id ];
+
+  try {
+    let db_res = await pool.query(query, data);
+    return db_res.rows[0].togglemsgs == 1;
+  } catch (error) {
+    console.log(error);
+  }
+}
+  }
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -418,4 +471,8 @@ module.exports = {
   revokeBanQuery,
   getMutualFriendsQuery,
   getMutualOrgsQuery,
+  checkUserBlocked,
+  isFollowing,
+  toggleDM,
+  isOnlyFollowing
 };

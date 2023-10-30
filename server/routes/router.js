@@ -1,6 +1,7 @@
 const express = require("express");
 const calendarController = require("../controllers/calendarController");
 const accountController = require("../controllers/accountController");
+const messagingController = require("../controllers/messagingController");
 
 const router = express.Router();
 
@@ -36,6 +37,8 @@ router.post("/ignore_report", accountController.ignoreReport);
 router.post("/ban_report", accountController.banFromReport);
 router.post("/get_mutual_friends", accountController.getMutualFriends);
 router.post("/get_mutual_orgs", accountController.getMutualOrgs);
+router.post("/toggle_dm", messagingController.toggleDM);
+router.post("/msg_user", messagingController.messageUser);
 router.post("/delete_account", accountController.deleteAccountAPI);
 
 module.exports = router;

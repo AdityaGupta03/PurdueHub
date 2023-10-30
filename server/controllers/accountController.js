@@ -65,6 +65,8 @@ async function createAccount(req, res) {
       return res.status(500).json({ error: "Internal server error" });
     }
 
+    console.log("Created userid: " + user_id);
+
     return res.status(200).json({ message: "Account successfully created", user_id: user_id });
   } catch (err) {
     console.log(err.message);
