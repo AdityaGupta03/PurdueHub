@@ -36,5 +36,6 @@ router.post("/ignore_report", accountController.ignoreReport);
 router.post("/ban_report", accountController.banFromReport);
 router.post("/get_mutual_friends", accountController.getMutualFriends);
 router.post("/get_mutual_orgs", accountController.getMutualOrgs);
+router.post("/delete_account", accountController.deleteAccountAPI);
 
 module.exports = router;
