@@ -72,11 +72,42 @@ async function createAccount(req, res) {
   }
 }
 
+async function deleteAccountAPI(req, res) {
+  console.log("[INFO] Deleting an account API.");
+
+  let username = req.body.username;
+  if (!username) {
+    return res.status(400).json({ error: "Missing username field." });
+  }
+
+  let isValidAcc = await accountQueries.checkAccountFromUsernameQuery(username);
+  if (!isValidAcc) {
+    return res.status(404).json({ error: "Account not found." });
+  }
+
+  console.log("Deleting user: " + username)
+
+  let status = await deleteAccount(username);
+  if (status) {
+    return res.status(200).json({ message: "Successfully deleted account." });
+  } else {
+    return res.status(500).json({ error: "Internal Server Error!" });
+  }
+}
+
 async function deleteAccount(username) {
-  console.log("[INFO] Deleting account helper.")
+  console.log("[INFO] Deleting account helper for user: " + username);
   let account = await accountQueries.getUserInfoFromUsernameQuery(username);
   if (account == null) {
     return false;
+  }
+
+  let email = account.email;
+  let isVerified = await verificationQueries.checkVerifiedEmail(email);
+  if (!isVerified) {
+    let status = await verificationQueries.removeEmailVerificationQuery(email);
+    if (!status) return false;
+    console.log("Deleted verification row: " + email);
   }
 
   const user_id = account.user_id;
@@ -866,4 +897,5 @@ module.exports = {
   banFromReport,
   sendEmailVerification,
   deleteAccount,
+  deleteAccountAPI,
 };
