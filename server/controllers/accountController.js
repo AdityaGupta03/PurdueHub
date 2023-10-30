@@ -830,6 +830,70 @@ async function ignoreReport(req, res) {
   return res.status(200).json({ message: "Successfully ignored report" });
 }
 
+async function getMutualFriends(req, res) {
+  console.log("[INFO] Get mutual friends api.");
+
+  let { user_id, other_username } = req.body;
+
+  if (!other_username) {
+    return res.status(400).json({ error: "Missing username" });
+  }
+
+  if (!user_id) {
+    return res.status(400).json({ error: "Missing user_id" });
+  }
+
+  let account = await accountQueries.getUserInfoFromUsernameQuery(other_username);
+  if (account == null) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  let other_user_id = account.user_id;
+
+  let db_res = await accountQueries.getMutualFriendsQuery(user_id, other_user_id);
+  if (db_res == null) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  if (db_res.rows[0].mutual_friends == null) {
+    return res.status(200).json({ mutual_friends: [] });
+  }
+
+  return res.status(200).json({ mutual_friends: db_res.rows[0].mutual_friends });
+}
+
+async function getMutualOrgs(req, res) {
+  console.log("[INFO] Get mutual orgs api.");
+
+  let { user_id, other_username } = req.body;
+
+  if (!other_username) {
+    return res.status(400).json({ error: "Missing username" });
+  }
+
+  if (!user_id) {
+    return res.status(400).json({ error: "Missing user_id" });
+  }
+
+  let account = await accountQueries.getUserInfoFromUsernameQuery(other_username);
+  if (account == null) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  let other_user_id = account.user_id;
+
+  let db_res = await accountQueries.getMutualOrgsQuery(user_id, other_user_id);
+  if (db_res == null) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  if (db_res.rows[0].mutual_orgs == null) {
+    return res.status(200).json({ mutual_orgs: [] });
+  }
+
+  return res.status(200).json({ mutual_orgs: db_res.rows[0].mutual_orgs });
+}
+
 async function banFromReport(req, res) {
   const { id, ban_id, reported_email, reporter_email } = req.body;
 
@@ -899,5 +963,7 @@ module.exports = {
   banFromReport,
   sendEmailVerification,
   deleteAccount,
+  getMutualFriends,
+  getMutualOrgs,
   deleteAccountAPI,
 };

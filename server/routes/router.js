@@ -35,6 +35,8 @@ router.post("/revoke_ban", accountController.revokeBan);
 router.post("/report_user", accountController.reportUser);
 router.post("/ignore_report", accountController.ignoreReport);
 router.post("/ban_report", accountController.banFromReport);
+router.post("/get_mutual_friends", accountController.getMutualFriends);
+router.post("/get_mutual_orgs", accountController.getMutualOrgs);
 router.post("/toggle_dm", messagingController.toggleDM);
 router.post("/msg_user", messagingController.messageUser);
 router.post("/delete_account", accountController.deleteAccountAPI);
