@@ -13,9 +13,16 @@ import UsernameAuthCode from './UsernameAuthCode';
 import VerifyEmail from './VerifyEmail';
 import ViewCalendar from './ViewCalendar';
 import ReportSubmission from './Report';
+import Feedback from './Feedback';
+import MessagePage from './MessagePage';
 
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './App.css' // This is a temporary file pulled from tutorial
+import DeleteAccount from './DeleteAccount';
+import Settings from './Settings';
+import TestProfile from './TestProfile';
+import ClubPage from './ClubPage';
+
 
 function App() {
 
@@ -40,8 +47,15 @@ function App() {
         <Route path='/verify_email/:email' element={<VerifyEmail />} />
         <Route path='/viewlist' element={<ViewList />} />
         <Route path='/calendar' element={<ViewCalendar />} />
-
+        
         <Route path='/report' element={<ReportSubmission />} />
+        <Route path='/feedback' element={<Feedback />} />
+        <Route path='/delete' element={<DeleteAccount />} />
+        <Route path='/settings' element={<Settings />} />
+        <Route path='/testpf' element={<TestProfile />} />
+        <Route path='/message-user' element={<MessagePage/>} />
+        <Route path='/club' element={<ClubPage/>} />
+
       </Routes>
     </BrowserRouter>
     </main>
