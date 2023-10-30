@@ -37,5 +37,6 @@ router.post("/ignore_report", accountController.ignoreReport);
 router.post("/ban_report", accountController.banFromReport);
 router.post("/toggle_dm", messagingController.toggleDM);
 router.post("/msg_user", messagingController.messageUser);
+router.post("/delete_account", accountController.deleteAccountAPI);
 
 module.exports = router;
