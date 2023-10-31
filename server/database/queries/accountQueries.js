@@ -438,8 +438,6 @@ async function isOnlyFollowing(user_id) {
     console.log(error);
   }
 }
-  }
-}
 
 module.exports = {
   isUniqueUsernameQuery,
