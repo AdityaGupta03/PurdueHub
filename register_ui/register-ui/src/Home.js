@@ -6,11 +6,11 @@ export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    //const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
 
-    //if (isLoggedIn == 'false') {
-    //  navigate("/login");
-    //}
+    if (isLoggedIn == 'false') {
+      navigate("/login");
+    }
 
   }, []);
 
@@ -29,6 +29,7 @@ export default function Home() {
         <Link to="/delete">Delete Account</Link>
         <Link to="/message-user">Message A User</Link>
         <Link to="/interested-events">Events I Am Interested In</Link>
+        <Link to="/username-lookup">Username Lookup</Link>
         </section>
       </div>
     </div>

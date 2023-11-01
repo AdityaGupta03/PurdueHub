@@ -23,6 +23,7 @@ import Settings from './Settings';
 import TestProfile from './TestProfile';
 import ClubPage from './ClubPage';
 import EventsInterestedPage from './EventsInterestedPage';
+import UsernameLookup from './UsernameLookup';
 
 function App() {
 
@@ -48,14 +49,17 @@ function App() {
         <Route path='/viewlist' element={<ViewList />} />
         <Route path='/calendar' element={<ViewCalendar />} />
         
+        <Route path='/testprofile/:username' element={<TestProfile />} /> {/* TESTING UI*/}
+        <Route path='/testprofile/' element={<TestProfile />} /> {/* TESTING UI */}
+
         <Route path='/report' element={<ReportSubmission />} />
         <Route path='/feedback' element={<Feedback />} />
         <Route path='/delete' element={<DeleteAccount />} />
         <Route path='/settings' element={<Settings />} />
-        <Route path='/testpf' element={<TestProfile />} />
         <Route path='/message-user' element={<MessagePage/>} />
         <Route path='/club' element={<ClubPage/>} />
         <Route path='/interested-events' element={<EventsInterestedPage/>} />
+        <Route path='/username-lookup' element={<UsernameLookup/>} />
 
       </Routes>
     </BrowserRouter>
