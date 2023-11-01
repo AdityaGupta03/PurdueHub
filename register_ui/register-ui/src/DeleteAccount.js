@@ -21,15 +21,33 @@ function DeleteAccount() {
         handleDisplay(true);
      }
     
-     const handleConfirm = () => {
+    const handleConfirm = async () => {
+
+        let my_username = sessionStorage.getItem('username');
+        console.log("Deleting account for: " + my_username);
         
         if(message != '') {
             // send back feedback info to backend for taking a look at
         }
         // backend logic
+
+        try {
+            let res = await fetch('http://localhost:5000/api/delete_account', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: my_username }),
+            });
+            const data = await res.json();
+            console.log(data);
+        } catch (error) {
+            console.log("Error:" + error);
+        }
+
         setSuccess(true);
         handleDisplay(false);
-     }
+    }
 
   return (
     <>
