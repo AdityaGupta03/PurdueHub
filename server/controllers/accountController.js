@@ -4,6 +4,7 @@ const helperFuncs = require("./helperFunctions");
 const verificationQueries = require("../database/queries/verificationQueries");
 const reportQueries = require("../database/queries/reportQueries");
 const { saveToDatabase } = require("../server");
+const stringSimilarity = require('string-similarity');
 
 async function createAccount(req, res) {
   console.log("[INFO] Creating account api.");
@@ -934,6 +935,46 @@ async function banFromReport(req, res) {
   return res.status(200).json({ message: "Successfully banned user" });
 }
 
+async function searchUsers(req, res) {
+  console.log("[INFO] Search users api.");
+  
+  const { search } = req.body;
+
+  if (!search) {
+    return res.status(400).json({ error: "Missing search field" });
+  }
+
+  let account = await accountQueries.getUserInfoFromUsernameQuery(search);
+  if (account != null) {
+    console.log("Found exact match.");
+    return res.status(200).json({ users: [account.username] });
+  }
+
+  console.log("No exact match found. Searching for closest usernames.");
+
+  let db_res = await accountQueries.getAllUsernames();
+  if (db_res == null) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  if (db_res.length == 0) {
+    return res.status(200).json({ users: [] });
+  }
+
+  console.log(db_res);
+
+  // Find the 5 closest usernames to the search field provided.
+  const usernames = db_res.map(user => user.username);
+  const matches = stringSimilarity.findBestMatch(search, usernames);
+  const closestUsernames = matches.ratings
+    .sort((a, b) => b.rating - a.rating)
+    .slice(0, 5)
+    .map(match => db_res.find(user => user.username === match.target).username);
+  
+  console.log(closestUsernames);
+  return res.status(200).json({ users: closestUsernames });
+}
+
 module.exports = {
   createAccount,
   updateUsername,
@@ -966,4 +1007,5 @@ module.exports = {
   getMutualFriends,
   getMutualOrgs,
   deleteAccountAPI,
+  searchUsers,
 };

@@ -439,6 +439,19 @@ async function isOnlyFollowing(user_id) {
   }
 }
 
+async function getAllUsernames() {
+  const query = "SELECT username FROM users";
+  const data = [];
+
+  try {
+    let db_res = await pool.query(query, data);
+    return db_res.rows;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -472,5 +485,6 @@ module.exports = {
   checkUserBlocked,
   isFollowing,
   toggleDM,
-  isOnlyFollowing
+  isOnlyFollowing,
+  getAllUsernames,
 };
