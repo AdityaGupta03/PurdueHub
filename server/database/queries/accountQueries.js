@@ -418,6 +418,8 @@ async function toggleDM(user_id, option) {
   const query = "UPDATE users SET togglemsgs = $1 WHERE user_id = $2";
   const data = [ option, user_id ];
 
+  console.log("Toggling DM option for user: " + user_id + " to " + option);
+
   try {
     await pool.query(query, data);
     return true;

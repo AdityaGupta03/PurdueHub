@@ -56,6 +56,8 @@ async function toggleDM(req, res) {
   console.log("[INFO] Toggle direct messaging option");
 
   let { user_id, option } = req.body;
+  console.log(req.body);
+
   if (!user_id) {
     return res.status(400).json({ error: "Missing user_id field." });
   }

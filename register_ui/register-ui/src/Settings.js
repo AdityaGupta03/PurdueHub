@@ -33,8 +33,27 @@ function Settings() {
     const clubCalloutChange = (e) => {
         setCalloutChecked(e.target.checked);
     }
-    const receiveMessagesChange = (e) => {
+
+    const receiveMessagesChange = async (e) => {
         setDirectMessageCheck(e.target.checked);
+        console.log(directMessageCheck);
+        let option = directMessageCheck ? "0" : "1";
+        console.log(option);
+
+        let my_userid = sessionStorage.getItem('user_id');
+        try {
+            let res = await fetch('http://localhost:5000/api/toggle_dm', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "user_id": my_userid, "option": option }),
+            });
+            const data = await res.json();
+            console.log(data);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     // Conditional Rendering For Showing Notification Page
