@@ -79,6 +79,8 @@
 }
 
 .event {
+    width: 100%;
+    width: 600px;
     display: block;
     padding-top: 20px;
 }
@@ -92,3 +94,7 @@
     border-radius: 4px;
     font-size: 30px;
   }
+
+.event:hover {
+    background-color: rgb(96, 82, 82);
+}
