@@ -11,6 +11,7 @@ function Feedback() {
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
 
+    
     const errRef = useRef(); /* Set focus on an error, to allow accessibility purposes */
 
     useEffect(() => {
@@ -56,7 +57,6 @@ function Feedback() {
                         id='title'
                         autoComplete='off'
                         onChange={(e) => setTitle(e.target.value)}
-                        required
                     />
                     <label htmlFor='message'>Your Feedback:</label>
                     <textarea
@@ -65,7 +65,6 @@ function Feedback() {
                         rows={11}
                         cols={40}
                         onChange={(e) => setMessage(e.target.value)}
-                        required
                     />  
                     <button type='submit'>
                         Submit Feedback
