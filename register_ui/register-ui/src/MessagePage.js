@@ -19,7 +19,8 @@ function MessagePage() {
   const [success, setSuccess] = useState(false); 
   const [errMsg, setErrMsg] = useState(''); 
 
-  const [ isBlocked, setIsBlocked ] = useState(false); // user who is being messaged is blocked
+  const [ isBlocked, setIsBlocked ] = useState(false); // user1 (sender) to user2 (receiver), user1 blocked user2
+  const [ youAreBlocked, setYouAreBlocked] = useState(false); // user1 (sender) to user2 (receiver), user1 is blocked by user2
   const [ isBanned, setIsBanned ] = useState(false); // user who is being messaged is banned
 
   const errRef = useRef(); // NEW
@@ -47,18 +48,22 @@ function MessagePage() {
       setErrMsg('Empty Message');
       return;
     }
+    if(formData.username != "Billy") {
+      // IF USERNAME DOES NOT EXIST!
+      setErrMsg("User does not exist, try again")
+      return
+    }
     if(isBlocked) {
-        setErrMsg("User is blocked, can't send message");
+        setErrMsg("You have this user blocked, can't send message");
+        return;
+    }
+    if(youAreBlocked) {
+        setErrMsg("You are blocked by this user, can't send message");
         return;
     }
     if(isBanned) {
       setErrMsg("User is banned, can't send message");
       return;
-    }
-    if(formData.username != "Billy") {
-      // IF USERNAME DOES NOT EXIST!
-      setErrMsg("User does not exist, try again")
-      return
     }
     // IF INFORMATION IS CORRECT AND SENT SUCCESSFULLY LOGIC HERE:
     toast.success('Successfully Sent Your Message!', {
