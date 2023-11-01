@@ -151,6 +151,7 @@ function EventsInterestedPage() {
                     <div className='containbtn' style={{paddingBottom: '10px'}}>
                         <button className="actualbtn" onClick={shareOnFacebook}>Share On Facebook</button>
                     </div>
+                    <br/>
                 </div>  
         ):(
 
