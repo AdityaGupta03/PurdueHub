@@ -958,13 +958,13 @@ async function searchUsers(req, res) {
   }
 
   if (db_res.length == 0) {
+    console.log("No users in database.");
     return res.status(200).json({ users: [] });
   }
 
-  console.log(db_res);
-
-  // Find the 5 closest usernames to the search field provided.
   const usernames = db_res.map(user => user.username);
+  console.log(search);
+  console.log(usernames);
   const matches = stringSimilarity.findBestMatch(search, usernames);
   const closestUsernames = matches.ratings
     .sort((a, b) => b.rating - a.rating)
