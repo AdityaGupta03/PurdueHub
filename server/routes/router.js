@@ -40,5 +40,6 @@ router.post("/get_mutual_orgs", accountController.getMutualOrgs);
 router.post("/toggle_dm", messagingController.toggleDM);
 router.post("/msg_user", messagingController.messageUser);
 router.post("/delete_account", accountController.deleteAccountAPI);
+router.post("/search_users", accountController.searchUsers);
 
 module.exports = router;

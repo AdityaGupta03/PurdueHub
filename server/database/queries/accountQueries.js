@@ -418,6 +418,8 @@ async function toggleDM(user_id, option) {
   const query = "UPDATE users SET togglemsgs = $1 WHERE user_id = $2";
   const data = [ option, user_id ];
 
+  console.log("Toggling DM option for user: " + user_id + " to " + option);
+
   try {
     await pool.query(query, data);
     return true;
@@ -438,6 +440,17 @@ async function isOnlyFollowing(user_id) {
     console.log(error);
   }
 }
+
+async function getAllUsernames() {
+  const query = "SELECT username FROM users";
+  const data = [];
+
+  try {
+    let db_res = await pool.query(query, data);
+    return db_res.rows;
+  } catch (error) {
+    console.log(error);
+    return null;
   }
 }
 
@@ -474,5 +487,6 @@ module.exports = {
   checkUserBlocked,
   isFollowing,
   toggleDM,
-  isOnlyFollowing
+  isOnlyFollowing,
+  getAllUsernames,
 };
