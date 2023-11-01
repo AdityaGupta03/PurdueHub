@@ -13,6 +13,7 @@ import UsernameAuthCode from './UsernameAuthCode';
 import VerifyEmail from './VerifyEmail';
 import ViewCalendar from './ViewCalendar';
 import ReportSubmission from './Report';
+import ViewMutuals from './ViewMutuals';
 import Feedback from './Feedback';
 import MessagePage from './MessagePage';
 
@@ -53,6 +54,7 @@ function App() {
         <Route path='/testprofile/' element={<TestProfile />} /> {/* TESTING UI */}
 
         <Route path='/report' element={<ReportSubmission />} />
+        <Route path='/viewmutuals/:username' element={<ViewMutuals />} />
         <Route path='/feedback' element={<Feedback />} />
         <Route path='/delete' element={<DeleteAccount />} />
         <Route path='/settings' element={<Settings />} />
@@ -60,7 +62,6 @@ function App() {
         <Route path='/club' element={<ClubPage/>} />
         <Route path='/interested-events' element={<EventsInterestedPage/>} />
         <Route path='/username-lookup' element={<UsernameLookup/>} />
-
       </Routes>
     </BrowserRouter>
     </main>

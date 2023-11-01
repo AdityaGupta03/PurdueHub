@@ -362,6 +362,32 @@ async function revokeBanQuery(user_id) {
   }
 }
 
+async function getMutualFriendsQuery(user_id, other_user_id) {
+  const query = "SELECT array_agg(username) AS mutual_friends FROM users WHERE user_id = ANY(SELECT unnest(follow) FROM users WHERE user_id = $1) AND user_id = ANY(SELECT unnest(follow) FROM users WHERE user_id = $2)";
+  const data = [ user_id, other_user_id ];
+
+  try {
+    const mutual_friends = await pool.query(query, data);
+    return mutual_friends;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+async function getMutualOrgsQuery(user_id, other_user_id) {
+  const query = "SELECT array_agg(name) AS mutual_orgs FROM organization WHERE org_id = ANY(SELECT unnest(saved_orgs) FROM users WHERE user_id = $1) AND org_id = ANY(SELECT unnest(saved_orgs) FROM users WHERE user_id = $2)";
+  const data = [ user_id, other_user_id ];
+
+  try {
+    const mutual_orgs = await pool.query(query, data);
+    return mutual_orgs;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 async function checkUserBlocked(sender_id, reciever_id) {
   const query = "SELECT * FROM users WHERE user_id = $1 AND $2 = ANY(blocked)";
   const data = [ reciever_id, sender_id ];
@@ -410,7 +436,8 @@ async function isOnlyFollowing(user_id) {
     return db_res.rows[0].togglemsgs == 1;
   } catch (error) {
     console.log(error);
-    return false;
+  }
+}
   }
 }
 
@@ -442,6 +469,8 @@ module.exports = {
   banAccountQuery,
   markDeleteAccountQuery,
   revokeBanQuery,
+  getMutualFriendsQuery,
+  getMutualOrgsQuery,
   checkUserBlocked,
   isFollowing,
   toggleDM,
