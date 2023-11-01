@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import './Club.css' // css pulled online
+import './Club.css' 
 
 import temp from './temporary-profile.jpeg' // temp picture
 import works from './fireworks-shape.jpg' // temp picture

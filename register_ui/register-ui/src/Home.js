@@ -11,21 +11,28 @@ export default function Home() {
     if (isLoggedIn == 'false') {
       navigate("/login");
     }
+
   }, []);
 
   return (
-    <section>
-      <h1>Welcome to PurdueHub!</h1>
-      <p>An application targeted to students of Purdue University</p>
-      <Link to="/userprofile">View Profile</Link>
-      <Link to="/viewlist">View your user lists!</Link>
-      <Link to="/viewprofile/testing">View testing's profile</Link>
-      <Link to="/viewprofile/banned">View banned's profile</Link>
-      <Link to="/feedback">Provide Feedback</Link>
-      <Link to="/settings">Settings</Link>
-      <Link to="/delete">Delete Account</Link>
-      <Link to="/message-user">Message A User</Link>
-    </section>
+    <div>
+      <div>
+        <section>
+        <h1>Welcome to PurdueHub!</h1>
+        <p>An application targeted to students of Purdue University</p>
+        <Link to="/userprofile">View Profile</Link>
+        <Link to="/viewlist">View your user lists!</Link>
+        <Link to="/viewprofile/testing">View testing's profile</Link>
+        <Link to="/viewprofile/banned">View banned's profile</Link>
+        <Link to="/feedback">Provide Feedback</Link>
+        <Link to="/settings">Settings</Link>
+        <Link to="/delete">Delete Account</Link>
+        <Link to="/message-user">Message A User</Link>
+        <Link to="/interested-events">Events I Am Interested In</Link>
+        <Link to="/username-lookup">Username Lookup</Link>
+        </section>
+      </div>
+    </div>
   )
 }
 

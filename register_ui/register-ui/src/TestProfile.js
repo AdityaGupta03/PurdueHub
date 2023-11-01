@@ -9,7 +9,10 @@ import './Club.css'
 
 function TestProfile() {
     const navigate = useNavigate();
-    const username = useState("Billy Joel");
+    //const username = "Hello";
+
+    const { username } = useParams(); 
+
     const my_username = useState("Leo Delgado");
     const [bio, setBio] = useState('Lorem Ipsum random bio information here, blee bloo'); // bio is empty at first
     const [ isBlocked, setIsBlocked ] = useState(false); // not blocked yet
@@ -142,7 +145,7 @@ function TestProfile() {
                         </form>
                     </section>
                 </div>
-            ): (
+            ):(
                 <div style={{alignContent: 'center'}}className='whole'>
                     <h1>{username}'s Profile</h1>
                     <Link to="/report">Report user</Link>
@@ -156,7 +159,7 @@ function TestProfile() {
                         <h2>Username: {username}</h2>
                         <button onClick={toggleBlock}>{isBlocked ? 'Unblock' : 'Block'}</button>
                         <button disabled={isBlocked ? true : false} onClick={toggleFollow}>{isFollow ? 'Unfollow' : 'Follow'}</button>
-                        <button onClick={messageUser}>Message</button>
+                        <button disabled={isBlocked ? true : false} onClick={messageUser}>Message</button>
                     {/* <button onClick={reportUser}>Report</button> */}
                     </span>
                     {   
