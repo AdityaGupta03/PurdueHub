@@ -5,6 +5,14 @@
     width: 750px;
     height: auto;
 }
+.interestedWhole {
+    background-color: rgb(41, 35, 35);
+    border-radius: 25px;
+    padding: 20px;
+    width: 750px;
+    height: 520px;
+
+}
 .intro {
     display: block;
     min-height: 120px;

@@ -21,6 +21,13 @@ function EventsInterestedPage() {
     const [eventName, setEventName] = useState('X'); // specific event information
     const [eventDescription, setEventDescription] = useState('X'); // specific event information
 
+    const shareOnFacebook = () => {
+        const eventDetails = 'Come join us in this event!:'; // Replace with the actual URL of your event
+        const url = 'https://www.example.com'; // Placeholder URL
+        const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(eventDetails)}`;
+        window.open(facebookShareUrl, '_blank', 'width=600,height=400');
+    };
+
     const headBack = () => {
         navigate("/");
     }
@@ -121,7 +128,7 @@ function EventsInterestedPage() {
     return (
         <>
         {viewingEvent ? (
-                <div className='whole'>
+                <div className='interestedWhole'>
                     <div className='containbtn'>
                         <button className='actualbtn' onClick={() => viewEventPageClick('X', 'X')}>Back</button>
                     </div>
@@ -137,10 +144,13 @@ function EventsInterestedPage() {
                         <br/>
                     </div>
 
-                    <div className='containbtn' style={{paddingBottom: '100px'}}>
+                    <div className='containbtn' style={{paddingBottom: '10px'}}>
                         <button className="actualbtn" onClick={followEvent}>{isInterested ? "Remove Event": "Add Event"}</button>
                     </div>
-
+                    <br/>
+                    <div className='containbtn' style={{paddingBottom: '10px'}}>
+                        <button className="actualbtn" onClick={shareOnFacebook}>Share On Facebook</button>
+                    </div>
                 </div>  
         ):(
 
