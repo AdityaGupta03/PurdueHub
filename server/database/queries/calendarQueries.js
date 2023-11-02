@@ -150,7 +150,7 @@ async function getCalendarInfoFromIdQuery(event_id) {
         const { rows } = await pool.query(query, data);
         return rows[0];
     } catch (error) {
-        console.error("[Error] getCalendarInfoFromIdQuery");
+        console.error(error);
         return null;
     }
 }
@@ -167,4 +167,5 @@ module.exports = {
     isCalendarEventInUseQuery,
     createCalendarQuery,
     deleteCalendarQuery,
+    getCalendarInfoFromIdQuery,
 };

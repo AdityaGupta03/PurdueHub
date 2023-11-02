@@ -86,7 +86,7 @@ async function deleteCalendarEvent(req, res) {
 
     const id = req.body.id;
 
-    const calendarInfo = await calendarQueries.getCalendarInfoFromIdQuery(username);
+    const calendarInfo = await calendarQueries.getCalendarInfoFromIdQuery(id);
     if (calendarInfo == null) {
         return res.status(500).json({ error: "Internal server error" });
     }
@@ -98,7 +98,7 @@ async function deleteCalendarEvent(req, res) {
 
     let title = "PurdueHub - Deleted Calendar Event";
     let msg = "Your calendar event, " + calendarInfo.title + ", has been deleted by " + username + ".\n\n";
-    await helperFuncs.sendEmail(account.email, title, msg);
+    helperFuncs.sendEmail(account.email, title, msg);
 
     try {
         await calendarQueries.removeCalendarEventsArrQuery(username, id);
