@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import './Club.css' 
+import './Club.css'
+import './Profile.css' // css pulled online
 
 import temp from './temporary-profile.jpeg' // temp picture
 import works from './fireworks-shape.jpg' // temp picture
 
+import albert from './temp-icons/albert.jpg' // temp picture
+import toby from './temp-icons/toby.jpg' // temp picture
+import joel from './temp-icons/joel.jpg' // temp picture
 
 function ClubPage() {
 
     const [viewingEvent, setViewingEvent] = useState(false);
+    const [viewingFriends, setViewingFriends] = useState(false);
 
     const [eventName, setEventName] = useState('X'); // specific event information
     const [eventDescription, setEventDescription] = useState('X'); // specific event information
@@ -19,91 +24,149 @@ function ClubPage() {
     const [clubTags, setClubTags] = useState([]);
 
     const [isFollowingClub, setIsFollowingClub] = useState(false);
+
     const [indexOfEvent, setIndexOfEvent] = useState(0);
     // example
+
     const data = [
         {
-            eventName:'Calling Out Firework Fanatics!',
+            eventName: 'Calling Out Firework Fanatics!',
             description: 'We have our first meeting, come join us and let us get to using gunpowder!',
-            tags: ["Club Callout", "Cops", "Crazy"],
+            tags: ["Callout", "Cops", "Crazy"],
             interest: false
         },
         {
-            eventName:'Sightseeing',
+            eventName: 'Sightseeing',
             description: 'We are viewing fireworks near the Wabash river at 9PM, October 31st 9PM!',
-            tags: [""],
+            tags: ["General"],
             interest: false
         },
         {
-            eventName:'DIY',
+            eventName: 'DIY',
             description: 'We are building our own fireworks, this is not illegal haha, November 32nd, 1AM',
-            tags: ["Fun", "DIY"],
+            tags: ["General", "DIY"],
             interest: false
         },
         {
-            eventName:'Blowing Up',
+            eventName: 'Blowing Up',
             description: 'We are lighting up the DIY fireworks, bring your Bomb suit, a lot of gunpowder and explosions, December 1st, 5AM',
             tags: ["Professional Development"],
             interest: false
         }
     ];
-    const [ events, setEvents ] = useState(data);
 
+    const friendData = [
+        {
+            username: 'Billy Joel',
+            profilePic: joel
+        },
+        {
+            username: 'Alberty341',
+            profilePic: albert
+        },
+        {
+            username: 'tobyRuL3s',
+            profilePic: toby
+        },
+    ];
+
+    const [followedUsernames, setFollowedUsernames] = useState(friendData);
+    const [events, setEvents] = useState(data);
+
+    const viewFriends = () => {
+        if(viewingFriends) {
+            setViewingFriends(false);
+        }
+        else {
+            setViewingFriends(true);
+        }
+    }
     // if a user isn't following a club to be notified of all their events, they can choose an event to say there are interested in
     const followEvent = () => {
-        if(isInterested) {
+        if (isInterested) {
+
+            // If they are no longer interested in it...
+            const updatedEvents = [...events];
+            updatedEvents[indexOfEvent].interest = false;
+            setEvents(updatedEvents);
+
             setIsInterested(false);
 
         }
         else {
+            // If they are interested in it....
+            //console.log("BEFORE: " + events[indexOfEvent].interest);
+
+            const updatedEvents = [...events];
+            updatedEvents[indexOfEvent].interest = true;
+            setEvents(updatedEvents);
+
+            //console.log("AFTER: " + events[indexOfEvent].interest);
             setIsInterested(true)
         }
     }
 
     // notify a user of all events associated with the club
     const followClub = () => {
-        if(isFollowingClub) {
+        if (isFollowingClub) {
+            // No longer following a club
+            const updatedEvents = events.map(event => {
+                // Create a copy of the event object with 'interest' set to false
+                return { ...event, interest: false };
+            });
+            setEvents(updatedEvents);
+
             setIsFollowingClub(false);
         }
         else {
+            // Following a club
+            const updatedEvents = events.map(event => {
+                // Create a copy of the event object with 'interest' set to false
+                return { ...event, interest: true };
+            });
+            setEvents(updatedEvents);
+
             setIsFollowingClub(true)
         }
     }
 
     const viewEventPageClick = (name, description, tags, interest, indexOf) => {
-        
-        if(viewingEvent) {
+        console.log("Interest: " + interest)
+
+        if (viewingEvent) {
+            // If no longer on the viewing event page
             setEventName('');
             setEventDescription('');
             setViewingEvent(false);
         }
         else {
-            //setIndexOfEvent(indexOf); //find a way to change this better and modify interest in the backend
+            // If viewing event page
             setEventName(name);
             setClubTags(tags);
-            //setIsInterested(interest); //find a way to change this better and modify interest in the backend
+            setIsInterested(interest);
+            setIndexOfEvent(indexOf);
             setEventDescription(description);
             setViewingEvent(true);
         }
     }
-    
+
     return (
         <>
             {viewingEvent ? (
                 <div className='whole'>
                     <div className='containbtn'>
-                        <button className='actualbtn' onClick={() => viewEventPageClick('X', 'X')}>Back</button>
+                        <button className='actualbtn' onClick={() => viewEventPageClick(eventName, eventDescription, clubTags, isInterested, indexOfEvent)}>Back</button>
                     </div>
-
+        
                     <div className='intro'>
-                        <img className='clubPF' src={works}/>
-                        <h1 className='title'>Event: {eventName}</h1>
+                        <img className='clubPF' src={works} />
+                        <h1 className='title'>{eventName}</h1>
                     </div>
 
                     <div className='summaryText'>
                         <h3>Description:</h3>
                         <p>{eventDescription}</p>
-                        <br/>
+                        <br />
                     </div>
 
                     <div className='summaryText'>
@@ -111,60 +174,90 @@ function ClubPage() {
                         <br />
                         {clubTags.map((item, index) => {
                             return (
-                                <div className='tags' style={{paddingBottom: '10px'}}>
-                                    <p className={ item.length === 0 ? "tags" : 'actualTag'}>{item.length === 0 ? "No Tags Associated With Event" : item}</p>
+                                <div className='tags' style={{ paddingBottom: '10px' }}>
+                                    <p className={item.length === 0 ? "tags" : 'actualTag'}>{item.length === 0 ? "No Tags Associated With Event" : item}</p>
                                 </div>
                             )
-                            }
+                        }
                         )}
                     </div>
 
-                    <div className='containbtn' style={{paddingBottom: '100px'}}>
-                        <button className={isFollowingClub ? "disabled" : "actualbtn"} onClick={followEvent} disabled={isFollowingClub ? true : false}>{isInterested ? "Unfollow Event": "Follow Event"}</button>
+                    <div className='containbtn' style={{ paddingBottom: '100px' }}>
+                        <button className={isFollowingClub ? "disabled" : "actualbtn"} onClick={followEvent} disabled={isFollowingClub ? true : false}>{isInterested ? "Unfollow Event" : "Follow Event"}</button>
                     </div>
 
-                </div>                
+                </div>
             ) : (
+
                 <div className='whole'>
-                <div className='containbtn'>
-                    <button className='actualbtn' onClick={followClub}>{isFollowingClub ? "Unfollow Club": "Follow Club"}</button>
-                </div>
-                <div className='intro'>
-                    <img className='clubPF' src={works}/>
-                    <h1 className='title'>{clubName}</h1>
-                </div>
-        
-                <div className='summaryText'>
-                <h3>Summary:</h3>
-                    <p>{clubDescription}</p>
-                </div>
-                
-                <div className='info'>
-                    <h3>General Info:</h3>
-                    <p>West Lafayette, IN 47907-2034</p>
-                    <p>United States</p>
-                    <p>Email: fireworksconns@purdue.edu</p>
-                </div>
-        
-                <div className='eventCtn'>
-                    <h2>Upcoming Events:</h2>
-                    <div>
-                        {data.map((item, index) => {
-                            return (
-                                <Link style={{textDecorationLine: 'none'}} onClick={() => viewEventPageClick(item.eventName, item.description, item.tags, item.interest, index)}>
-                                    <div key={index} className='event'>
-                                        <h3>Event Name:</h3>
-                                        <p>{item.eventName}</p>
-                                        <h3>Event Description: </h3>
-                                        <p>{item.description}</p>
+                    {viewingFriends ? (
+                        <div>
+                            <div className='containbtn'>
+                                <button className='actualbtn' onClick={viewFriends}>Back</button>
+                            </div>
+                            <br />
+                        <div className='friendsIntro'>
+                            <h1 className='friendsTitle'>Users Who Are Interested:</h1>
+                            {friendData.map((item, index) => {
+                                return (
+                                    <div className="changeBox" key={index}>
+                                        <div className='holdImage'>
+                                            <img src={item.profilePic} className='baseimage' />
+                                        </div>
+                                        <div className='imageText'>
+                                            <h3 className='userName'>{item.username}</h3>
+                                        </div>
                                     </div>
-                                </Link>
-                            )    
-                        })}
+                                )
+                            })}
+                        </div>
+                        </div>
+                    ) : (
+                        <div>
+                        <div className='containbtn'>
+                            <button className='actualbtn' onClick={followClub}>{isFollowingClub ? "Unfollow Club" : "Follow Club"}</button>
+                            <button className='top-left-btn' onClick={viewFriends}>View Friends</button>
+                        </div>
+                        <br />
+                    <div className='intro'>
+                        <img className='clubPF' src={works} />
+                        <h1 className='title'>{clubName}</h1>
                     </div>
+
+                    <div className='summaryText'>
+                        <h3>Summary:</h3>
+                        <p>{clubDescription}</p>
+                    </div>
+
+                    <div className='info'>
+                        <h3>General Info:</h3>
+                        <p>West Lafayette, IN 47907-2034</p>
+                        <p>United States</p>
+                        <p>Email: fireworksconns@purdue.edu</p>
+                    </div>
+
+                    <div className='eventCtn'>
+                        <h2>Upcoming Events:</h2>
+                        <div>
+                            {events.map((item, index) => {
+                                return (
+                                    <Link style={{ textDecorationLine: 'none' }} onClick={() => viewEventPageClick(item.eventName, item.description, item.tags, item.interest, index)}>
+                                        <div key={index} className='event'>
+                                            <h3>Event Name:</h3>
+                                            <p className='wrapText'>{item.eventName}</p>
+                                            <h3>Event Description: </h3>
+                                            <p className='wrapText'>{item.description}</p>
+                                        </div>
+                                    </Link>
+                                )
+                            })}
+                        </div>
+                    </div>
+                    </div>
+                    )}
+                    
                 </div>
-            </div>
-        )}
+            )}
         </>
     )
 }

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import data from './friend-data';
 import temp from './temporary-profile.jpeg' // temp picture
 
 import './Profile.css' // css pulled online
