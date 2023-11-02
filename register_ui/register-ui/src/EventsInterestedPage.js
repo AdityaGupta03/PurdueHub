@@ -158,7 +158,7 @@ function EventsInterestedPage() {
 
                     <div className='intro'>
                         <img className='clubPF' src={works} />
-                        <h1 className='title'>Event: {eventName}</h1>
+                        <h1 className='title'>{eventName}</h1>
                     </div>
 
                     <div className='summaryText'>
@@ -182,7 +182,7 @@ function EventsInterestedPage() {
                         <button className='actualbtn' onClick={headBack}>Back</button>
                     </div>
 
-                    <div className='intro'>
+                    <div className='friendsIntro'>
                         <h1 className='title'>Events I am Interested In</h1>
                     </div>
 
