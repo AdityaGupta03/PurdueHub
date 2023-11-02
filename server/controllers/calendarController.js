@@ -159,9 +159,75 @@ async function addCalendarEvent(req, res) {
     }
 }
 
+async function getClubEvents(req, res) {
+
+    let db_res = await calendarQueries.getAllClubEventsQuery();
+    if (db_res == null) {
+        return res.status(500).json({ error: "Internal server error" });
+    }
+
+    return res.status(200).json({ events: db_res.rows });
+
+}
+
+async function getAllInterestedEvents(req, res) {
+    let user_id = req.body.user_id;
+
+    let db_res = await calendarQueries.getAllInterestedEvents(user_id);
+    if (db_res == null) {
+        return res.status(500).json({ error: "Internal server error" });
+    }
+
+    return res.status(200).json({ events: db_res.rows });
+}
+
+async function addIntrestedEvent(req, res) {
+    const { user_id } = req.body;
+    const { event_id } = req.body;
+    // check if event already in user's intrested list
+    let tmp = await checkEvent(user_id, event_id);
+    if (tmp) {
+        console.log("This event was is already in the list")
+        return res.status(200).json({ message: "This event was is already in the list" });
+    }
+    let db_res = await calendarQueries.addIntrestedEventQuery(user_id, event_id);
+    if (db_res == true) {
+        console.log("Added intrested event succesfully");
+        return res.status(200).json({ message: "Added intrested event succesfully" });
+    }
+
+    return res.status(500).json({ error: "Internal server error" });
+} 
+
+async function checkEvent(user_id, event_id) {
+    let db_res = await calendarQueries.checkEventQuery(user_id, event_id);
+    if (db_res == true) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+async function removeIntrestedEvent(req, res) {
+    const { user_id } = req.body;
+    const { event_id } = req.body;
+    let db_res = await calendarQueries.removeIntrestedEventQuery(user_id, event_id);
+    if (db_res == true) {
+        console.log("Removed intrested event succesfully");
+        return res.status(200).json({ message: "Removed intrested event succesfully" });
+    } else {
+        return res.status(500).json({ error: "Internal server error" });
+    }
+} 
+
+
 module.exports = {
     getCalendar,
     updateCalendarEvent,
     deleteCalendarEvent,
     addCalendarEvent,
+    getClubEvents,
+    getAllInterestedEvents,
+    addIntrestedEvent,
+    removeIntrestedEvent,
 };

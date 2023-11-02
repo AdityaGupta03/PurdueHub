@@ -16,17 +16,22 @@ CREATE TABLE users (
   saved_orgs INTEGER[] DEFAULT ARRAY[]::INTEGER[],
   calendar_id INTEGER UNIQUE,
   togglemsgs INTEGER DEFAULT 0,  /* 0 is everyone, 1 is only following people */
-  
+  professional_development INTEGER DEFAULT 0, /* For the following 3, 0 is no 1 is yes */
+  club_callouts INTEGER DEFAULT 0,
+  disable_all INTEGER DEFAULT 0,
+  interested_events INTEGER[] DEFAULT ARRAY[]::INTEGER[],
 );
 
 CREATE TABLE calendar_events (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
-  start_date TIMESTAMP NOT NULL,
-  end_date TIMESTAMP NOT NULL,
+  start_date TIMESTAMP,
+  end_date TIMESTAMP,
   location VARCHAR(255),
   description TEXT,
-  organization_id INTEGER
+  organization_id INTEGER,
+  professional_development INTEGER DEFAULT 0, /* 0 is no, 1 is yes on flag */
+  club_callouts INTEGER DEFAULT 0 /* 0 is no, 1 is yes on flag */
 );
 
 CREATE TABLE calendars (
@@ -50,7 +55,8 @@ CREATE TABLE organization (
   org_id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL UNIQUE,
   description TEXT,
-  officers INTEGER[] DEFAULT ARRAY[]::INTEGER[]
+  officers INTEGER[] DEFAULT ARRAY[]::INTEGER[],
+  followers INTEGER[] DEFAULT ARRAY[]::INTEGER[]
 );
 
 CREATE TABLE email_verification (
@@ -72,4 +78,11 @@ CREATE TABLE password_reset_verification (
   email VARCHAR(255) NOT NULL UNIQUE,
   authCode VARCHAR(255) NOT NULL,
   FOREIGN KEY (email) REFERENCES users (email)
+);
+
+CREATE TABLE feedback (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  feedback_title TEXT,
+  feedback_body TEXT
 );

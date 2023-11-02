@@ -455,7 +455,8 @@ async function getAllUsernames() {
 }
 
 async function setPreferencesQuery(user_id, professional_development, club_callouts, disable_all) {
-	const query = "UPDATE users SET professional_development = $1, club_callouts = $2 , disable_all = $3 WHERE user_id = $4";
+
+	const query = "UPDATE users SET professional_development = $1, club_callouts = $2 ,disable_all = $3  WHERE user_id = $4";
 	const data = [ professional_development, club_callouts, disable_all, user_id ];
 
 	try {
@@ -465,22 +466,113 @@ async function setPreferencesQuery(user_id, professional_development, club_callo
 		console.log(error);
 		return false;
 	  }
+
 }
 
-async function checkEventQuery(user_id, event_id) {
-	const query = `SELECT * FROM users WHERE $1 = ANY(intrested_events) AND user_id = $2`;
-	const data = [ event_id, user_id ];
+async function getPreferencesQuery(user_id, professional_development, club_callouts, disable_all) {
+
+	const query = "SELECT professional_development, club_callouts, disable_all FROM users WHERE user_id = $1";
+	const data = [ user_id ];
+
+	try {
+		let db_res = await pool.query(query, data);
+		return db_res;
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+    
+}
+
+async function getInterestedEventsClubQuery(user_id) {
+
+  const query = `SELECT DISTINCT ce.id, ce.title, ce.description
+  FROM calendar_events ce
+  JOIN users u ON ce.club_callouts = 1 AND u.club_callouts = 1 WHERE u.user_id = $1`;
+  const data = [ user_id ];
+  
   try {
-    const db_res = await pool.query(query, data);
-	  if (db_res == null) {
-      return true;
-    } else {
+      const db_res = await pool.query(query, data);
+      return db_res;
+  } catch (error) {
+      console.log(error);
       return false;
     }
+}
+
+async function getInterestedEventsProfQuery(user_id) {
+
+  const query = `SELECT DISTINCT ce.id, ce.title, ce.description
+  FROM calendar_events ce
+  JOIN users u ON ce.professional_development = 1 AND u.professional_development = 1 AND ce.id = ANY(u.interested_events) WHERE u.user_id = $1`;
+  const data = [ user_id ];
+  
+  try {
+      const db_res = await pool.query(query, data);
+      return db_res;
+  } catch (error) {
+      console.log(error);
+      return false;
+    }
+}
+
+async function addFollowerQuery(user_id, org_id) {
+  const query = 'UPDATE organization SET followers = ARRAY_APPEND(followers, $1) WHERE org_id = $2'
+  const data = [ user_id, org_id ];
+  try {
+      const db_res = await pool.query(query, data);
+      return true;
+  } catch (error) {
+      console.log(error);
+      return false;
+  }
+}
+
+async function unfollowOrgQuery(user_id, org_id) {
+  const query = 'UPDATE organization SET followers = ARRAY_REMOVE(followers, $2) WHERE org_id = $1'
+  const data = [ org_id, user_id ];
+  try {
+      const db_res = await pool.query(query, data);
+      return true;
+  } catch (error) {
+      console.log(error);
+      return false;
+  }
+}
+
+async function isFollowingOrgQuery(user_id, org_id) {
+
+  const query = "SELECT * FROM organization WHERE org_id = $1 AND $2 = ANY(followers)";
+  const data = [ org_id, user_id ];
+
+  try {
+    const db_res = await pool.query(query, data);
+    return db_res.rows.length > 0;
   } catch (error) {
     console.log(error);
     return false;
+  
   }
+
+}
+
+async function friendsWhoFollowClubQuery(user_id, org_id) {
+  const query = `
+  SELECT u.username
+  FROM users u
+  INNER JOIN organization o ON o.org_id = $1
+  WHERE u.user_id = ANY(o.followers) AND u.user_id IN (SELECT unnest(follow) FROM users WHERE user_id = $2);`;
+  const data = [ org_id, user_id ];
+  
+  try {
+    let db_res = pool.query(query, data);
+    return db_res;
+  } catch (error) {
+    console.error(error);
+    return null;
+  
+  }
+
 }
 
 
@@ -520,4 +612,11 @@ module.exports = {
   isOnlyFollowing,
   getAllUsernames,
   setPreferencesQuery,
+  getPreferencesQuery,
+  getInterestedEventsClubQuery,
+  getInterestedEventsProfQuery,
+  addFollowerQuery,
+  unfollowOrgQuery,
+  isFollowingOrgQuery,
+  friendsWhoFollowClubQuery,
 };

@@ -70,10 +70,101 @@ function ClubPage() {
         },
     ];
 
-    const [followedUsernames, setFollowedUsernames] = useState(friendData);
+    const [followedUsernames, setFollowedUsernames] = useState([]);
     const [events, setEvents] = useState(data);
 
-    const viewFriends = () => {
+    useEffect(() => {
+        fetchEvents();
+    }, []);
+
+    async function fetchEvents() {
+        let my_userid = sessionStorage.getItem('user_id');
+        try {
+            let res = await fetch('http://localhost:5000/api/get_club_events', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            let data = await res.json();
+            let events = data.events;
+
+            res = await fetch('http://localhost:5000/api/get_all_interested_events', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "user_id": my_userid }),
+            });
+
+            data = await res.json();
+            console.log("Inter");
+            let inter = data.events;
+            console.log(inter);
+            const newEvents = events.map(event => {
+                console.log(event);
+                const tags = [];
+                if (event.professional_development == 1) {
+                    tags.push("Professional Development");
+                }
+                if (event.club_callouts == 1) {
+                    tags.push("Club Callout");
+                }
+                const matchingInter = inter.find(item => item.id === event.id);
+                if (matchingInter) {
+                  return { ...event, interest: true, tags: tags };
+                } else {
+                    return { ...event, interest: false, tags: tags };
+                }
+            });
+            console.log("NEW EVENTS");
+            console.log(newEvents);
+            setEvents(newEvents);
+        } catch (error) {
+            console.log(error);
+        }
+        
+        try {
+            let res = await fetch('http://localhost:5000/api/is_following_org', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "user_id": my_userid, "org_id": "1" }),
+            });
+
+            if (res.status == 200) {
+                setIsFollowingClub(true);
+            } else {
+                setIsFollowingClub(false);
+            }
+        } catch (error) {
+
+        }
+    }
+
+    const viewFriends = async () => {
+
+        try {
+            let my_userid = sessionStorage.getItem('user_id');
+            let res = await fetch('http://localhost:5000/api/get_friends_org', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "user_id": my_userid, "org_id": "1" }),
+            });
+
+            let data = await res.json();
+            if (res.status == 200) {
+                setFollowedUsernames(data.friends);
+            }
+        } catch (error) {
+            console.log(error);
+            setViewingFriends(false);
+        }
+
         if(viewingFriends) {
             setViewingFriends(false);
         }
@@ -82,15 +173,33 @@ function ClubPage() {
         }
     }
     // if a user isn't following a club to be notified of all their events, they can choose an event to say there are interested in
-    const followEvent = () => {
+    const followEvent = async () => {
         if (isInterested) {
 
             // If they are no longer interested in it...
             const updatedEvents = [...events];
             updatedEvents[indexOfEvent].interest = false;
             setEvents(updatedEvents);
-
             setIsInterested(false);
+
+            try {
+                let event_id = events[indexOfEvent].id;
+                console.log("Removing");
+                console.log(event_id);
+                let my_userid = sessionStorage.getItem('user_id');
+                let res = await fetch('http://localhost:5000/api/remove_interested_event', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "user_id": my_userid, "event_id": event_id }),
+                });
+
+                let data = await res.json();
+                console.log(data);
+            } catch (error) {
+                console.log(error);
+            }
 
         }
         else {
@@ -103,17 +212,71 @@ function ClubPage() {
 
             //console.log("AFTER: " + events[indexOfEvent].interest);
             setIsInterested(true)
+
+            try {
+                let event_id = events[indexOfEvent].id;
+                console.log("Removing");
+                console.log(event_id);
+                let my_userid = sessionStorage.getItem('user_id');
+                let res = await fetch('http://localhost:5000/api/add_interested_event', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "user_id": my_userid, "event_id": event_id }),
+                });
+
+                let data = await res.json();
+                console.log(data);
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
     // notify a user of all events associated with the club
-    const followClub = () => {
+    const followClub = async () => {
+        let my_userid = sessionStorage.getItem('user_id');
         if (isFollowingClub) {
             // No longer following a club
             const updatedEvents = events.map(event => {
                 // Create a copy of the event object with 'interest' set to false
                 return { ...event, interest: false };
             });
+
+            try {
+                let res = await fetch('http://localhost:5000/api/remove_org_follower', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ "user_id": my_userid, "org_id": "1" }),
+                    });
+    
+                let data = await res.json();
+                console.log(data);
+            } catch (error) {
+                console.log(error);
+            }
+
+            for (const ourEvent of events) {
+                try {
+                    let event_id = ourEvent.id;
+                    let res = await fetch('http://localhost:5000/api/remove_interested_event', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ "user_id": my_userid, "event_id": event_id }),
+                    });
+    
+                    let data = await res.json();
+                    console.log(data);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
             setEvents(updatedEvents);
 
             setIsFollowingClub(false);
@@ -126,11 +289,45 @@ function ClubPage() {
             });
             setEvents(updatedEvents);
 
-            setIsFollowingClub(true)
+            setIsFollowingClub(true);
+
+            try {
+                let res = await fetch('http://localhost:5000/api/add_org_follower', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ "user_id": my_userid, "org_id": "1" }),
+                    });
+    
+                let data = await res.json();
+                console.log(data);
+            } catch (error) {
+                console.log(error);
+            }
+
+            for (const ourEvent of events) {
+                try {
+                    let event_id = ourEvent.id;
+                    let res = await fetch('http://localhost:5000/api/add_interested_event', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ "user_id": my_userid, "event_id": event_id }),
+                    });
+    
+                    let data = await res.json();
+                    console.log(data);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
         }
     }
 
-    const viewEventPageClick = (name, description, tags, interest, indexOf) => {
+    const viewEventPageClick = async (name, description, tags, interest, indexOf) => {
         console.log("Interest: " + interest)
 
         if (viewingEvent) {
@@ -198,14 +395,11 @@ function ClubPage() {
                             <br />
                         <div className='friendsIntro'>
                             <h1 className='friendsTitle'>Users Who Are Interested:</h1>
-                            {friendData.map((item, index) => {
+                            {followedUsernames.map((item, index) => {
                                 return (
                                     <div className="changeBox" key={index}>
-                                        <div className='holdImage'>
-                                            <img src={item.profilePic} className='baseimage' />
-                                        </div>
                                         <div className='imageText'>
-                                            <h3 className='userName'>{item.username}</h3>
+                                            <Link to={`/viewprofile/${item.username}`}>{item.username}</Link>
                                         </div>
                                     </div>
                                 )
@@ -241,10 +435,10 @@ function ClubPage() {
                         <div>
                             {events.map((item, index) => {
                                 return (
-                                    <Link style={{ textDecorationLine: 'none' }} onClick={() => viewEventPageClick(item.eventName, item.description, item.tags, item.interest, index)}>
+                                    <Link style={{ textDecorationLine: 'none' }} onClick={() => viewEventPageClick(item.title, item.description, item.tags, item.interest, index)}>
                                         <div key={index} className='event'>
                                             <h3>Event Name:</h3>
-                                            <p className='wrapText'>{item.eventName}</p>
+                                            <p className='wrapText'>{item.title}</p>
                                             <h3>Event Description: </h3>
                                             <p className='wrapText'>{item.description}</p>
                                         </div>
