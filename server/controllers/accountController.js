@@ -975,6 +975,28 @@ async function searchUsers(req, res) {
   return res.status(200).json({ users: closestUsernames });
 }
 
+async function setPreferences(req, res) {
+
+  console.log("[INFO] Set preferences api.");
+
+	const { user_id, professional_development, club_callouts, disable_all } = req.body;
+
+	let db_res = await accountQueries.setPreferencesQuery(user_id, professional_development, club_callouts, disable_all);
+	if (db_res == false) {
+		return res.status(500).json({ error: "Internal server error" });
+	}
+
+  return res.status(200).json({ message: "Successfully set preferences" });
+
+}
+
+async function checkEvent(user_id, event_id) {
+  
+  let db_res = await accountQueries.checkEventQuery(user_id, event_id);
+  return db_res == true;
+
+}
+
 module.exports = {
   createAccount,
   updateUsername,
@@ -1008,4 +1030,5 @@ module.exports = {
   getMutualOrgs,
   deleteAccountAPI,
   searchUsers,
+  setPreferences,
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 
 import './Profile.css' // css pulled online
 
@@ -128,7 +128,7 @@ function ViewMutuals() {
                     <div>
                       {mutualFriends.map((item, index) => {
                         return (
-                          <div>{item}</div>
+                          <Link to={`/viewprofile/${item}`}>{item}</Link>
                         )
                       })}
                     </div>
