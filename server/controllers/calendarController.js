@@ -1,4 +1,6 @@
 const calendarQueries = require("../database/queries/calendarQueries");
+const accountQueries = require("../database/queries/accountQueries");
+const helperFuncs = require("./helperFunctions");
 
 async function getCalendar(req, res) {
     console.log("[Info] Getting calendar for user " + req.body.username);
@@ -13,7 +15,7 @@ async function getCalendar(req, res) {
         let rows;
         rows = await calendarQueries.getCalendarQuery(username);
         if (rows.length === 0) {
-            return res.status(400).json({ error: "User not found" });
+            return res.status(404).json({ error: "User not found" });
         }
 
         let calendar = {
@@ -29,9 +31,8 @@ async function getCalendar(req, res) {
         }
 
         rows = await calendarQueries.getCalendarEventsQuery(calendar_events_arr);
-        calendar.calendar_events = rows;
-        
-        return res.status(200).json({ calendar: calendar });
+        console.log(rows);
+        return res.status(200).json({ calendar: rows });
     } catch (error) {
         console.error("[Error] " + error);
         return res.status(500).json({ error: "Internal server error" });
@@ -40,6 +41,8 @@ async function getCalendar(req, res) {
 
 async function updateCalendarEvent(req, res) {
     console.log("[Info] Updating calendar event for user " + req.body.username);
+
+    console.log(req.body);
     
     const username = req.body.username;
     if (!username) {
@@ -48,7 +51,7 @@ async function updateCalendarEvent(req, res) {
     }
 
     const { start, end, title, description, location, organization_id, id } = req.body;
-    if (!start || !end || !title || !description || !location || !organization_id || !id) {
+    if (!start || !end || !title || !organization_id || !id) {
         console.error("[Error] Missing fields");
         return res.status(400).json({ error: "Missing fields" });
     }
@@ -83,6 +86,20 @@ async function deleteCalendarEvent(req, res) {
 
     const id = req.body.id;
 
+    const calendarInfo = await calendarQueries.getCalendarInfoFromIdQuery(username);
+    if (calendarInfo == null) {
+        return res.status(500).json({ error: "Internal server error" });
+    }
+
+    const account = await accountQueries.getUserInfoFromUsernameQuery(username);
+    if (!account) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
+    let title = "PurdueHub - Deleted Calendar Event";
+    let msg = "Your calendar event, " + calendarInfo.title + ", has been deleted by " + username + ".\n\n";
+    await helperFuncs.sendEmail(account.email, title, msg);
+
     try {
         await calendarQueries.removeCalendarEventsArrQuery(username, id);
         permanentlyDeleteCalendarEvent(id);
@@ -109,6 +126,7 @@ async function permanentlyDeleteCalendarEvent(id) {
 
 async function addCalendarEvent(req, res) {
     console.log("[Info] Adding calendar event for user " + req.body.username);
+    console.log(req.body);
 
     const username = req.body.username;
     if (!username) {
@@ -117,7 +135,7 @@ async function addCalendarEvent(req, res) {
     }
 
     const { start, end, title, description, location, organization_id } = req.body;
-    if (!start || !end || !title || !description || !location || !organization_id) {
+    if (!start || !end || !title || !organization_id) {
         console.error("[Error] Missing fields");
         return res.status(400).json({ error: "Missing fields" });
     }
@@ -132,9 +150,9 @@ async function addCalendarEvent(req, res) {
     };
 
     try {
-        await calendarQueries.addCalendarEventQuery(calendar_event);
-        await calendarQueries.addCalendarEventsArrQuery(username, calendar_event.id);
-        return res.status(200).json({ message: "Calendar event added" });
+        let calEvent_id = await calendarQueries.addCalendarEventQuery(calendar_event);
+        await calendarQueries.addCalendarEventsArrQuery(username, calEvent_id);
+        return res.status(200).json({ id: calEvent_id });
     } catch (error) {
         console.error("[Error] " + error);
         return res.status(500).json({ error: "Internal server error" });

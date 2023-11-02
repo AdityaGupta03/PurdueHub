@@ -56,7 +56,7 @@ async function getAllCalendarEventsQuery(subscribed_cals) {
 }
 
 async function updateCalendarEventQuery(calendar_event) {
-    const query = "UPDATE calendar_events SET start = $1, end = $2, title = $3, description = $4, location = $5, organization_id = $6 WHERE id = $7";
+    const query = "UPDATE calendar_events SET start_date = $1, end_date = $2, title = $3, description = $4, location = $5, organization_id = $6 WHERE id = $7";
     const data = [ calendar_event.start, calendar_event.end, calendar_event.title, calendar_event.description, calendar_event.location, calendar_event.organization_id, calendar_event.id ];
 
     try {
@@ -80,11 +80,12 @@ async function deleteCalendarEventQuery(id) {
 }
 
 async function addCalendarEventQuery(calendar_event) {
-    const query = "INSERT INTO calendar_events (start, end, title, description, location, organization_id) VALUES ($1, $2, $3, $4, $5, $6)";
+    const query = "INSERT INTO calendar_events (start_date, end_date, title, description, location, organization_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id"
     const data = [ calendar_event.start, calendar_event.end, calendar_event.title, calendar_event.description, calendar_event.location, calendar_event.organization_id ];
 
     try {
-        await pool.query(query, data);
+        let db_res = await pool.query(query, data);
+        return db_res.rows[0].id;
     } catch (error) {
         console.error("[Error] addCalendarEventQuery");
         throw error;
@@ -140,6 +141,19 @@ async function deleteCalendarQuery(calendar_id) {
       return false;
     }
   }
+
+async function getCalendarInfoFromIdQuery(event_id) {
+    const query = "SELECT * FROM calendar_events WHERE id = $1";
+    const data = [ event_id ];
+
+    try {
+        const { rows } = await pool.query(query, data);
+        return rows[0];
+    } catch (error) {
+        console.error("[Error] getCalendarInfoFromIdQuery");
+        return null;
+    }
+}
 
 module.exports = {
     getCalendarQuery,
