@@ -20,29 +20,59 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     width: 100%;
     max-width: auto;
     min-height: auto;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    padding: 1rem;
-    background-color: #000000;
 }
+
+.changeBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: auto;
+    min-height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    margin: 50px auto;
+    width: 400px;
+    border-radius: 5px;
+}
+.holdImage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .baseimage {
     width: 80px;
+    height: 80px;
     border-radius: 50%;
+}
+.imageText {
+    display: flex;
+    padding-left: 50px;
+    flex-direction: column;
 }
 
 .ViewList {
     text-align: center;
 }
 
-
 .container {
     padding: 20px;
     margin: 50px auto;
-    width: 650px;
+    width: 400px;
+    border-radius: 5px;
+}
+
+.container {
+    margin: 50px auto;
+    width: 400px;
     border-radius: 5px;
 }

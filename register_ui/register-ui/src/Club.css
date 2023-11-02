@@ -11,9 +11,13 @@
     padding: 20px;
     width: 750px;
     height: auto;
-
 }
 .intro {
+    padding-left: 40px;
+    display: block;
+    min-height: 120px;
+}
+.friendsIntro {
     display: block;
     min-height: 120px;
 }
@@ -25,6 +29,18 @@
     margin-inline-start: 105px;
     margin-inline-end: 0px;
     font-weight: bold;
+}
+.friendsTitle {
+    display: block;
+    font-size: 2em;
+    margin-block-start: 0.67em;
+    margin-block-end: 0.67em;
+    margin-inline-start: 105px;
+    margin-inline-end: 0px;
+    padding-left: 20px;
+    font-weight: bold;
+
+    padding: 0px 0px 0px 0px;
 }
 .clubPF {
     display: inline-flex;
@@ -47,16 +63,28 @@
 
 .containbtn {
     position: relative;
-    width: 100%; /* Ensure the div takes up the full width of its container */
+    width: 100%; 
     min-height: 50px;
+}
+
+.top-left-btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #CEB888; 
+    color: #fff; 
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .actualbtn {
     position: absolute;
     top: 0;
     right: 0;
-    background-color: #CEB888; /* Set the button background color */
-    color: #fff; /* Set the button text color */
+    background-color: #CEB888; 
+    color: #fff; 
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -67,12 +95,12 @@
     position: absolute;
     top: 0;
     right: 0;
-    background-color: #ccc; /* Change the background color */
-    color: #666;           /* Change the text color */
+    background-color: #ccc; 
+    color: #666;          
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
-    cursor: not-allowed;   /* Change the cursor style */
+    cursor: not-allowed;   
 }
 .eventCtn {
     padding-top: 25px;
@@ -97,8 +125,8 @@
     display: inline-block;
     padding: 4px 8px;
     margin-right: 8px;
-    background-color: #c9a453; /* Change the background color to your preference */
-    color: #fff; /* Text color */
+    background-color: #c9a453; 
+    color: #fff; 
     border-radius: 4px;
     font-size: 30px;
   }

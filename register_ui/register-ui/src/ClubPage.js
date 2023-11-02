@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import './Club.css'
+import './Profile.css' // css pulled online
 
 import temp from './temporary-profile.jpeg' // temp picture
 import works from './fireworks-shape.jpg' // temp picture
 
+import albert from './temp-icons/albert.jpg' // temp picture
+import toby from './temp-icons/toby.jpg' // temp picture
+import joel from './temp-icons/joel.jpg' // temp picture
 
 function ClubPage() {
 
     const [viewingEvent, setViewingEvent] = useState(false);
+    const [viewingFriends, setViewingFriends] = useState(false);
 
     const [eventName, setEventName] = useState('X'); // specific event information
     const [eventDescription, setEventDescription] = useState('X'); // specific event information
@@ -49,8 +54,33 @@ function ClubPage() {
             interest: false
         }
     ];
+
+    const friendData = [
+        {
+            username: 'Billy Joel',
+            profilePic: joel
+        },
+        {
+            username: 'Alberty341',
+            profilePic: albert
+        },
+        {
+            username: 'tobyRuL3s',
+            profilePic: toby
+        },
+    ];
+
+    const [followedUsernames, setFollowedUsernames] = useState(friendData);
     const [events, setEvents] = useState(data);
 
+    const viewFriends = () => {
+        if(viewingFriends) {
+            setViewingFriends(false);
+        }
+        else {
+            setViewingFriends(true);
+        }
+    }
     // if a user isn't following a club to be notified of all their events, they can choose an event to say there are interested in
     const followEvent = () => {
         if (isInterested) {
@@ -127,7 +157,7 @@ function ClubPage() {
                     <div className='containbtn'>
                         <button className='actualbtn' onClick={() => viewEventPageClick(eventName, eventDescription, clubTags, isInterested, indexOfEvent)}>Back</button>
                     </div>
-
+        
                     <div className='intro'>
                         <img className='clubPF' src={works} />
                         <h1 className='title'>Event: {eventName}</h1>
@@ -158,10 +188,37 @@ function ClubPage() {
 
                 </div>
             ) : (
+
                 <div className='whole'>
-                    <div className='containbtn'>
-                        <button className='actualbtn' onClick={followClub}>{isFollowingClub ? "Unfollow Club" : "Follow Club"}</button>
-                    </div>
+                    {viewingFriends ? (
+                        <div>
+                            <div className='containbtn'>
+                                <button className='actualbtn' onClick={viewFriends}>Back</button>
+                            </div>
+                            <br />
+                        <div className='friendsIntro'>
+                            <h1 className='friendsTitle'>Users Who Are Interested:</h1>
+                            {friendData.map((item, index) => {
+                                return (
+                                    <div className="changeBox" key={index}>
+                                        <div className='holdImage'>
+                                            <img src={item.profilePic} className='baseimage' />
+                                        </div>
+                                        <div className='imageText'>
+                                            <h3 className='userName'>{item.username}</h3>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                        </div>
+                    ) : (
+                        <div>
+                        <div className='containbtn'>
+                            <button className='actualbtn' onClick={followClub}>{isFollowingClub ? "Unfollow Club" : "Follow Club"}</button>
+                            <button className='top-left-btn' onClick={viewFriends}>View Friends</button>
+                        </div>
+                        <br />
                     <div className='intro'>
                         <img className='clubPF' src={works} />
                         <h1 className='title'>{clubName}</h1>
@@ -196,6 +253,9 @@ function ClubPage() {
                             })}
                         </div>
                     </div>
+                    </div>
+                    )}
+                    
                 </div>
             )}
         </>
