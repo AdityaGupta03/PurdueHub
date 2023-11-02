@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {useRef, useEffect} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Profile.css' // css pulled online
 import temp from './temporary-profile.jpeg' // temp picture
 
@@ -28,6 +28,11 @@ const UserProfile = () => {
     const handleEditClick = () => {
         setIsEditing(true);
     }
+
+    const handleSettings = () => {
+        navigate('/settings');
+    }
+
     const handleSaveClick = async () => {
         const a1 = USER_REGEX.test(username);
 
@@ -233,6 +238,7 @@ const UserProfile = () => {
                 <h2>Username: {username}</h2>
                 <p>Bio: {bio}</p>
                 <button onClick={handleEditClick}>Edit Profile</button>
+                <button onClick={handleSettings}>View Your Settings</button>
              </div>
         )}
     </div>

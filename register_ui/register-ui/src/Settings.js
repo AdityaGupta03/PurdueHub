@@ -17,21 +17,59 @@ function Settings() {
     // Variables to hold true or false values for notification settings 
     const[profDevChecked, setProfDevChecked] = useState(false);
     const[calloutChecked, setCalloutChecked] = useState(false);
-    const[disableNottifChecked, setDisableNotifChecked] = useState(false);
     const[checkNotifs, setCheckNotifs] = useState(false);
     
     const[directMessageCheck, setDirectMessageCheck] = useState(false);
 
     // Functions to grab true or false values if toggles are checked for respective inputs
-    const disableNotifChange = (e) => {
-        setDisableNotifChecked(e.target.checked);
-    }
-    const profDevChange = (e) => {
+    const profDevChange = async (e) => {
         setProfDevChecked(e.target.checked);
+        let my_userid = sessionStorage.getItem('user_id');
+        let prof = e.target.checked ? "1" : "0";
+        let disable = "0";
+        let callout = calloutChecked ? "1" : "0";
+        let body_vals = {
+            "user_id": my_userid,
+            "disable_all": disable,
+            "professional_development": prof,
+            "club_callouts": callout
+        };
+        try {
+            let res = await fetch('http://localhost:5000/api/set_preferences', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body_vals),
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
-    const clubCalloutChange = (e) => {
+    const clubCalloutChange = async (e) => {
         setCalloutChecked(e.target.checked);
+        let my_userid = sessionStorage.getItem('user_id');
+        let callout = e.target.checked ? "1" : "0";
+        let prof = profDevChecked ? "1" : "0";
+        let disable = "0";
+        let body_vals = {
+            "user_id": my_userid,
+            "disable_all": disable,
+            "professional_development": prof,
+            "club_callouts": callout
+        };
+        try {
+            let res = await fetch('http://localhost:5000/api/set_preferences', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body_vals),
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const receiveMessagesChange = async (e) => {
@@ -56,6 +94,37 @@ function Settings() {
         }
     }
 
+    useEffect(() => {
+        fetchProfileData(); 
+    }, []);
+
+    async function fetchProfileData() {
+        let my_userid = sessionStorage.getItem('user_id');
+
+        try {
+            let res = await fetch('http://localhost:5000/api/get_preferences', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "user_id": my_userid }),
+            });
+
+            const data = await res.json();
+            if (res.status == 200) {
+                if (data.user_options.professional_development == 1) {
+                    setProfDevChecked(true);
+                }
+
+                if (data.user_options.club_callouts == 1) {
+                    setCalloutChecked(true);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     // Conditional Rendering For Showing Notification Page
     const viewNotif = () => {
         if(checkNotifs === true) {
@@ -73,16 +142,6 @@ function Settings() {
             <h1>Notifications:</h1>
             <br/>
             <h3>General:</h3>
-            <FormControlLabel 
-                label='Disable Notifcations'
-                control={
-                <Switch 
-                    checked={disableNottifChecked} 
-                    onChange={disableNotifChange}
-                    color='success'
-                />}
-            />
-            <br />
             <FormControlLabel 
                 label='Professional Development'
                 control={

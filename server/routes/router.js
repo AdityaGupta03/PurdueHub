@@ -2,6 +2,7 @@ const express = require("express");
 const calendarController = require("../controllers/calendarController");
 const accountController = require("../controllers/accountController");
 const messagingController = require("../controllers/messagingController");
+const organizationController = require("../controllers/organizationController");
 
 const router = express.Router();
 
@@ -41,5 +42,17 @@ router.post("/toggle_dm", messagingController.toggleDM);
 router.post("/msg_user", messagingController.messageUser);
 router.post("/delete_account", accountController.deleteAccountAPI);
 router.post("/search_users", accountController.searchUsers);
+router.post("/submit_feedback", accountController.submitFeedback);
+router.post("/set_preferences", accountController.setPreferences);
+router.post("/get_preferences", accountController.getPreferences);
+router.post("/get_interested_events", accountController.getNotifications);
+router.get("/get_club_events", calendarController.getClubEvents);
+router.post("/get_all_interested_events", calendarController.getAllInterestedEvents);
+router.post("/add_interested_event", calendarController.addIntrestedEvent);
+router.post("/remove_interested_event", calendarController.removeIntrestedEvent);
+router.post("/add_org_follower", organizationController.addFollower);
+router.post("/remove_org_follower", organizationController.unfollowOrg);
+router.post("/is_following_org", organizationController.isFollowingOrg);
+router.post("/get_friends_org", organizationController.getFriendsOrg);
 
 module.exports = router;

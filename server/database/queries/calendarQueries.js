@@ -155,6 +155,74 @@ async function getCalendarInfoFromIdQuery(event_id) {
     }
 }
 
+async function getAllClubEventsQuery() {
+    const query = "SELECT * FROM calendar_events WHERE professional_development = 1 OR club_callouts = 1";
+
+    try {
+        const db_res = await pool.query(query, []);
+        return db_res;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+async function getAllInterestedEvents(user_id) {
+    const query = "SELECT * FROM calendar_events WHERE id = ANY(SELECT unnest(interested_events) FROM users WHERE user_id = $1)";
+    const data = [ user_id ];
+
+    try {
+        const db_res = await pool.query(query, data);
+        return db_res;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+async function addIntrestedEventQuery(user_id, event_id) {
+    const query = `UPDATE users SET interested_events = ARRAY_APPEND(interested_events, $1) WHERE user_id = $2`;
+    const data = [ event_id, user_id ];
+    try {
+        const db_res = await pool.query(query, data);
+        return true;
+    } catch (error) {
+        console.log(error);
+        return false;
+      }
+}
+
+async function checkEventQuery(user_id, event_id) {
+    const query = `SELECT * FROM users WHERE $1 = ANY(interested_events) AND user_id = $2`;
+    const data = [ event_id, user_id ];
+
+    try {
+        const db_res = await pool.query(query, data);
+        if (db_res.rows.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+async function removeIntrestedEventQuery(user_id, event_id) {
+    const query = `UPDATE users SET interested_events = ARRAY_REMOVE(interested_events, $1) WHERE user_id = $2`;
+    const data = [ event_id, user_id ];
+    try {
+        const db_res = await pool.query(query, data);
+        return true;
+    } catch (error) {
+        console.log(error);
+        return false;
+      }
+}
+
+
+
 module.exports = {
     getCalendarQuery,
     getCalendarEventsQuery,
@@ -168,4 +236,9 @@ module.exports = {
     createCalendarQuery,
     deleteCalendarQuery,
     getCalendarInfoFromIdQuery,
+    getAllClubEventsQuery,
+    getAllInterestedEvents,
+    addIntrestedEventQuery,
+    checkEventQuery,
+    removeIntrestedEventQuery,
 };

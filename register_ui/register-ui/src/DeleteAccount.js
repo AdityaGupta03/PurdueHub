@@ -26,10 +26,21 @@ function DeleteAccount() {
         let my_username = sessionStorage.getItem('username');
         console.log("Deleting account for: " + my_username);
         
-        if(message != '') {
-            // send back feedback info to backend for taking a look at
+        if ( message != '' ) {
+            let my_userid = sessionStorage.getItem('user_id');
+            try {
+                const response = await fetch("http://127.0.0.1:5000/api/submit_feedback", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "user_id": my_userid, "feedback_title": "", "feedback_body": message }),
+                });
+            } catch (error) {
+                console.log(error);
+                return;
+            }
         }
-        // backend logic
 
         try {
             let res = await fetch('http://localhost:5000/api/delete_account', {

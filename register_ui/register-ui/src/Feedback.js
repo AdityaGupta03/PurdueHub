@@ -1,5 +1,3 @@
-
-import { set } from 'date-fns';
 import {useRef, useState, useEffect} from 'react';
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom';
@@ -24,12 +22,38 @@ function Feedback() {
             setErrMsg('Emtpy Title')
             return 
         }
+
         if(message === '') {
             setErrMsg('Emtpy Message')
             return 
         }
-        setSuccess(true);
+
+        let my_userid = sessionStorage.getItem('user_id');
+
+        try {
+            const response = await fetch("http://127.0.0.1:5000/api/submit_feedback", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "user_id": my_userid, "feedback_title": title, "feedback_body": message }),
+            });
+
+            const data = await response.json();
+            console.log(data);
+
+            if (response.status != 200) {
+                setErrMsg(data.error);
+            } else {
+                setSuccess(true);
+                setErrMsg('');
+            }
+        } catch (error) {
+            console.log(error);
+            setErrMsg('Something went wrong, please try again later.');
+        }
     }
+
     return (
         <>
             {success ? (

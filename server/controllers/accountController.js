@@ -2,6 +2,7 @@ const accountQueries = require("../database/queries/accountQueries");
 const calendarQueries = require("../database/queries/calendarQueries");
 const helperFuncs = require("./helperFunctions");
 const verificationQueries = require("../database/queries/verificationQueries");
+const feedbackQueries = require("../database/queries/feedbackQueries");
 const reportQueries = require("../database/queries/reportQueries");
 const { saveToDatabase } = require("../server");
 const stringSimilarity = require('string-similarity');
@@ -975,12 +976,21 @@ async function searchUsers(req, res) {
   return res.status(200).json({ users: closestUsernames });
 }
 
+async function submitFeedback(req, res) {
+
+  const { user_id, feedback_body, feedback_title } = req.body;
+  let db_res = await feedbackQueries.submitFeedbackQuery(user_id, feedback_title, feedback_body);
+  if (db_res == false) {
+      return res.status(500).json({ error: "Internal server error" });
+  }
+
+  return res.status(200).json({ message: "Successfully submitted feedback" });
+
+}
+
 async function setPreferences(req, res) {
 
-  console.log("[INFO] Set preferences api.");
-
 	const { user_id, professional_development, club_callouts, disable_all } = req.body;
-
 	let db_res = await accountQueries.setPreferencesQuery(user_id, professional_development, club_callouts, disable_all);
 	if (db_res == false) {
 		return res.status(500).json({ error: "Internal server error" });
@@ -990,10 +1000,43 @@ async function setPreferences(req, res) {
 
 }
 
-async function checkEvent(user_id, event_id) {
-  
-  let db_res = await accountQueries.checkEventQuery(user_id, event_id);
-  return db_res == true;
+async function getPreferences(req, res) {
+
+	const { user_id } = req.body;
+	let db_res = await accountQueries.getPreferencesQuery(user_id);
+	if (db_res == null) {
+		return res.status(500).json({ error: "Internal server error" });
+	}
+
+  return res.status(200).json({ user_options: db_res.rows[0] });
+
+}
+
+async function getNotifications(req, res) {
+  console.log("[INFO] Get notifications api.")
+
+  const { user_id } = req.body;
+
+  let ret = {
+    professional_development: [],
+    club_callouts: []
+  }
+
+  let db_res = await accountQueries.getInterestedEventsClubQuery(user_id);
+  if (db_res == false) {
+    return res.status(500).json({ error: "Error getting notifications" });
+  }
+
+  ret.club_callouts = db_res.rows;
+
+  db_res = await accountQueries.getInterestedEventsProfQuery(user_id);
+  if (db_res == false) {
+    return res.status(500).json({ error: "Error getting notifications" });
+  }
+
+  ret.professional_development = db_res.rows;
+
+  return res.status(200).json({ notifications: ret });
 
 }
 
@@ -1030,5 +1073,8 @@ module.exports = {
   getMutualOrgs,
   deleteAccountAPI,
   searchUsers,
+  submitFeedback,
   setPreferences,
+  getPreferences,
+  getNotifications,
 };

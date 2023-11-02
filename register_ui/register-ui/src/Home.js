@@ -27,8 +27,9 @@ export default function Home() {
         <Link to="/settings">Settings</Link>
         <Link to="/delete">Delete Account</Link>
         <Link to="/message-user">Message A User</Link>
-        <Link to="/interested-events">Upcoming Events</Link>
+        <Link to="/interested-events">Events I am Interested In</Link>
         <Link to="/username-lookup">Username Lookup</Link>
+        <Link to="/club">Look at our example club!</Link>
         </section>
       </div>
     </div>
