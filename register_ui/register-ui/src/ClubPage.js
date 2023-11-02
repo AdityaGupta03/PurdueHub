@@ -160,7 +160,7 @@ function ClubPage() {
         
                     <div className='intro'>
                         <img className='clubPF' src={works} />
-                        <h1 className='title'>Event: {eventName}</h1>
+                        <h1 className='title'>{eventName}</h1>
                     </div>
 
                     <div className='summaryText'>
