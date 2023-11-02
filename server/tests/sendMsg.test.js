@@ -8,6 +8,7 @@ describe("Testing messageUser API:", () => {
   let consoleLogSpy, consoleErrSpy;
 
   beforeAll(async () => {
+    await pool.query("DELETE FROM email_verification");
     await pool.query("DELETE FROM users");
   });
 
@@ -54,12 +55,21 @@ describe("Testing messageUser API:", () => {
     expect(res.body.error).toEqual("Missing message field.");
   });
 
+  it("should return 400 if title is missing", async () => {
+    let res = await request(app)
+      .post("/api/msg_user")
+      .send({ user_id: "1", username: "gupta", msg: "testing units" });
+    
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.error).toEqual("Missing title field.");
+  });
+
   it("should return 500 if getUserInfoQuery fails", async () => {
     jest.spyOn(accountQueries, "getUserInfoQuery").mockReturnValue(false);
 
     let res = await request(app)
       .post("/api/msg_user")
-      .send({ user_id: "1", username: "gupta", msg: "testing units" });
+      .send({ user_id: "1", username: "gupta", msg: "testing units", title: "Testing" });
     
     expect(res.statusCode).toEqual(500);
     expect(res.body.error).toEqual("Internal Server Error!");
@@ -71,7 +81,7 @@ describe("Testing messageUser API:", () => {
 
     let res = await request(app)
       .post("/api/msg_user")
-      .send({ user_id: "1", username: "gupta", msg: "testing units" });
+      .send({ user_id: "1", username: "gupta", msg: "testing units", title: "Testing" });
 
     console.log(res.body);
     
@@ -86,7 +96,7 @@ describe("Testing messageUser API:", () => {
 
     let res = await request(app)
       .post("/api/msg_user")
-      .send({ user_id: "1", username: "gupta", msg: "testing units" });
+      .send({ user_id: "1", username: "gupta", msg: "testing units", title: "Testing" });
 
     console.log(res.body);
     
@@ -103,7 +113,7 @@ describe("Testing messageUser API:", () => {
 
     let res = await request(app)
       .post("/api/msg_user")
-      .send({ user_id: "1", username: "gupta", msg: "testing units" });
+      .send({ user_id: "1", username: "gupta", msg: "testing units", title: "Testing" });
 
     console.log(res.body);
     
@@ -119,7 +129,7 @@ describe("Testing messageUser API:", () => {
 
     let res = await request(app)
       .post("/api/msg_user")
-      .send({ user_id: "1", username: "gupta", msg: "testing units" });
+      .send({ user_id: "1", username: "gupta", msg: "testing units", title: "Testing" });
     
     expect(res.statusCode).toEqual(500);
     expect(res.body.error).toEqual("Internal Server Error!");
@@ -134,7 +144,7 @@ describe("Testing messageUser API:", () => {
 
     let res = await request(app)
       .post("/api/msg_user")
-      .send({ user_id: "1", username: "gupta", msg: "testing units" });
+      .send({ user_id: "1", username: "gupta", msg: "testing units", title: "Testing" });
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.message).toEqual("Successfully sent message.");
@@ -148,7 +158,7 @@ describe("Testing messageUser API:", () => {
 
     let res = await request(app)
       .post("/api/msg_user")
-      .send({ user_id: "1", username: "gupta", msg: "testing units" });
+      .send({ user_id: "1", username: "gupta", msg: "testing units", title: "Testing" });
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.message).toEqual("Successfully sent message.");

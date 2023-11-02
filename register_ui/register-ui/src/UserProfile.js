@@ -176,7 +176,7 @@ const UserProfile = () => {
     }, [username])
     
     return (
-        <>
+        <div style={{ background: 'black', padding: '30px' }}>
         {isEditing ? (
             <section>
                 <p className={userFocus && username && !validUserName
@@ -227,7 +227,7 @@ const UserProfile = () => {
                 <button onClick={handleSaveClick}>Save</button>
             </section>
         ) : (
-             <div>
+             <div style={{ background: 'black', padding: '20px' }}>
                 <h1>User Profile</h1>
                 <img className='landscape' src={selectedImage || profilePicture} alt="Profile Picture"/>
                 <h2>Username: {username}</h2>
@@ -235,7 +235,7 @@ const UserProfile = () => {
                 <button onClick={handleEditClick}>Edit Profile</button>
              </div>
         )}
-    </>
+    </div>
     )
 }
 

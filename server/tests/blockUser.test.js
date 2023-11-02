@@ -7,6 +7,7 @@ describe("Testing blockUser API:", () => {
   let consoleLogSpy, consoleErrSpy;
 
   beforeAll(async () => {
+    await pool.query("DELETE FROM email_verification WHERE email IN (SELECT email FROM users)");
     await pool.query("DELETE FROM users");
   });
 

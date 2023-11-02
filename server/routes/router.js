@@ -16,7 +16,7 @@ router.post("/get_followed_by", accountController.getFollowedBy);
 router.post("/follow_user", accountController.followUser);
 router.post("/unfollow_user", accountController.unfollowUser);
 router.post("/get_block_list", accountController.getBlockList);
-router.get("/get_calendar", calendarController.getCalendar);
+router.post("/get_calendar", calendarController.getCalendar);
 router.post("/update_calendar_event", calendarController.updateCalendarEvent);
 router.post("/delete_calendar_event", calendarController.deleteCalendarEvent);
 router.post("/add_calendar_event", calendarController.addCalendarEvent);

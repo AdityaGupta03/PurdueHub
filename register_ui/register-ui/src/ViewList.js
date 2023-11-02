@@ -102,7 +102,8 @@ function ViewList() {
     }, [])
 
   return (
-    <>
+    <div style={{ background: 'black', padding: '20px' }}>
+        <h1>Your Related User Lists:</h1>
         {
             signedIn && (
                 <div>
@@ -190,7 +191,7 @@ function ViewList() {
                 </div>
             )
         }
-    </>
+    </div>
   )
 }
 

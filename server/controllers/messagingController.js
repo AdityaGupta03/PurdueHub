@@ -4,7 +4,7 @@ const accountQueries = require("../database/queries/accountQueries");
 async function messageUser(req, res) {
   console.log("[INFO] Direct message user API.");
 
-  let { user_id, username, msg } = req.body;
+  let { user_id, username, msg, title } = req.body;
   if (!user_id) {
     return res.status(400).json({ error: "Missing user_id field." });
   }
@@ -15,6 +15,10 @@ async function messageUser(req, res) {
 
   if (!msg) {
     return res.status(400).json({ error: "Missing message field." });
+  }
+
+  if (!title) {
+    return res.status(400).json({ error: "Missing title field." });
   }
 
   let sender = await accountQueries.getUserInfoQuery(user_id);
@@ -30,6 +34,10 @@ async function messageUser(req, res) {
   console.log(sender);
   console.log(reciever);
 
+  if (reciever.banned == 1) {
+    return res.status(400).json({ error: "User is banned, can't send message" });
+  }
+
   let isBlocked = await accountQueries.checkUserBlocked(user_id, reciever.user_id);
   if (isBlocked) {
     return res.status(400).json({ error: "Sender is blocked by user." });
@@ -43,7 +51,7 @@ async function messageUser(req, res) {
     }
   }
 
-  let subject = "PurdueHub - Direct Message from " + sender.username;
+  let subject = "PurdueHub - Direct Message from " + sender.username + ": " + title;
   let msg_status = await helperFuncs.sendEmail(reciever.email, subject, msg);
   if (!msg_status) {
     return res.status(500).json({ error: "Internal Server Error!" });

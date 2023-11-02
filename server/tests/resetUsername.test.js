@@ -10,6 +10,7 @@ describe("Testing updateUsername API:", () => {
   let consoleLogSpy;
 
   beforeAll(async () => {
+    await pool.query("DELETE FROM email_verification");
     await pool.query("DELETE FROM users");
   });
 

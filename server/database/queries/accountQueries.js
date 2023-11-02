@@ -454,6 +454,36 @@ async function getAllUsernames() {
   }
 }
 
+async function setPreferencesQuery(user_id, professional_development, club_callouts, disable_all) {
+	const query = "UPDATE users SET professional_development = $1, club_callouts = $2 , disable_all = $3 WHERE user_id = $4";
+	const data = [ professional_development, club_callouts, disable_all, user_id ];
+
+	try {
+		await pool.query(query, data);
+		return true;
+	} catch (error) {
+		console.log(error);
+		return false;
+	  }
+}
+
+async function checkEventQuery(user_id, event_id) {
+	const query = `SELECT * FROM users WHERE $1 = ANY(intrested_events) AND user_id = $2`;
+	const data = [ event_id, user_id ];
+  try {
+    const db_res = await pool.query(query, data);
+	  if (db_res == null) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -489,4 +519,5 @@ module.exports = {
   toggleDM,
   isOnlyFollowing,
   getAllUsernames,
+  setPreferencesQuery,
 };

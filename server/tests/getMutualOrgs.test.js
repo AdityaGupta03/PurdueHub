@@ -7,6 +7,7 @@ describe("Testing getMutualOrgs API:", () => {
   let consoleLogSpy, consoleErrSpy;
 
   beforeAll(async () => {
+    await pool.query("DELETE FROM email_verification");
     await pool.query("DELETE FROM users");
   });
 

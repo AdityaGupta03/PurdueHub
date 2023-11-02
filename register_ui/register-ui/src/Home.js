@@ -18,12 +18,11 @@ export default function Home() {
     <div>
       <div>
         <section>
-        <h1>Welcome to PurdueHub!</h1>
-        <p>An application targeted to students of Purdue University</p>
-        <Link to="/userprofile">View Profile</Link>
+        <h1 style={{ paddingBottom: '20px' }}>Welcome to PurdueHub!</h1>
+        <p style={{ paddingBottom: '20px' }}>An application targeted to students of Purdue University!</p>
+        <Link to="/userprofile">View Your Profile</Link>
+        <Link to="/calendar">View Your Calendar</Link>
         <Link to="/viewlist">View your user lists!</Link>
-        <Link to="/viewprofile/testing">View testing's profile</Link>
-        <Link to="/viewprofile/banned">View banned's profile</Link>
         <Link to="/feedback">Provide Feedback</Link>
         <Link to="/settings">Settings</Link>
         <Link to="/delete">Delete Account</Link>
