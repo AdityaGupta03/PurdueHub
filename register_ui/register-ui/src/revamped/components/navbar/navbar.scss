@@ -7,7 +7,7 @@
     border-bottom: 1px solid lightgrey;
     position: sticky;
     top: 0;
-    background-color: white; // removes transparency when scrolling, removing clipping
+    
     .left{
         display: flex;
         align-items: center;
@@ -19,6 +19,9 @@
             color: black;
         }
         .search{
+            .selectFrom {
+                color: whitesmoke;
+            }
             display: flex;
             align-items: center;
             gap: 10px;

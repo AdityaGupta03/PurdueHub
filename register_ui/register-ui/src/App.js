@@ -5,6 +5,8 @@ import Profile from "./revamped/pages/profile/Profile";
 import Navbar from "./revamped/components/navbar/Navbar"
 import LeftBar from "./revamped/components/leftBar/LeftBar";
 
+import './revamped/styles.scss'
+
 import {
   createBrowserRouter,
   Navigate,
@@ -12,19 +14,23 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
+import Feedback from "./revamped/pages/feedback/Feedback";
+import RightBar from "./revamped/components/rightBar/RightBar";
+
 function App() {
 
   const currentUser = true;
 
   const Layout = () => {
     return(
-      <div>
+      <div className="dark-theme">
         <Navbar />
         <div style={{display: 'flex'}}>
           <LeftBar/>
           <div style={{flex: 6}}>
             <Outlet />
           </div>
+          <RightBar/>
         </div>
       </div>
     )
@@ -49,6 +55,10 @@ function App() {
         {
           path: "/profile/:id",
           element: <Profile />
+        },
+        {
+          path: "/feedback",
+          element: <Feedback />
         },
       ]
     },

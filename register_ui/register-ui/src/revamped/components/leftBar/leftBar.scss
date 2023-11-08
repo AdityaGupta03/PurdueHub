@@ -1,5 +1,5 @@
 .leftBar {
-    flex: 1;
+    flex: 2;
     position: sticky;
     top: 70px;
     height: calc(100vh - 70px); // since nav bar takes up 50px in height + 20px in padding = 70px to account for
@@ -29,6 +29,7 @@
                 display: flex;
                 align-items: center;
                 gap: 10px;
+                padding: 10px;
                 img {
                     width: 30px;
                     height: 30px;
@@ -41,14 +42,27 @@
                 }
             }
 
+            .removeStyleLink {
+                text-decoration: none;
+            }
+
+            .removeStyleLink:visited {
+                color: whitesmoke;
+            }
+
+            .removeStyleLink:hover {
+                background-color: #333;
+            }
             .item {
                 display: flex;
                 align-items: center;
                 gap: 10px;
+                padding: 10px;
                 span {
                     font-size: 14px;
                 }
             }
+            
         }
     }
 }
