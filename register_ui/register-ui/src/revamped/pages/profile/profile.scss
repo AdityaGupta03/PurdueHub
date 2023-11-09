@@ -6,15 +6,17 @@
         width: 100%;
         height: 300px;
         position: relative;
-        .cover{
+
+        .cover {
             width: 100%;
             height: 100%;
         }
+
         .profilePic {
             width: 200px;
             height: 200px;
             border-radius: 50%;
-            object-fit:cover;
+            object-fit: cover;
             overflow: hidden;
 
             position: absolute;
@@ -23,13 +25,14 @@
             margin: auto;
             top: 200px;
         }
-        
+
         .profileContainer {
             background-color: #333;
             padding: 20px 70px;
+
             .uInfo {
                 height: 180px;
-                box-shadow: 0px 0px 25px -10px rgba(0,0,0,0.38);
+                box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
                 border-radius: 20px;
                 background-color: #222;
                 color: whitesmoke;
@@ -44,6 +47,7 @@
                     display: flex;
                     gap: 10px;
                 }
+
                 .center {
                     flex: 1;
                     display: flex;
@@ -55,16 +59,18 @@
                         font-size: 30px;
                         font-weight: 500;
                     }
+
                     .info {
                         width: 100%;
                         display: flex;
                         align-items: center;
                         justify-content: space-around;
-                        
+
                         .item {
                             display: flex;
-                        align-items: center;
+                            align-items: center;
                         }
+
                         span {
                             font-size: 12px;
                         }
@@ -78,7 +84,10 @@
                         border-radius: 5px;
                         cursor: pointer;
                     }
+
+
                 }
+
                 .right {
                     flex: 1;
                     display: flex;
@@ -88,6 +97,25 @@
 
 
                 }
+
+                overflow-y: scroll;
+                margin-bottom: 20px;
+                
+                .bottomInfo {
+                   
+                    display: flex;
+                    align-items: flex-start;
+                }
+            }
+
+            .bioInfo {
+                height: 180px;
+                box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+                border-radius: 20px;
+                background-color: #222;
+                color: whitesmoke;
+                padding: 50px;
+                
             }
         }
     }

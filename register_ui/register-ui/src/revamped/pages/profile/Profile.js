@@ -53,9 +53,18 @@ const Profile = () => {
               <EmailIcon/>
               <MoreVertIcon/>
             </div>
-            
+
           </div>
+
+          <div className='bioInfo'>
+
+          </div>
+          <div className='bioInfo'>
+
+          </div>
+          
         </div>
+
       </div>
     </div>
   )
