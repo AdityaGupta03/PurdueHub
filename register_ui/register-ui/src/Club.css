@@ -30,6 +30,16 @@
     margin-inline-end: 0px;
     font-weight: bold;
 }
+
+.test {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.question {
+    font-weight: bold;
+}
 .friendsTitle {
     display: block;
     font-size: 2em;
@@ -77,6 +87,19 @@
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.ask-left {
+    
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: lightblue; 
+        color: #fff; 
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
 }
 
 .actualbtn {

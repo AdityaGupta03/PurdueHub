@@ -25,6 +25,7 @@ import TestProfile from './TestProfile';
 import ClubPage from './ClubPage';
 import EventsInterestedPage from './EventsInterestedPage';
 import UsernameLookup from './UsernameLookup';
+import FAQ from './FAQ';
 
 function App() {
 
@@ -62,6 +63,8 @@ function App() {
         <Route path='/club' element={<ClubPage/>} />
         <Route path='/interested-events' element={<EventsInterestedPage/>} />
         <Route path='/username-lookup' element={<UsernameLookup/>} />
+        <Route path='/faq' element={<FAQ/>} />
+
       </Routes>
     </BrowserRouter>
     </main>
