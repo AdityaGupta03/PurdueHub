@@ -26,6 +26,11 @@ import ClubPage from './ClubPage';
 import EventsInterestedPage from './EventsInterestedPage';
 import UsernameLookup from './UsernameLookup';
 import FAQ from './FAQ';
+import Weather from './Weather';
+
+import {QueryClient, QueryClientProvider, useQuery } from "react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
 
@@ -34,7 +39,8 @@ function App() {
 
   return (
     <main className='App'>
-    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
       <Routes>
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
@@ -64,9 +70,12 @@ function App() {
         <Route path='/interested-events' element={<EventsInterestedPage/>} />
         <Route path='/username-lookup' element={<UsernameLookup/>} />
         <Route path='/faq' element={<FAQ/>} />
+        <Route path='/weather' element={<Weather/>} />
 
       </Routes>
     </BrowserRouter>
+      </QueryClientProvider>
+
     </main>
   );
 }

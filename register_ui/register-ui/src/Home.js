@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { ToastContainer, toast } from 'react-toastify'; // NEW
 import 'react-toastify/dist/ReactToastify.css'; // NEW
-import TipComponent from './TipComponent';
 import './Notification.css'; // Import your CSS file
 
 export default function Home() {
@@ -64,6 +63,7 @@ export default function Home() {
           <Link to="/username-lookup">Username Lookup</Link>
           <Link to="/club">Look at our example club!</Link>
           <Link to="/faq">View FAQs</Link>
+          <Link to="/weather">View Weather</Link>
         </section>
       </div>
     </div>
