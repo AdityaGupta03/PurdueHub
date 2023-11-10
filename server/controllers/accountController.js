@@ -1035,6 +1035,7 @@ async function getNotifications(req, res) {
   }
 
   ret.professional_development = db_res.rows;
+  console.log(ret);
 
   return res.status(200).json({ notifications: ret });
 

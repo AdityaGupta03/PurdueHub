@@ -19,12 +19,12 @@ function Feedback() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if(title === '') {
-            setErrMsg('Emtpy Title')
+            setErrMsg('Empty Title')
             return 
         }
 
         if(message === '') {
-            setErrMsg('Emtpy Message')
+            setErrMsg('Empty Body')
             return 
         }
 

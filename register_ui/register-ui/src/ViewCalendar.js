@@ -293,7 +293,7 @@ export default function ViewCalendar() {
     }
 
     return (
-        <>
+        <div style={{ background: '#292323', borderRadius: '25px' }}>
             {isCreating == false && isAdding === false && (
                 <div className="App">
                     <h1>Your Calendar</h1>
@@ -368,6 +368,6 @@ export default function ViewCalendar() {
                     </div>
                 </div>
             )}
-        </>
+        </div>
     )
 }

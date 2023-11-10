@@ -488,7 +488,7 @@ async function getInterestedEventsClubQuery(user_id) {
 
   const query = `SELECT DISTINCT ce.id, ce.title, ce.description
   FROM calendar_events ce
-  JOIN users u ON ce.club_callouts = 1 AND u.club_callouts = 1 WHERE u.user_id = $1`;
+  JOIN users u ON ce.club_callouts = 1 AND u.club_callouts = 1 AND ce.id = ANY(u.interested_events) WHERE u.user_id = $1`;
   const data = [ user_id ];
   
   try {
@@ -519,8 +519,12 @@ async function getInterestedEventsProfQuery(user_id) {
 async function addFollowerQuery(user_id, org_id) {
   const query = 'UPDATE organization SET followers = ARRAY_APPEND(followers, $1) WHERE org_id = $2'
   const data = [ user_id, org_id ];
+
+  const query2 = 'UPDATE users SET saved_orgs = ARRAY_APPEND(saved_orgs, $1) WHERE user_id = $2'
+  const data2 = [ org_id, user_id ];
   try {
       const db_res = await pool.query(query, data);
+      await pool.query(query2, data2);
       return true;
   } catch (error) {
       console.log(error);
@@ -531,8 +535,12 @@ async function addFollowerQuery(user_id, org_id) {
 async function unfollowOrgQuery(user_id, org_id) {
   const query = 'UPDATE organization SET followers = ARRAY_REMOVE(followers, $2) WHERE org_id = $1'
   const data = [ org_id, user_id ];
+
+  const query2 = 'UPDATE users SET saved_orgs = ARRAY_REMOVE(saved_orgs, $2) WHERE user_id = $1'
+  const data2 = [ user_id, org_id ];
   try {
       const db_res = await pool.query(query, data);
+      await pool.query(query2, data2);
       return true;
   } catch (error) {
       console.log(error);
