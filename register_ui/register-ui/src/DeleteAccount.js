@@ -34,7 +34,7 @@ function DeleteAccount() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ "user_id": my_userid, "feedback_title": "", "feedback_body": message }),
+                    body: JSON.stringify({ "user_id": my_userid, "feedback_title": "Delete Account", "feedback_body": message }),
                 });
             } catch (error) {
                 console.log(error);

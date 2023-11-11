@@ -19,7 +19,7 @@ CREATE TABLE users (
   professional_development INTEGER DEFAULT 0, /* For the following 3, 0 is no 1 is yes */
   club_callouts INTEGER DEFAULT 0,
   disable_all INTEGER DEFAULT 0,
-  interested_events INTEGER[] DEFAULT ARRAY[]::INTEGER[],
+  interested_events INTEGER[] DEFAULT ARRAY[]::INTEGER[]
 );
 
 CREATE TABLE calendar_events (
