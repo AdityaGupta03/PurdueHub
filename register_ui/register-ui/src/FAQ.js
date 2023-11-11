@@ -36,7 +36,6 @@ function FAQ() {
         },
     ];
 
-
     useEffect(() => {
         setErrMsg('');
     }, [questionGiven])

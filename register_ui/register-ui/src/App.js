@@ -29,6 +29,9 @@ import FAQ from './FAQ';
 import Weather from './Weather';
 
 import {QueryClient, QueryClientProvider, useQuery } from "react-query";
+import ClassLookup from './ClassLookup';
+import ClassPage from './ClassPage';
+import Favorites from './Favorites';
 
 const queryClient = new QueryClient();
 
@@ -67,10 +70,14 @@ function App() {
         <Route path='/settings' element={<Settings />} />
         <Route path='/message-user' element={<MessagePage/>} />
         <Route path='/club' element={<ClubPage/>} />
+
         <Route path='/interested-events' element={<EventsInterestedPage/>} />
         <Route path='/username-lookup' element={<UsernameLookup/>} />
         <Route path='/faq' element={<FAQ/>} />
         <Route path='/weather' element={<Weather/>} />
+        <Route path='/class-lookup' element={<ClassLookup/>} />
+        <Route path='/class/:className' element={<ClassPage />} />
+        <Route path='/favorites' element={<Favorites />} />
 
       </Routes>
     </BrowserRouter>

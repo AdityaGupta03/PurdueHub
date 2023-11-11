@@ -61,6 +61,7 @@ export default function Home() {
           <Link to="/message-user">Message A User</Link>
           <Link to="/interested-events">Events I am Interested In</Link>
           <Link to="/username-lookup">Username Lookup</Link>
+          <Link to="/class-lookup">Class Lookup</Link>
           <Link to="/club">Look at our example club!</Link>
           <Link to="/faq">View FAQs</Link>
           <Link to="/weather">View Weather</Link>

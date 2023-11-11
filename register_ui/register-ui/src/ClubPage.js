@@ -10,6 +10,12 @@ import albert from './temp-icons/albert.jpg' // temp picture
 import toby from './temp-icons/toby.jpg' // temp picture
 import joel from './temp-icons/joel.jpg' // temp picture
 
+import IconButton from '@mui/material/IconButton';
+import { Tooltip } from '@mui/material';
+import FavoriteBorderIcon from '@mui/icons-material/StarBorder';
+import FavoriteIcon from '@mui/icons-material/Star';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 function ClubPage() {
 
     const [viewingEvent, setViewingEvent] = useState(false);
@@ -27,6 +33,16 @@ function ClubPage() {
 
     const [indexOfEvent, setIndexOfEvent] = useState(0);
     // example
+
+    const [isFavorite, setFavorite] = useState(false);
+    const handleToggleFavorite = () => {
+        if(isFavorite === true) {
+            setFavorite(false);
+        }
+        else {
+            setFavorite(true);
+        }
+    };
 
     const data = [
         {
@@ -113,7 +129,7 @@ function ClubPage() {
                 }
                 const matchingInter = inter.find(item => item.id === event.id);
                 if (matchingInter) {
-                  return { ...event, interest: true, tags: tags };
+                    return { ...event, interest: true, tags: tags };
                 } else {
                     return { ...event, interest: false, tags: tags };
                 }
@@ -124,7 +140,7 @@ function ClubPage() {
         } catch (error) {
             console.log(error);
         }
-        
+
         try {
             let res = await fetch('http://localhost:5000/api/is_following_org', {
                 method: 'POST',
@@ -165,7 +181,7 @@ function ClubPage() {
             setViewingFriends(false);
         }
 
-        if(viewingFriends) {
+        if (viewingFriends) {
             setViewingFriends(false);
         }
         else {
@@ -246,13 +262,13 @@ function ClubPage() {
 
             try {
                 let res = await fetch('http://localhost:5000/api/remove_org_follower', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ "user_id": my_userid, "org_id": "1" }),
-                    });
-    
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "user_id": my_userid, "org_id": "1" }),
+                });
+
                 let data = await res.json();
                 console.log(data);
             } catch (error) {
@@ -269,7 +285,7 @@ function ClubPage() {
                         },
                         body: JSON.stringify({ "user_id": my_userid, "event_id": event_id }),
                     });
-    
+
                     let data = await res.json();
                     console.log(data);
                 } catch (error) {
@@ -293,13 +309,13 @@ function ClubPage() {
 
             try {
                 let res = await fetch('http://localhost:5000/api/add_org_follower', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ "user_id": my_userid, "org_id": "1" }),
-                    });
-    
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "user_id": my_userid, "org_id": "1" }),
+                });
+
                 let data = await res.json();
                 console.log(data);
             } catch (error) {
@@ -316,7 +332,7 @@ function ClubPage() {
                         },
                         body: JSON.stringify({ "user_id": my_userid, "event_id": event_id }),
                     });
-    
+
                     let data = await res.json();
                     console.log(data);
                 } catch (error) {
@@ -354,7 +370,7 @@ function ClubPage() {
                     <div className='containbtn'>
                         <button className='actualbtn' onClick={() => viewEventPageClick(eventName, eventDescription, clubTags, isInterested, indexOfEvent)}>Back</button>
                     </div>
-        
+
                     <div className='intro'>
                         <img className='clubPF' src={works} />
                         <h1 className='title'>{eventName}</h1>
@@ -393,63 +409,72 @@ function ClubPage() {
                                 <button className='actualbtn' onClick={viewFriends}>Back</button>
                             </div>
                             <br />
-                        <div className='friendsIntro'>
-                            <h1 className='friendsTitle'>Users Who Are Interested:</h1>
-                            {followedUsernames.map((item, index) => {
-                                return (
-                                    <div className="changeBox" key={index}>
-                                        <div className='imageText'>
-                                            <Link to={`/viewprofile/${item.username}`}>{item.username}</Link>
+                            <div className='friendsIntro'>
+                                <h1 className='friendsTitle'>Users Who Are Interested:</h1>
+                                {followedUsernames.map((item, index) => {
+                                    return (
+                                        <div className="changeBox" key={index}>
+                                            <div className='imageText'>
+                                                <Link to={`/viewprofile/${item.username}`}>{item.username}</Link>
+                                            </div>
                                         </div>
-                                    </div>
-                                )
-                            })}
-                        </div>
+                                    )
+                                })}
+                            </div>
                         </div>
                     ) : (
                         <div>
-                        <div className='containbtn'>
-                            <button className='actualbtn' onClick={followClub}>{isFollowingClub ? "Unfollow Club" : "Follow Club"}</button>
-                            <button className='top-left-btn' onClick={viewFriends}>View Friends</button>
+                            <div className='containbtn'>
+                                <button className='actualbtn' onClick={followClub}>{isFollowingClub ? "Unfollow Club" : "Follow Club"}</button>
+                                <button className='top-left-btn' onClick={viewFriends}>View Friends</button>
+                            </div>
+                            <br />
+                            <div className='containbtn'>
+                                <div className='place-icon-right'>
+                                <Tooltip title="Favorite">
+                                    <IconButton onClick={handleToggleFavorite} style={{ fontSize: 'large' }} color={isFavorite ? 'primary' : 'info'}>
+                                        {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                                    </IconButton>
+                                </Tooltip>
+                                </div>
+                            </div>
+                            <div className='intro'>
+                                <img className='clubPF' src={works} />
+                                <h1 className='test'>{clubName}</h1>
+                            </div>
+
+                            <div className='summaryText'>
+                                <h3>Summary:</h3>
+                                <p>{clubDescription}</p>
+                            </div>
+
+                            <div className='info'>
+                                <h3>General Info:</h3>
+                                <p>West Lafayette, IN 47907-2034</p>
+                                <p>United States</p>
+                                <p>Email: fireworksconns@purdue.edu</p>
+                            </div>
+
+                            <div className='eventCtn'>
+                                <h2>Upcoming Events:</h2>
+                                <div>
+                                    {events.map((item, index) => {
+                                        return (
+                                            <Link style={{ textDecorationLine: 'none' }} onClick={() => viewEventPageClick(item.title, item.description, item.tags, item.interest, index)}>
+                                                <div key={index} className='event'>
+                                                    <h3>Event Name:</h3>
+                                                    <p className='wrapText'>{item.title}</p>
+                                                    <h3>Event Description: </h3>
+                                                    <p className='wrapText'>{item.description}</p>
+                                                </div>
+                                            </Link>
+                                        )
+                                    })}
+                                </div>
+                            </div>
                         </div>
-                        <br />
-                    <div className='intro'>
-                        <img className='clubPF' src={works} />
-                        <h1 className='title'>{clubName}</h1>
-                    </div>
-
-                    <div className='summaryText'>
-                        <h3>Summary:</h3>
-                        <p>{clubDescription}</p>
-                    </div>
-
-                    <div className='info'>
-                        <h3>General Info:</h3>
-                        <p>West Lafayette, IN 47907-2034</p>
-                        <p>United States</p>
-                        <p>Email: fireworksconns@purdue.edu</p>
-                    </div>
-
-                    <div className='eventCtn'>
-                        <h2>Upcoming Events:</h2>
-                        <div>
-                            {events.map((item, index) => {
-                                return (
-                                    <Link style={{ textDecorationLine: 'none' }} onClick={() => viewEventPageClick(item.title, item.description, item.tags, item.interest, index)}>
-                                        <div key={index} className='event'>
-                                            <h3>Event Name:</h3>
-                                            <p className='wrapText'>{item.title}</p>
-                                            <h3>Event Description: </h3>
-                                            <p className='wrapText'>{item.description}</p>
-                                        </div>
-                                    </Link>
-                                )
-                            })}
-                        </div>
-                    </div>
-                    </div>
                     )}
-                    
+
                 </div>
             )}
         </>

@@ -5,6 +5,7 @@
     width: 750px;
     height: auto;
 }
+
 .interestedWhole {
     background-color: rgb(41, 35, 35);
     border-radius: 25px;
@@ -12,15 +13,18 @@
     width: 750px;
     height: auto;
 }
+
 .intro {
     padding-left: 40px;
     display: block;
     min-height: 120px;
 }
+
 .friendsIntro {
     display: block;
     min-height: 120px;
 }
+
 .title {
     display: block;
     font-size: 2em;
@@ -40,6 +44,7 @@
 .question {
     font-weight: bold;
 }
+
 .friendsTitle {
     display: block;
     font-size: 2em;
@@ -52,6 +57,7 @@
 
     padding: 0px 0px 0px 0px;
 }
+
 .clubPF {
     display: inline-flex;
     border-radius: 50%;
@@ -73,16 +79,17 @@
 
 .containbtn {
     position: relative;
-    width: 100%; 
+    width: 100%;
     min-height: 50px;
+
 }
 
 .top-left-btn {
     position: absolute;
     top: 0;
     left: 0;
-    background-color: #CEB888; 
-    color: #fff; 
+    background-color: #CEB888;
+    color: #fff;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -90,41 +97,49 @@
 }
 
 .ask-left {
-    
-        position: absolute;
-        top: 0;
-        left: 0;
-        background-color: lightblue; 
-        color: #fff; 
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-}
 
-.actualbtn {
     position: absolute;
     top: 0;
-    right: 0;
-    background-color: #CEB888; 
-    color: #fff; 
+    left: 0;
+    background-color: lightblue;
+    color: #fff;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
 }
 
+.actualbtn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #CEB888;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.place-icon-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px 20px;
+}
+
 .disabled {
     position: absolute;
     top: 0;
     right: 0;
-    background-color: #ccc; 
-    color: #666;          
+    background-color: #ccc;
+    color: #666;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
-    cursor: not-allowed;   
+    cursor: not-allowed;
 }
+
 .eventCtn {
     padding-top: 25px;
     width: 500px;
@@ -148,11 +163,11 @@
     display: inline-block;
     padding: 4px 8px;
     margin-right: 8px;
-    background-color: #c9a453; 
-    color: #fff; 
+    background-color: #c9a453;
+    color: #fff;
     border-radius: 4px;
     font-size: 30px;
-  }
+}
 
 .event:hover {
     background-color: rgb(96, 82, 82);
