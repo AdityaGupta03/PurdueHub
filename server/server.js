@@ -67,7 +67,9 @@ app.post("/update_profile_picture", upload.single('file'), async (req, res) => {
   return res.status(200).json({ message: "Successfully updated profile picture" });
 });
 
-helperFuncs.printAllAccounts();
+if (process.env.NODE_ENV !== 'test') {
+  helperFuncs.printAllAccounts();
+}
 
 module.exports = {
   upload,

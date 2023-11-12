@@ -4,7 +4,7 @@
   "description": "Backend server for PurdueHub application.",
   "main": "server.js",
   "scripts": {
-    "tests": "cross-env NODE_ENV=test jest ./tests --detectOpenHandles --forceExit --verbose --runInBand",
+    "tests": "cross-env NODE_ENV=test jest ./tests --detectOpenHandles --forceExit --verbose --runInBand --silent",
     "start": "NODE_ENV=local server.js",
     "start-aws": "NODE_ENV=aws node server.js",
     "dev": "nodemon server.js"
