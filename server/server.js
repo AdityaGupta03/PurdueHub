@@ -6,6 +6,7 @@ const multer = require('multer');
 const accountQueries = require("./database/queries/accountQueries");
 const path = require('path');
 const helperFuncs = require("./controllers/helperFunctions");
+const { loadModel } = require("./controllers/faqController");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -18,6 +19,8 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
 app.use("/api", router);
+
+loadModel();
 
 let saveToDatabase;
 const storage = multer.diskStorage({
