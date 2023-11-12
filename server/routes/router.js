@@ -55,7 +55,7 @@ router.post("/add_org_follower", organizationController.addFollower);
 router.post("/remove_org_follower", organizationController.unfollowOrg);
 router.post("/is_following_org", organizationController.isFollowingOrg);
 router.post("/get_friends_org", organizationController.getFriendsOrg);
-router.get("get_advice", adviceController.getAdvice);
-router.post("set_advice_setting", adviceController.setAdviceAPI);
+router.get("/get_advice", adviceController.getAdvice);
+router.post("/set_advice_setting", adviceController.setAdviceAPI);
 
 module.exports = router;

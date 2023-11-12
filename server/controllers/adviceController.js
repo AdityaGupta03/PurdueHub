@@ -21,15 +21,20 @@ const adviceArr = [
   "You can search for other users using the search bar in the Username Lookup page!",
   "You can ban other users by going to their user profile and hitting the ban button!",
   "Send messages to other users through our emailing system using the Send Email page!",
-  "You can view if another user has the same friends/followers as you in the View Mutuals page!"
+  "You can view if another user has the same friends/followers as you in the View Mutuals page!",
+  "Testing: Failed"
 ];
 
 async function getAdvice(req, res) {
 
   console.log("[INFO] Get Advice to show");
-  let ind = Math.floor(Math.random() * 6);
+  let ind = getIndex(0, adviceArr.length - 1);
   return res.status(200).json({ advice: adviceArr[ind] });
 
+}
+
+function getIndex(min, max) {
+  return Math.floor(Math.random() * (max - min + 1));
 }
 
 module.exports = {
