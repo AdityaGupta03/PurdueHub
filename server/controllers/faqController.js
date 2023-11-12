@@ -1,5 +1,4 @@
 const faqQueries = require("../database/queries/faqQueries");
-// const stringSimilarity = require('string-similarity');
 const tf = require('@tensorflow/tfjs-node');
 const use = require('@tensorflow-models/universal-sentence-encoder');
 
@@ -23,8 +22,11 @@ async function askQuestionAPI(req, res) {
 
   console.log("[INFO] Asking: " + question);
 
-  let allQuestions = await faqQueries.getAllFAQsQuery();
   let threshold = 0.7;
+  let allQuestions = await faqQueries.getAllFAQsQuery();
+  if (allQuestions == null) {
+    return res.status(500).json({ error: "Internal Server Error." });
+  }
 
   // Calculate the embedding for the new question
   let newQuestionEmbedding = await getQuestionEmbedding(question);
@@ -43,10 +45,10 @@ async function askQuestionAPI(req, res) {
   let highest_rating = Math.max(...similarities);
   let mostSimilarIndex = similarities.indexOf(highest_rating);
 
-  // Find the data of the most similar index
+  // Find the data of the most similar question
   let mostSimilarFAQ = allQuestions[mostSimilarIndex];
+  console.log("Rating: " + highest_rating);
   console.log(mostSimilarFAQ);
-  console.log(highest_rating);
 
   let db_res;
   if (highest_rating > threshold) {

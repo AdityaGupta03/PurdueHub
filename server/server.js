@@ -20,7 +20,9 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
 app.use("/api", router);
 
-loadModel();
+if (process.env.NODE_ENV !== 'test') {
+  loadModel();
+}
 
 let saveToDatabase;
 const storage = multer.diskStorage({
