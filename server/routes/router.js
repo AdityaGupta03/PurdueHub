@@ -3,6 +3,7 @@ const calendarController = require("../controllers/calendarController");
 const accountController = require("../controllers/accountController");
 const messagingController = require("../controllers/messagingController");
 const organizationController = require("../controllers/organizationController");
+const adviceController = require("../controllers/adviceController");
 
 const router = express.Router();
 
@@ -54,5 +55,7 @@ router.post("/add_org_follower", organizationController.addFollower);
 router.post("/remove_org_follower", organizationController.unfollowOrg);
 router.post("/is_following_org", organizationController.isFollowingOrg);
 router.post("/get_friends_org", organizationController.getFriendsOrg);
+router.get("get_advice", adviceController.getAdvice);
+router.post("set_advice_setting", adviceController.setAdviceAPI);
 
 module.exports = router;
