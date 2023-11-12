@@ -44,7 +44,7 @@ const upload = multer({
   },
 });
 
-if (!process.env.TEST_ENV) {
+if (process.env.NODE_ENV !== 'test') {
   app.listen(port, () => {
     console.log(`Server has started on port ${port}\n`);
   });
