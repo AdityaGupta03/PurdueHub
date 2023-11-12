@@ -275,20 +275,27 @@ export default function Home() {
 
 
   useEffect(() => {
-    if (showTour) {
-      tour.start();
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+
+    if (isLoggedIn == 'false') {
+      navigate("/login");
     }
     else {
-      // Simulate showing a notification after component mount
-      const notificationDiv = document.getElementById('notification');
-      notificationDiv.classList.add('show');
-
-      const randomTip = sampleMessages[Math.floor(Math.random() * sampleMessages.length)];
-      setNotificationMessage(randomTip);
-
-      setTimeout(() => {
-        notificationDiv.classList.remove('show');
-      }, 6000);
+      if (showTour) {
+        tour.start();
+      }
+      else {
+        // Simulate showing a notification after component mount
+        const notificationDiv = document.getElementById('notification');
+        notificationDiv.classList.add('show');
+  
+        const randomTip = sampleMessages[Math.floor(Math.random() * sampleMessages.length)];
+        setNotificationMessage(randomTip);
+  
+        setTimeout(() => {
+          notificationDiv.classList.remove('show');
+        }, 6000);
+      }
     }
 
   }, []);
