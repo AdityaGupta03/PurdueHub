@@ -287,23 +287,23 @@ function EventsInterestedPage() {
                         <h2 style={{ textDecoration: 'underline' }}>Professional Development:</h2>
                         {notifyProfDev ? (
                             <div>
-                                    {profDevEvents.length != 0 ? (
-                                        <div>
-                                            {profDevEvents.map((item, index) => {
-                                                return (
-                                                    <Link className="clubEventLinks" style={{ textDecorationLine: 'none' }} onClick={() => viewEventPageClick(item.title, item.description, index, "prof")}>
-                                                        <div key={index} className='event'>
-                                                            <h3>Event Name:</h3>
-                                                            <p className='wrapText'>{item.title}</p>
-                                                            <h3>Event Description: </h3>
-                                                            <p className='wrapText'>{item.description}</p>
-                                                        </div>
-                                                    </Link>
-                                                )
-                                            })}
-                                        </div>) : (
-                                        <p>Nothing Coming Up...</p>
-                                    )}
+                                {profDevEvents.length != 0 ? (
+                                    <div>
+                                        {profDevEvents.map((item, index) => {
+                                            return (
+                                                <Link className="clubEventLinks" style={{ textDecorationLine: 'none' }} onClick={() => viewEventPageClick(item.title, item.description, index, "prof")}>
+                                                    <div key={index} className='event'>
+                                                        <h3>Event Name:</h3>
+                                                        <p className='wrapText'>{item.title}</p>
+                                                        <h3>Event Description: </h3>
+                                                        <p className='wrapText'>{item.description}</p>
+                                                    </div>
+                                                </Link>
+                                            )
+                                        })}
+                                    </div>) : (
+                                    <p>Nothing Coming Up...</p>
+                                )}
                             </div>
                         ) : (
                             <p>Nothing Coming Up...</p>
@@ -314,26 +314,26 @@ function EventsInterestedPage() {
                         <h2 style={{ textDecoration: 'underline' }}>Club Callout:</h2>
                         {notifyGeneralCallout ? (
                             <div>
-                                    {calloutEvents.length != 0 ?
-                                        (
-                                            <div>
-                                                {calloutEvents.map((item, index) => {
-                                                    return (
-                                                        <Link className="clubEventLinks" style={{ textDecorationLine: 'none' }} onClick={() => viewEventPageClick(item.title, item.description, index, "callout")}>
-                                                            <div key={index} className='event'>
-                                                                <h3>Event Name:</h3>
-                                                                <p className='wrapText'>{item.title}</p>
-                                                                <h3>Event Description: </h3>
-                                                                <p className='wrapText'>{item.description}</p>
-                                                            </div>
-                                                        </Link>
-                                                    )
-                                                })}
-                                            </div>
-                                        ) : (
-                                            <p>Nothing Coming Up...</p>
-                                        )
-                                    }
+                                {calloutEvents.length != 0 ?
+                                    (
+                                        <div>
+                                            {calloutEvents.map((item, index) => {
+                                                return (
+                                                    <Link className="clubEventLinks" style={{ textDecorationLine: 'none' }} onClick={() => viewEventPageClick(item.title, item.description, index, "callout")}>
+                                                        <div key={index} className='event'>
+                                                            <h3>Event Name:</h3>
+                                                            <p className='wrapText'>{item.title}</p>
+                                                            <h3>Event Description: </h3>
+                                                            <p className='wrapText'>{item.description}</p>
+                                                        </div>
+                                                    </Link>
+                                                )
+                                            })}
+                                        </div>
+                                    ) : (
+                                        <p>Nothing Coming Up...</p>
+                                    )
+                                }
                             </div>
                         ) : (
                             <p>Nothing Coming Up...</p>
