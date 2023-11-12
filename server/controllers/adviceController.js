@@ -7,6 +7,18 @@ async function setAdviceAPI(req, res) {
   const { user_id, toggleAdvice } = req.body;
   console.log("Setting advice to " + toggleAdvice + " for user: " + user_id);
 
+  if (!user_id) {
+    return res.status(400).json({ error: "Missing user_id field." });
+  }
+
+  if (!toggleAdvice) {
+    return res.status(400).json({ error: "Missing toggleAdvice field." });
+  }
+
+  if (toggleAdvice != 0 && toggleAdvice != 1) {
+    return res.status(400).json({ error: "Invalid option." });
+  }
+
   let db_res = await accountQueries.setAdviceQuery(user_id, toggleAdvice);
   if (db_res == false) {
     return res.status(500).json({ error: "Internal Server Error." });

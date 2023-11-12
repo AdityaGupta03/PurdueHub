@@ -1,7 +1,5 @@
 const request = require("supertest");
-const pool = require("../database/db");
 const { app } = require("../server");
-const accountQueries = require("../database/queries/accountQueries");
 
 describe("Testing getAdvice API:", () => {
 
