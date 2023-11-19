@@ -583,6 +583,19 @@ async function friendsWhoFollowClubQuery(user_id, org_id) {
 
 }
 
+async function updateTutorialQuery(username) {
+  const query = "UPDATE users SET tutorial = 1 WHERE username = $1";
+  const data = [ username ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
 
 module.exports = {
   isUniqueUsernameQuery,
@@ -627,4 +640,5 @@ module.exports = {
   unfollowOrgQuery,
   isFollowingOrgQuery,
   friendsWhoFollowClubQuery,
+  updateTutorialQuery,
 };

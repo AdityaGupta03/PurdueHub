@@ -174,6 +174,13 @@ async function login(req, res) {
     return res.status(400).json({ error: "Incorrect password" });
   }
 
+  if (account.tutorial == 0) {
+    const db_res = await accountQueries.updateTutorialQuery(username);
+    if (!db_res) {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+
   return res.status(200).json({ message: "Successfully logged in", user_id: user_id });
 }
 
