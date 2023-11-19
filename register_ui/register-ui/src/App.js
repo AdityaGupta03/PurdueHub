@@ -25,6 +25,7 @@ import TestProfile from './TestProfile';
 import ClubPage from './ClubPage';
 import EventsInterestedPage from './EventsInterestedPage';
 import UsernameLookup from './UsernameLookup';
+import ChatBot from './Chatbot';
 
 function App() {
 
@@ -49,10 +50,8 @@ function App() {
         <Route path='/verify_email/:email' element={<VerifyEmail />} />
         <Route path='/viewlist' element={<ViewList />} />
         <Route path='/calendar' element={<ViewCalendar />} />
-        
         <Route path='/testprofile/:username' element={<TestProfile />} /> {/* TESTING UI*/}
         <Route path='/testprofile/' element={<TestProfile />} /> {/* TESTING UI */}
-
         <Route path='/report' element={<ReportSubmission />} />
         <Route path='/viewmutuals/:username' element={<ViewMutuals />} />
         <Route path='/feedback' element={<Feedback />} />
@@ -62,6 +61,7 @@ function App() {
         <Route path='/club' element={<ClubPage/>} />
         <Route path='/interested-events' element={<EventsInterestedPage/>} />
         <Route path='/username-lookup' element={<UsernameLookup/>} />
+        <Route path='/chat-bot' element={<ChatBot/>} />
       </Routes>
     </BrowserRouter>
     </main>

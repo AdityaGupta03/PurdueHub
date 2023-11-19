@@ -30,6 +30,7 @@ export default function Home() {
         <Link to="/interested-events">Events I am Interested In</Link>
         <Link to="/username-lookup">Username Lookup</Link>
         <Link to="/club">Look at our example club!</Link>
+        <Link to="/chat-bot">Chatbot</Link>
         </section>
       </div>
     </div>
