@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Maps API Example</title>
+  <style>
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script>
+    let map;
+    let userMarker;
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: 0, lng: 0 },
+        zoom: 2,
+      });
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+
+            map.setCenter(userLocation);
+
+            userMarker = new google.maps.Marker({
+              position: userLocation,
+              map: map,
+              title: 'Your Location',
+            });
+          },
+          () => {
+            console.error('Error: The Geolocation service failed.');
+          }
+        );
+      } else {
+        console.error('Error: Your browser doesn\'t support geolocation.');
+      }
+
+      addCustomMarker({ lat: 10, lng: 10 }, 'Marker 1');
+      addCustomMarker({ lat: -10, lng: -10 }, 'Marker 2');
+
+      // Replace 'YOUR_API_KEY' with your actual Google Maps API key
+      const apiKey = 'YOUR_API_KEY';
+
+// Replace with an array of string locations
+const locations = [
+    '1600 Amphitheatre Parkway, Mountain View, CA',
+    'Eiffel Tower, Paris, France',
+    'Sydney Opera House, Sydney, Australia'
+    // Add more locations as needed
+];
+
+const geocoder = new google.maps.Geocoder();
+
+locations.forEach(function (location) {
+    geocoder.geocode({ 'address': location }, function (results, status) {
+        if (status === 'OK') {
+            const marker = new google.maps.Marker({
+                map: map,
+                position: results[0].geometry.location,
+                title: location
+                // You can customize the marker icon, animation, etc. here
+            });
+        } else {
+            console.error('Geocode was not successful for the following reason: ' + status);
+        }
+    });
+});
+
+
+
+    }
+
+    function addCustomMarker(position, title) {
+      const marker = new google.maps.Marker({
+        position: position,
+        map: map,
+        title: title,
+      });
+    }
+  </script>
+
+  <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJjTUM6jgVKmk-FGrB8FRgV1rArfnfUDo&libraries=places&callback=initMap"></script>
+</body>
+</html>
