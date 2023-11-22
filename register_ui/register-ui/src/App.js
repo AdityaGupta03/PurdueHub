@@ -16,6 +16,7 @@ import {
 
 import Feedback from "./revamped/pages/feedback/Feedback";
 import RightBar from "./revamped/components/rightBar/RightBar";
+import UserProfile from "./revamped/pages/profile/UserProfile";
 
 function App() {
 
@@ -59,6 +60,10 @@ function App() {
         {
           path: "/feedback",
           element: <Feedback />
+        },
+        {
+          path: "/user-profile",
+          element: <UserProfile />
         },
       ]
     },

@@ -1,6 +1,8 @@
 .register{
     height: 100vh;
-    background-color:  #CEB888;
+    //#CEB888
+    background-color:  rgb(27, 22, 22);
+    
     display: flex;
     align-items: center;
     justify-content: center;
@@ -15,7 +17,7 @@
         overflow: hidden; // prevent image from splling out
         .left{
             flex: 1; // gives it 50% of screen
-            background: linear-gradient(rgba(7, 2, 16, 0.5),rgba(7, 2, 16, 0.5)), url("https://business.purdue.edu/masters/images/2023_kal_798611.jpg") center;            
+            background: linear-gradient(rgba(7, 2, 16, 0.5),rgba(7, 2, 16, 0.5)), url("./P_logo_statue.jpeg") center;            
             background-size: cover;
             padding: 50px;
             display: flex; // set inside content left to right

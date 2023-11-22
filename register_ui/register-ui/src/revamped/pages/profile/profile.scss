@@ -2,6 +2,17 @@
 
     background-color: #333;
 
+    .iconButton {
+        color: inherit;
+    }
+    .iconButton:hover {
+        background-color: #333;
+    }
+
+    .fakeLink {
+        color: whitesmoke;
+    }
+
     .images {
         width: 100%;
         height: 300px;
@@ -10,6 +21,7 @@
         .cover {
             width: 100%;
             height: 100%;
+            object-fit: cover;
         }
 
         .profilePic {
@@ -76,7 +88,7 @@
                         }
                     }
 
-                    button {
+                    .button {
                         border: none;
                         background-color: #CEB888;
                         color: black;
@@ -84,7 +96,14 @@
                         border-radius: 5px;
                         cursor: pointer;
                     }
-
+                    .disabled {
+                        border: none;
+                        background-color: #CEB888;
+                        color: black;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    }
 
                 }
 
@@ -108,15 +127,18 @@
                 }
             }
 
-            .bioInfo {
-                height: 180px;
-                box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
-                border-radius: 20px;
-                background-color: #222;
-                color: whitesmoke;
-                padding: 50px;
-                
+            .store {
+                .bioInfo {
+                    height: 180px;
+                    box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+                    border-radius: 20px;
+                    background-color: #222;
+                    color: whitesmoke;
+                    padding: 50px;
+                    
+                }
             }
+            
         }
     }
 }

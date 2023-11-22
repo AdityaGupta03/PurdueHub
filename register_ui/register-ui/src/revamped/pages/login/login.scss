@@ -14,7 +14,7 @@
         overflow: hidden; // prevent image from splling out
         .left{
             flex: 1; // gives it 50% of screen
-            background: linear-gradient(rgba(7, 2, 16, 0.5),rgba(7, 2, 16, 0.5)), url("https://www.purdue.edu/uns/images/2021/campus-imageLO.jpg") center;            
+            background: linear-gradient(rgba(7, 2, 16, 0.5),rgba(7, 2, 16, 0.5)), url("./arch.jpeg") center;            
             background-size: cover;
             padding: 50px;
             display: flex; // set inside content left to right

@@ -35,62 +35,62 @@ import ForumIcon from '@mui/icons-material/Forum'; const LeftBar = () => {
           </div>
 
           <Link to="/feedback" className="removeStyleLink">
-          <div className='item'>
-            <GolfCourseIcon />
-            <span>Clubs</span>
-          </div>
+            <div className='item'>
+              <GolfCourseIcon />
+              <span>Clubs</span>
+            </div>
           </Link>
           <Link to="/feedback" className="removeStyleLink">
-          <div className='item'>
-            <CalendarMonthIcon />
-            <span>Calendar</span>
-          </div>
-          </Link>
-          <Link to="/feedback" className="removeStyleLink">
-
-          <div className='item'>
-            <PeopleIcon />
-            <span>Friends</span>
-          </div>
-        </Link>
-          <Link to="/feedback" className="removeStyleLink">
-
-          <div className='item'>
-            <EventIcon />
-            <span>Upcoming Events</span>
-          </div>
+            <div className='item'>
+              <CalendarMonthIcon />
+              <span>Calendar</span>
+            </div>
           </Link>
           <Link to="/feedback" className="removeStyleLink">
 
-          <div className='item'>
-            <ThermostatIcon />
-            <span>Weather</span>
-          </div>
+            <div className='item'>
+              <PeopleIcon />
+              <span>Friends</span>
+            </div>
           </Link>
           <Link to="/feedback" className="removeStyleLink">
-          <div className='item'>
-            <BookmarkIcon />
-            <span>Favorited Items</span>
-          </div>
+
+            <div className='item'>
+              <EventIcon />
+              <span>Upcoming Events</span>
+            </div>
+          </Link>
+          <Link to="/feedback" className="removeStyleLink">
+
+            <div className='item'>
+              <ThermostatIcon />
+              <span>Weather</span>
+            </div>
+          </Link>
+          <Link to="/feedback" className="removeStyleLink">
+            <div className='item'>
+              <BookmarkIcon />
+              <span>Favorited Items</span>
+            </div>
           </Link>
 
-          <hr/>
+          <hr />
           <div className='menu'>
             <span>Others</span>
 
             <Link to="/feedback" className="removeStyleLink">
-            <div className='item'>
-              <ForumIcon />
-              <span>Give Feedback</span>
-            </div>
+              <div className='item'>
+                <ForumIcon />
+                <span>Give Feedback</span>
+              </div>
             </Link>
 
             <Link to="/feedback" className="removeStyleLink">
 
-            <div className='item'>
-              <SettingsIcon />
-              <span>Settings</span>
-            </div>
+              <div className='item'>
+                <SettingsIcon />
+                <span>Settings</span>
+              </div>
             </Link>
           </div>
 
