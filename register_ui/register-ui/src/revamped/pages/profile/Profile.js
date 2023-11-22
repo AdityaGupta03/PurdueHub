@@ -154,7 +154,7 @@ const Profile = () => {
     display: 'flex',
     flexDirection: 'column',
     color: 'whitesmoke',
-}
+  }
 
   const buttonStyle = {
     padding: '20px',
@@ -222,7 +222,7 @@ const Profile = () => {
     justifyContent: 'center',
     alignItems: 'center',
     padding: '20px',
-}
+  }
   return (
 
     <div className="profile">
@@ -353,7 +353,7 @@ const Profile = () => {
         open={isOpenMore}
         onClose={handleMoreClose}
       >
-        <Box sx={{...style, width: '450px'}}>
+        <Box sx={{ ...style, width: '450px' }}>
           <Button onClick={handleReportOpen} sx={buttonStyle}>Report</Button>
           <Button onClick={handleBlock} sx={{ ...buttonStyle, borderBottom: 'none' }}>{isBlocked ? 'Unblock' : 'Block'}</Button>
         </Box>
@@ -423,6 +423,9 @@ const Profile = () => {
                 </div>
               </div>
               <button className={isBlocked ? 'disabled' : 'button'} disabled={isBlocked ? true : false} onClick={toggleFollow}>{isFollow ? 'Unfollow' : 'Follow'}</button>
+              <div className='bioSection'>
+                <p>What's up people? My name is _ and I am looking to connect on here!</p>
+              </div>
             </div>
 
             <div className='right'>

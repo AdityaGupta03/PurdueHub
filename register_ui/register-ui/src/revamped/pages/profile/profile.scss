@@ -43,7 +43,7 @@
             padding: 20px 70px;
 
             .uInfo {
-                height: 180px;
+                height: 250px;
                 box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
                 border-radius: 20px;
                 background-color: #222;
@@ -61,12 +61,13 @@
                 }
 
                 .center {
-                    flex: 1;
+                    padding-top: 50px;
+                    flex: 2;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
                     gap: 10px;
-
+                    width: 300px;
                     span {
                         font-size: 30px;
                         font-weight: 500;
@@ -95,6 +96,12 @@
                         padding: 10px 20px;
                         border-radius: 5px;
                         cursor: pointer;
+                    }
+                    .bioSection {
+                        background-color: red;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
                     }
                     .disabled {
                         border: none;
