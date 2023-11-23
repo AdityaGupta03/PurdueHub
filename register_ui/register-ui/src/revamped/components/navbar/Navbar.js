@@ -1,9 +1,8 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './navbar.scss'
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
-import SettingsIcon from '@mui/icons-material/Settings';
 import SearchIcon from '@mui/icons-material/Search';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -19,15 +18,22 @@ import { TextField } from '@mui/material';
 import { styled } from '@mui/system';
 
 
+import SettingsIcon from '@mui/icons-material/Settings';
+import DeleteIcon from '@mui/icons-material/Delete';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import ForumIcon from '@mui/icons-material/Forum';
+import LogoutIcon from '@mui/icons-material/Logout';
+
 const Navbar = () => {
 
   //  <SearchIcon />
   //<input text="text" placeholder={placeholderSearch}></input>
   const [placeholderSearch, setPlaceholderSearch] = useState('Search For User...');
+  const dropdownRef = useRef(null);
 
   const [searchFor, setSearchFor] = useState(1);
   const [searchFocused, setSearchFocused] = useState(false);
-
+  const [open, setOpen] = useState(false);
   const handleInputFocus = () => {
     // Input is in focus, make the div visible
     setSearchFocused(true);
@@ -35,6 +41,11 @@ const Navbar = () => {
   const handleInputBlur = () => {
     // Input is not in focus, make the div invisible
     setSearchFocused(false);
+  };
+
+  const handleBlur = () => {
+    // This function will be called when the dropdown loses focus
+    setOpen(false);
   };
 
   const navigate = useNavigate();
@@ -90,6 +101,21 @@ const Navbar = () => {
     navigate(`/class/${searchTerm}`);
   };
 
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      // Check if the click is outside the dropdown
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.body.addEventListener('click', handleOutsideClick);
+
+    return () => {
+      document.body.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
+
   const handleChange = (e) => {
 
     console.log("Change:" + e);
@@ -125,10 +151,10 @@ const Navbar = () => {
     },
 
   });
-  
+
 
   return (
-    
+
     <div className='navbar'>
 
       <div className='left'>
@@ -142,9 +168,10 @@ const Navbar = () => {
 
         <div className='selectFrom'>
 
-          <Box sx={{ 
-              borderColor: 'white',
-              minWidth: 150 }}>
+          <Box sx={{
+            borderColor: 'white',
+            minWidth: 150
+          }}>
             <StyledFormControl fullWidth>
               <InputLabel
                 sx={{
@@ -236,15 +263,48 @@ const Navbar = () => {
       </div>
 
       <div className='right'>
-        <Link to="/user-profile" className="removeStyleLink">
-          <div className='user'>
-            <PersonIcon />
-            <img src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" alt='' />
-            <span>John Doe</span>
+        <div 
+          className='user'
+          onClick={() => setOpen(!open)}
+          ref={dropdownRef}>
+          <img src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" alt='' />
+        </div>
+        {open && (
+          <div className='profile-dropdown'>
+            <div className='menu-item'>
+              <Link className='icon-button'>
+                <img src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" alt='' />
+              </Link>
+              <span>Your Profile</span>
+            </div>
+            <div className='menu-item'>
+              <Link className='icon-button'>
+                <DeleteIcon />
+              </Link>
+              <span>Delete Account</span>
+            </div>
+            <div className='menu-item'>
+              <Link className='icon-button'>
+                <ForumIcon />
+              </Link>
+              <span>Feedback</span>
+            </div>
+            <div className='menu-item'>
+              <Link className='icon-button'>
+                <LogoutIcon />
+              </Link>
+              <span>Logout</span>
+            </div>
+            <div className='menu-item'>
+              <Link className='icon-button'>
+                <SettingsIcon />
+              </Link>
+              <span>Settings</span>
+            </div>
           </div>
-        </Link>
-
+        )}
       </div>
+
     </div>
   )
 }

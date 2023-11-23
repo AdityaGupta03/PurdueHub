@@ -1,71 +1,72 @@
 import React from 'react';
 import { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './forgotUsername.scss'
+import './changePassword.scss'
 import '../login/LoadingSpinner.css';
 
-const ForgotUsername = () => {
-  const [email, setEmail] = useState('');
+const ChangePassword = () => {
+
+  const [pwd, setPwd] = useState('');
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
 
   const navigate = useNavigate();
 
-  const EMAIL_REGEX = /^[A-Za-z0-9._%+-]+@purdue\.edu$/;
+  const PWD_REGEX = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
-  const emailInvalid = <>
-    Invalid Email: must have @purdue.edu
+  const passwordMessage = <>
+    8 to 24 characters. <br />
+    Must include uppercase and lowercase letters,  <br />
+    a number, and a special character: !@#$%<br />
   </>
-
-  const exist = true; // testing
-  const badUser = true; // testing 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const a1 = EMAIL_REGEX.test(email);
-    if (!a1) {
-      setErrMsg(emailInvalid);
+    const validPWD = PWD_REGEX.test(pwd);
+
+    if (!validPWD) {
+      setErrMsg(passwordMessage);
       return;
     }
     else {
       setSuccess(true);
       setTimeout(() => {
-        navigate('/username-auth');
+        navigate('/login');
       }, 1500);
     }
 
   }
   useEffect(() => {
     setErrMsg('');
-  }, [email])
-
+  }, [pwd])
 
   return (
-    <div className='forgot-username'>
+    <div className='change-password'>
       {success && (
         <div className="loading-overlay">
-          <div className="loading-text">Please check your email</div>
+          <div className="loading-text">Success!...Back To Login...</div>
         </div>
       )}
       <div className="card">
         <div className="left">
-          <h1>Forgot Your Username?</h1>
-          <p>Dont't sweat it! Enter the email associated with your account, and we will send an authcode to your email. Enter the authcode at the provided page in the email, and you can go ahead and change your username!</p>
+          <h1>Setup New Password!</h1>
+          <p>Make sure your new password follows the guidelines: <br /> - 8 to 24 characters <br />
+            - Must include uppercase and lowercase letters, a number, and a special character: !@#$% </p>
           <Link className='link-gen' to="/login">
             <span>Back To Login?</span>
           </Link>
         </div>
         <div className="right">
-          <h1>Email</h1>
+          <h1>New Password</h1>
           <form>
             <input
               type="text"
-              placeholder="Email"
+              placeholder="Password"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={pwd}
+              onChange={(e) => setPwd(e.target.value)}
             />
-            <button onClick={handleSubmit}>Request Change</button>
+            <button onClick={handleSubmit}>Change Password</button>
           </form>
           {!!errMsg && (
             <div>
@@ -78,4 +79,4 @@ const ForgotUsername = () => {
   )
 }
 
-export default ForgotUsername
+export default ChangePassword

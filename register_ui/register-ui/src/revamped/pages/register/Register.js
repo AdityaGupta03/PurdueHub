@@ -1,8 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom'
+
 import './register.scss'
 import InfoIcon from '@mui/icons-material/Info';
 import { Tooltip, IconButton } from '@mui/material';
 import { useState, useEffect } from 'react';
+
 import '../login/LoadingSpinner.css'
 
 const Register = () => {

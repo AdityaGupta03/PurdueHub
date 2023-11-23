@@ -22,6 +22,12 @@ import ForgotPassword from "./revamped/pages/forgot-password/ForgotPassword";
 import ForgotUsername from "./revamped/pages/forgot-username/ForgotUsername";
 import VerifyEmail from "./revamped/pages/verify-email/VerifyEmail";
 
+import PasswordAuth from "./revamped/pages/password-auth/PasswordAuth";
+import UsernameAuth from "./revamped/pages/username-auth/UsernameAuth";
+
+import ChangeUsername from "./revamped/pages/change-username/ChangeUsername"
+import ChangePassword from "./revamped/pages/change-password/ChangePassword"
+
 function App() {
 
   const currentUser = true;
@@ -90,6 +96,22 @@ function App() {
     {
       path: "/verify-email",
       element: <VerifyEmail />
+    },
+    {
+      path: "/password-auth",
+      element: <PasswordAuth />
+    },
+    {
+      path: "/username-auth",
+      element: <UsernameAuth/>
+    },
+    {
+      path: "/change-password",
+      element: <ChangePassword />
+    },
+    {
+      path: "/change-username",
+      element: <ChangeUsername/>
     },
   ]);
 

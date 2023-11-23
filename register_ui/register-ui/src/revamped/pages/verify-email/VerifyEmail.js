@@ -34,7 +34,7 @@ const VerifyEmail = () => {
         }
     }
     return (
-        <div className='register'>
+        <div className='verify-email'>
             {success && (
                 <div className="loading-overlay">
                     <div className="loading-text">
