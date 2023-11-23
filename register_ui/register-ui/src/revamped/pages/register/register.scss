@@ -1,23 +1,49 @@
-.register{
+.register {
     height: 100vh;
     //#CEB888
-    background-color:  rgb(27, 22, 22);
-    
+    background-color: #161616;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
+    .link-login {
+        color: whitesmoke;
+        text-decoration: none;
+    }
+    .link-login:hover {
+        color: whitesmoke;
+        text-decoration: underline;
+    }
+    .iconButton {
+        color: inherit;
+    }
+
+    .iconButton:hover {
+        background-color: #333;
+    }
+
+    .login-button {
+        width: 50%;
+        padding: 10px; // makes it fluffier
+        border: none;
+        color: black;
+        font-weight: bold;
+        cursor: pointer;
+    }
 
     .card {
         width: 50%;
         display: flex; // assigns them left to right
         flex-direction: row-reverse;
-        background-color: rgb(41, 35, 35);
+        background-color: #222;
         border-radius: 10px;
         min-height: 600px;
         overflow: hidden; // prevent image from splling out
-        .left{
+
+        .left {
             flex: 1; // gives it 50% of screen
-            background: linear-gradient(rgba(7, 2, 16, 0.5),rgba(7, 2, 16, 0.5)), url("./P_logo_statue.jpeg") center;            
+            background: linear-gradient(rgba(7, 2, 16, 0.5), rgba(7, 2, 16, 0.5)), url("./P_logo_statue.jpeg") center;
             background-size: cover;
             padding: 50px;
             display: flex; // set inside content left to right
@@ -25,25 +51,28 @@
             gap: 40px; // spacing between elements
             color: white;
 
-            h1{
+            h1 {
                 font-size: 55px;
                 line-height: 55px;
             }
-            p{}
-            
-            span{
+
+            p {}
+
+            span {
                 font-size: 14px;
             }
-            button{
+
+            .register-button {
                 width: 50%;
                 padding: 10px; // makes it fluffier
-                border: none; 
+                border: none;
                 color: black;
                 font-weight: bold;
                 cursor: pointer;
             }
         }
-        .right{
+
+        .right {
             flex: 1; // gives it 50% of screen 
             padding: 50px;
             display: flex; // set inside content left to right
@@ -51,23 +80,29 @@
             gap: 50px; // creates space between h1 tag and form
             justify-content: center;
 
-            h1{
+            h1 {
                 color: rgb(255, 255, 255)
             }
-            form{
+
+            form {
                 display: flex;
                 flex-direction: column;
                 gap: 30px;
 
-                input{
-                    background-color:transparent;
-                    color: white;
-                    border: none;
-                    border-bottom: 1px solid lightgray; // line on the bottom of input fields
-                    padding: 20px 10px; // 20px top/bottom 10px left/right
+                div {
+                    position: relative;
+
+                    input {
+                        width: 75%;
+                        background-color: transparent;
+                        color: white;
+                        border: none;
+                        border-bottom: 1px solid lightgray; // line on the bottom of input fields
+                        padding: 20px 10px; // 20px top/bottom 10px left/right
+                    }
                 }
 
-                button{
+                .register-button {
                     width: 50%;
                     padding: 10px;
                     border: none;
