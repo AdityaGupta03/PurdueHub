@@ -18,6 +18,10 @@ import Feedback from "./revamped/pages/feedback/Feedback";
 import RightBar from "./revamped/components/rightBar/RightBar";
 import UserProfile from "./revamped/pages/profile/UserProfile";
 
+import ForgotPassword from "./revamped/pages/forgot-password/ForgotPassword";
+import ForgotUsername from "./revamped/pages/forgot-username/ForgotUsername";
+import VerifyEmail from "./revamped/pages/verify-email/VerifyEmail";
+
 function App() {
 
   const currentUser = true;
@@ -74,6 +78,18 @@ function App() {
     {
       path: "/register",
       element: <Register />
+    },
+    {
+      path: "/forgot-password",
+      element: <ForgotPassword/>
+    },
+    {
+      path: "/forgot-username",
+      element: <ForgotUsername />
+    },
+    {
+      path: "/verify-email",
+      element: <VerifyEmail />
     },
   ]);
 

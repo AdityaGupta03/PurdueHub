@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './register.scss'
 import InfoIcon from '@mui/icons-material/Info';
 import { Tooltip, IconButton } from '@mui/material';
 import { useState, useEffect } from 'react';
+import '../login/LoadingSpinner.css'
 
 const Register = () => {
 
@@ -21,6 +22,7 @@ const Register = () => {
   const [pwdError, setPwdError] = useState(false);
   const [matchError, setMatchError] = useState(false);
 
+  const navigate = useNavigate();
   const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;;
   const PWD_REGEX = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
   const EMAIL_REGEX = /^[A-Za-z0-9._%+-]+@purdue\.edu$/;
@@ -31,6 +33,7 @@ const Register = () => {
   const [pwd, setPwd] = useState('');
   const [matchPwd, setMatchPwd] = useState('a');
 
+  const [success, setSuccess] = useState(false);
   useEffect(() => {
     setUsernameError(false);
   }, [user])
@@ -52,7 +55,7 @@ const Register = () => {
     const a3 = EMAIL_REGEX.test(email);
     const a4 = matchPwd === pwd;
 
-    if(!a4) {
+    if (!a4) {
       setMatchError(true);
     }
     if (!a1) {
@@ -64,15 +67,24 @@ const Register = () => {
     if (!a3) {
       setEmailError(true);
     }
-    if(a1 && a2 && a3 && a4) {
+    if (a1 && a2 && a3 && a4) {
       //SUCCESS DATA
+      setSuccess(true);
+      setTimeout(() => {
+        navigate('/verify-email');
+      }, 1000);
       return;
     }
-    
+
   }
 
   return (
     <div className='register'>
+      {success && (
+        <div className="loading-overlay">
+          <div className="loading-text">Purdue Hub</div>
+        </div>
+      )}
       <div className="card">
         <div className="left">
           <h1>Register For PurdueHub</h1>
