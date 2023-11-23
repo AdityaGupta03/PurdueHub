@@ -495,6 +495,9 @@ const UserProfile = () => {
                                     <span>English</span>
                                 </div>
                             </div>
+                            <div className='bioSection'>
+                                    <p>Bio: Random spiel about something. That something is something I do not know unfortunately. I am looking to expand the character count to around 150.</p>
+                                </div>
                         </div>
 
                         <div className='right'>

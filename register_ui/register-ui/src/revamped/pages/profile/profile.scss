@@ -61,7 +61,7 @@
                 }
 
                 .center {
-                    padding-top: 50px;
+                    padding-top: 79px;
                     flex: 2;
                     display: flex;
                     flex-direction: column;
@@ -97,17 +97,17 @@
                         border-radius: 5px;
                         cursor: pointer;
                     }
+
                     .bioSection {
-                        background-color: red;
+                        padding: 10px 20px;
                         display: flex;
                         flex-direction: column;
-                        align-items: center;
                     }
+
                     .disabled {
                         border: none;
                         background-color: #CEB888;
                         color: black;
-                        padding: 10px 20px;
                         border-radius: 5px;
                         cursor: pointer;
                     }

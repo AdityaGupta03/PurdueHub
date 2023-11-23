@@ -7,48 +7,115 @@
     border-bottom: 1px solid lightgrey;
     position: sticky;
     top: 0;
-    
-    .left{
+
+    .removeStyleLink {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        text-decoration: none;
+    }
+
+    .removeStyleLink:visited {
+        color: whitesmoke;
+    }
+
+    .left {
         display: flex;
         align-items: center;
         gap: 30px;
 
-        span{
+        span {
             font-weight: bold;
             font-size: 20px;
             color: black;
         }
-        .search{
-            .selectFrom {
-                color: whitesmoke;
-            }
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid lightgray;
-            border-radius: 5px;
-            padding: 5px;
 
-            input{
-                border: none;
-                width: 500px;
+
+        .search-container {
+            margin-top: 160px;
+            padding: 5px;
+            width: 350px;
+            height: 200px;
+            display: flex;
+            flex-direction: column; 
+            //background-color: yellow;
+            border-radius: 5px;
+
+            .search {
+                .icon-search {
+                    margin-left: 10px;
+                }
+                display: flex;
+                border-radius: 10px;
+                width: 100%;
+                align-items: center;
+                min-height: 35px; // avoid squishing
+                
+                //background-color: purple;
+                .searchInput {
+                    border: none;
+                    width: 100%;
+                    //padding: 0 15px;
+                    display: flex;
+                    align-items: center;
+                    margin-left: 10px;
+                    border: none;
+                }
+
+                .searchInput:focus {
+                    outline: none;
+                }
             }
-            input:focus{
-                outline: none;
+
+            .dropdown {
+                /* Ensure the search container is above the nav bar */
+                border-radius: 7px;
+                color: white;
+                margin-top: 0.5rem;
+                background-color: #333;
+                display: flex;
+                flex-direction: column;
+                max-height: 320px;
+                overflow-y: scroll;
+                max-width: 350px;
+                //background-color: red;
+                .dropdown-row {
+                    //background-color: green;
+                    padding: 15px;
+                    font-size: 13px;
+                    cursor: pointer;
+                    height: 100%;
+                    width: 100%;
+                    text-align: start;
+                    margin: 5px 0;
+                    border-radius: 2px;
+                }
+            }
+            .dropdown:empty {
+                background-color: transparent;
+                z-index: 3;
+                border: none;
+            }
+
+            .dropdown-row:hover {
+                z-index: 3;
+                background-color: #444;
             }
         }
     }
 
     // right side of navbar 
-    .right{
+    .right {
         display: flex;
         align-items: center;
         gap: 20px;
+
         .user {
             display: flex;
             align-items: center;
             gap: 10px;
             font-weight: 500;
+
             img {
                 width: 30px;
                 height: 30px;
@@ -56,10 +123,7 @@
                 border-radius: 50%;
             }
 
-            span {
-
-
-            }
+            span {}
         }
     }
 }

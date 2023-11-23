@@ -424,7 +424,7 @@ const Profile = () => {
               </div>
               <button className={isBlocked ? 'disabled' : 'button'} disabled={isBlocked ? true : false} onClick={toggleFollow}>{isFollow ? 'Unfollow' : 'Follow'}</button>
               <div className='bioSection'>
-                <p>What's up people? My name is _ and I am looking to connect on here!</p>
+                <p>Bio: Random spiel about something. That something is something I do not know unfortunately. I am looking to expand the character count to around 150.</p>
               </div>
             </div>
 

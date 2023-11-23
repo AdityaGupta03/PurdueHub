@@ -24,40 +24,34 @@ import SettingsIcon from '@mui/icons-material/Settings';
 // personal favorite items
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 // feedback
+
+// faq
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+
 import ForumIcon from '@mui/icons-material/Forum'; const LeftBar = () => {
   return (
     <div className='leftBar'>
       <div className='container'>
         <div className='menu'>
-          <div className='user'>
-            <img src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" alt='' />
-            <span>John Doe</span>
-          </div>
-
-          <Link to="/feedback" className="removeStyleLink">
-            <div className='item'>
-              <GolfCourseIcon />
-              <span>Clubs</span>
+          <Link to="/user-profile" className="removeStyleLink">
+            <div className='user'>
+              <img src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" alt='' />
+              <span>John Doe</span>
             </div>
           </Link>
+
           <Link to="/feedback" className="removeStyleLink">
             <div className='item'>
               <CalendarMonthIcon />
               <span>Calendar</span>
             </div>
           </Link>
-          <Link to="/feedback" className="removeStyleLink">
-
-            <div className='item'>
-              <PeopleIcon />
-              <span>Friends</span>
-            </div>
-          </Link>
+          
           <Link to="/feedback" className="removeStyleLink">
 
             <div className='item'>
               <EventIcon />
-              <span>Upcoming Events</span>
+              <span>Interested Events</span>
             </div>
           </Link>
           <Link to="/feedback" className="removeStyleLink">
@@ -71,6 +65,13 @@ import ForumIcon from '@mui/icons-material/Forum'; const LeftBar = () => {
             <div className='item'>
               <BookmarkIcon />
               <span>Favorited Items</span>
+            </div>
+          </Link>
+
+          <Link to="/feedback" className="removeStyleLink">
+            <div className='item'>
+              <HelpOutlineIcon />
+              <span>FAQ</span>
             </div>
           </Link>
 
