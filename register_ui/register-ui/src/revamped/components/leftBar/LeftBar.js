@@ -70,11 +70,22 @@ const LeftBar = () => {
   const [openFeedback, setOpenFeedback] = useState(false);
   const [feedback, setFeedback] = useState('');
 
-  const handleModalClick = (e) => {
-    if (e.target.classList.contains('modal-overlay')) {
-      setOpenFeedback(!openFeedback);
-    }
-  };
+  const [openInterested, setOpenInterested] = useState(false);
+
+  const interestedEvents = [
+    {
+      clubName: "ESEC",
+      eventName: "Callout 1",
+    },
+    {
+      clubName: "Boiler League Of Tag",
+      eventName: "",
+    },
+    {
+      clubName: "ESEC",
+      eventName: "Callout 1",
+    },
+  ]
   
   return (
 
