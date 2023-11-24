@@ -24,16 +24,28 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ForumIcon from '@mui/icons-material/Forum';
 import LogoutIcon from '@mui/icons-material/Logout';
 
+
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import Modal from '@mui/material/Modal';
+
+import "../leftBar/modal.scss"
+
 const Navbar = () => {
 
-  //  <SearchIcon />
-  //<input text="text" placeholder={placeholderSearch}></input>
   const [placeholderSearch, setPlaceholderSearch] = useState('Search For User...');
   const dropdownRef = useRef(null);
 
   const [searchFor, setSearchFor] = useState(1);
   const [searchFocused, setSearchFocused] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const [openFeedback, setOpenFeedback] = useState(false);
+  const [feedback, setFeedback] = useState('');
+
+  const [openDelete, setOpenDelete] = useState(false);
+  const [deleteFeedback, setDeleteFeedback] = useState('');
+
   const handleInputFocus = () => {
     // Input is in focus, make the div visible
     setSearchFocused(true);
@@ -96,20 +108,19 @@ const Navbar = () => {
     navigate(`/class/${searchTerm}`);
   };
 
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      // Check if the click is outside the dropdown
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOpen(false);
-      }
-    };
+  const handleSubmitDelete = () => {
+    setOpenDelete(!openDelete); 
+    // send feedback to the database here
+    // delete account procedue here
+    setDeleteFeedback("");
+    navigate("/login");
+  }
 
-    document.body.addEventListener('click', handleOutsideClick);
-
-    return () => {
-      document.body.removeEventListener('click', handleOutsideClick);
-    };
-  }, []);
+  const handleSubmitFeedback = () => {
+    setOpenFeedback(!openFeedback);
+    // send feedback to the database here
+    setFeedback(""); // clear existing feedback
+  }
 
   const handleChange = (e) => {
 
@@ -148,6 +159,21 @@ const Navbar = () => {
   });
 
 
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      // Check if the click is outside the profile dropdown
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.body.addEventListener('click', handleOutsideClick);
+
+    return () => {
+      document.body.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
+  
   return (
 
     <div className='navbar'>
@@ -221,7 +247,6 @@ const Navbar = () => {
         </div>
 
         <div className='search-container'>
-
           <div className='search'>
             <SearchIcon className='icon-search' />
             <input
@@ -234,25 +259,25 @@ const Navbar = () => {
               onBlur={handleInputBlur}
             />
           </div>
-          {searchFocused && (
-            <div className="dropdown">
-              {usingData.filter(item => {
-                const searchTerm = value.toLowerCase();
-                const foundTerm = item.toLowerCase();
-                return searchTerm && foundTerm.includes(searchTerm);
-              })
-                .map((item, index) => (
-                  <div
-                    onClick={() => onSearch(item)}
-                    className="dropdown-row"
-                    key={index}
-                  >
-                    {item}
-                  </div>
-                ))}
-            </div>
-          )}
         </div>
+        {searchFocused && (
+          <div className="dropdown">
+            {usingData.filter(item => {
+              const searchTerm = value.toLowerCase();
+              const foundTerm = item.toLowerCase();
+              return searchTerm && foundTerm.includes(searchTerm);
+            })
+              .map((item, index) => (
+                <div
+                  onClick={() => onSearch(item)}
+                  className="dropdown-row"
+                  key={index}
+                >
+                  {item}
+                </div>
+              ))}
+          </div>
+        )}
 
 
       </div>
@@ -266,29 +291,29 @@ const Navbar = () => {
         </div>
         {open && (
           <div className='profile-dropdown'>
-            <div className='menu-item'>
+            <div onClick={() => navigate("/user-profile")} className='menu-item'>
               <Link className='icon-button'>
                 <img src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" alt='' />
               </Link>
               <span>Your Profile</span>
             </div>
-            <div className='menu-item'>
+            <div onClick={()=>setOpenDelete(!openDelete)} className='menu-item'>
               <Link className='icon-button'>
                 <DeleteIcon />
               </Link>
               <span>Delete Account</span>
             </div>
-            <div className='menu-item'>
+            <div onClick={() => setOpenFeedback(!openFeedback)} className='menu-item'>
               <Link className='icon-button'>
                 <ForumIcon />
               </Link>
               <span>Feedback</span>
             </div>
-            <div className='menu-item'>
+            <div onClick={() => navigate("/login")} className='menu-item'>
               <Link className='icon-button'>
                 <LogoutIcon />
               </Link>
-              <span>Logout</span>
+              <span>Log Out</span>
             </div>
             <div className='menu-item'>
               <Link className='icon-button'>
@@ -297,9 +322,104 @@ const Navbar = () => {
               <span>Settings</span>
             </div>
           </div>
+
         )}
       </div>
 
+          {/* PROVIDE FEEDBACK MODAL */}
+      <Modal
+        open={openFeedback}
+        onClose={()=>{setOpenFeedback(!openFeedback)}}>
+
+        <div className="norm">
+          <div className="modal-container">
+
+            <div className='modal-title'>
+              <span>Feedback</span>
+            </div>
+
+            <div onClick={() => { setOpenFeedback(!openFeedback) }} className='modal-exit' >
+              <IconButton sx={{
+                backgroundColor: '#484a4d',
+                width: '30px',
+                height: '30px',
+                padding: '20px',
+                color: 'white',
+              }}>
+                <CloseIcon />
+              </IconButton>
+            </div>
+
+            <div className='modal-content-1'>
+              <span>How can we improve?</span>
+            </div>
+            <div className='modal-content-2'>
+              <span>Details</span>
+              <textarea
+                placeholder='Feedback Here'
+                onChange={(e) => setFeedback(e.target.value)}
+                value={feedback}
+              ></textarea>
+            </div>
+            <div className='modal-content-3'>
+              <div className='contain-btn'>
+                <button onClick={() => { setOpenFeedback(!openFeedback) }} className='cancel-btn'>Cancel</button>
+              </div>
+              <div className='contain-btn'>
+                <button disabled={feedback ? false : true} onClick={handleSubmitFeedback} className='submit-btn'>Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
+
+          {/* DELETE ACCOUNT MODAL */}
+          <Modal
+        open={openDelete}
+        onClose={()=>{setOpenDelete(!openDelete)}}>
+
+        <div className="norm">
+          <div className="modal-container">
+
+            <div className='modal-title'>
+              <span>Delete Account</span>
+            </div>
+
+            <div onClick={() => { setOpenDelete(!openDelete) }} className='modal-exit' >
+              <IconButton sx={{
+                backgroundColor: '#484a4d',
+                width: '30px',
+                height: '30px',
+                padding: '20px',
+                color: 'white',
+              }}>
+                <CloseIcon />
+              </IconButton>
+            </div>
+
+            <div className='modal-content-1'>
+              <span>Please provide your reasons</span>
+            </div>
+            <div className='modal-content-2'>
+              <span>Details</span>
+              <textarea
+                placeholder='Why?'
+                onChange={(e) => setDeleteFeedback(e.target.value)}
+                value={deleteFeedback}
+              ></textarea>
+            </div>
+            <div className='modal-content-3'>
+              <div className='contain-btn'>
+                <button onClick={() => { setOpenDelete(!openDelete) }} className='cancel-btn'>Cancel</button>
+              </div>
+              <div className='contain-btn'>
+                <button disabled={deleteFeedback ? false : true} onClick={handleSubmitDelete} className='delete-btn'>Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

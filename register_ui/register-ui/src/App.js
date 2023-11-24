@@ -14,7 +14,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import Feedback from "./revamped/pages/feedback/Feedback";
 import RightBar from "./revamped/components/rightBar/RightBar";
 import UserProfile from "./revamped/pages/profile/UserProfile";
 
@@ -36,12 +35,12 @@ function App() {
   const currentUser = true;
 
   const Layout = () => {
-    return(
+    return (
       <div className="dark-theme">
         <Navbar />
-        <div style={{display: 'flex'}}>
+        <div style={{ display: 'flex' }}>
           <LeftBar/>
-          <div style={{flex: 6}}>
+          <div className="main-content" style={{ flex: 6 }} >
             <Outlet />
           </div>
           <RightBar/>
@@ -50,17 +49,17 @@ function App() {
     )
   }
   // if there is not a user, navigate to homepage, if there is one, show them the appropiate screen
-  const ProtectedRoute = ({children}) => {
-    if(!currentUser) {
-      return <Navigate to="/login"/>
+  const ProtectedRoute = ({ children }) => {
+    if (!currentUser) {
+      return <Navigate to="/login" />
     }
     return children;
   }
   // children [] = allow sticky nav bar to exist in any of the children pages
   const router = createBrowserRouter([
     {
-      path:"/",
-      element: <ProtectedRoute><Layout/></ProtectedRoute>,
+      path: "/",
+      element: <ProtectedRoute><Layout /></ProtectedRoute>,
       children: [
         {
           path: "/",
@@ -69,10 +68,6 @@ function App() {
         {
           path: "/profile/:id",
           element: <Profile />
-        },
-        {
-          path: "/feedback",
-          element: <Feedback />
         },
         {
           path: "/user-profile",
@@ -98,7 +93,7 @@ function App() {
     },
     {
       path: "/forgot-password",
-      element: <ForgotPassword/>
+      element: <ForgotPassword />
     },
     {
       path: "/forgot-username",
@@ -114,7 +109,7 @@ function App() {
     },
     {
       path: "/username-auth",
-      element: <UsernameAuth/>
+      element: <UsernameAuth />
     },
     {
       path: "/change-password",
@@ -122,13 +117,13 @@ function App() {
     },
     {
       path: "/change-username",
-      element: <ChangeUsername/>
+      element: <ChangeUsername />
     },
   ]);
 
   return (
     <div>
-        <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </div>
   )
 }

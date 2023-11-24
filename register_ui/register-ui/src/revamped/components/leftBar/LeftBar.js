@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react';
+import { useRef, useState, useEffect } from 'react';
+
 import './leftBar.scss'
 import {
   createBrowserRouter,
@@ -34,12 +36,96 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ForumIcon from '@mui/icons-material/Forum';
 import SchoolIcon from '@mui/icons-material/School';
 
+
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+
+import Paper, { Icon } from '@mui/material';
+import styled from '@emotion/styled';
+
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { useNavigate } from 'react-router-dom';
+
+import CloseIcon from '@mui/icons-material/Close';
+import './modal.scss';
+
+
 const LeftBar = () => {
+
   const [openFavClubs, setOpenFavClubs] = useState(false);
   const [openFavClasses, setOpenFavClasses] = useState(false);
 
+  const [openFeedback, setOpenFeedback] = useState(false);
+  const [feedback, setFeedback] = useState('');
+
+  const handleModalClick = (e) => {
+    if (e.target.classList.contains('modal-overlay')) {
+      setOpenFeedback(!openFeedback);
+    }
+  };
+  
   return (
+
     <div className='leftBar'>
+
+      <Modal
+        open={openFeedback}
+        onClose={()=>{setOpenFeedback(!openFeedback)}}>
+
+        <div className="norm">
+          <div className="modal-container">
+
+            <div className='modal-title'>
+              <span>Feedback</span>
+            </div>
+
+            <div onClick={() => { setOpenFeedback(!openFeedback) }} className='modal-exit' >
+              <IconButton sx={{
+                backgroundColor: '#484a4d',
+                width: '30px',
+                height: '30px',
+                padding: '20px',
+                color: 'white',
+              }}>
+                <CloseIcon />
+              </IconButton>
+            </div>
+
+            <div className='modal-content-1'>
+              <span>How can we improve?</span>
+            </div>
+            <div className='modal-content-2'>
+              <span>Details</span>
+              <textarea
+                placeholder='Feedback Here'
+                onChange={(e) => setFeedback(e.target.value)}
+                value={feedback}
+              ></textarea>
+            </div>
+            <div className='modal-content-3'>
+              <div className='contain-btn'>
+                <button onClick={() => { setOpenFeedback(!openFeedback) }} className='cancel-btn'>Cancel</button>
+              </div>
+              <div className='contain-btn'>
+                <button disabled={feedback ? false : true} onClick={() => { setOpenFeedback(!openFeedback); setFeedback("") }} className='submit-btn'>Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
       <div className='container'>
         <div className='menu'>
           <Link to="/user-profile" className="removeStyleLink">
@@ -49,35 +135,29 @@ const LeftBar = () => {
             </div>
           </Link>
 
-          <Link to="/feedback" className="removeStyleLink">
+          <Link to="/" className="removeStyleLink">
             <div className='item'>
               <CalendarMonthIcon />
               <span>Calendar</span>
             </div>
           </Link>
 
-          <Link to="/feedback" className="removeStyleLink">
+          <Link to="/" className="removeStyleLink">
 
             <div className='item'>
               <EventIcon />
               <span>Interested Events</span>
             </div>
           </Link>
-          <Link to="/feedback" className="removeStyleLink">
+          <Link to="/" className="removeStyleLink">
 
             <div className='item'>
               <ThermostatIcon />
               <span>Weather</span>
             </div>
           </Link>
-          <Link to="/feedback" className="removeStyleLink">
-            <div className='item'>
-              <BookmarkIcon />
-              <span>Favorited Items</span>
-            </div>
-          </Link>
 
-          <Link to="/feedback" className="removeStyleLink">
+          <Link to="/" className="removeStyleLink">
             <div className='item'>
               <HelpOutlineIcon />
               <span>FAQ</span>
@@ -147,15 +227,17 @@ const LeftBar = () => {
           <div className='menu'>
             <span>Others</span>
 
-            <Link to="/feedback" className="removeStyleLink">
+            {/* FEED BACK */}
+            <div onClick={() => setOpenFeedback(!openFeedback)} className="removeStyleLink">
               <div className='item'>
                 <ForumIcon />
                 <span>Give Feedback</span>
               </div>
-            </Link>
+            </div>
+
+
 
             <Link to="/feedback" className="removeStyleLink">
-
               <div className='item'>
                 <SettingsIcon />
                 <span>Settings</span>
@@ -166,7 +248,7 @@ const LeftBar = () => {
 
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 

@@ -11,11 +11,12 @@ $theme: (
 
 .dark-theme {
     background-color: #333;
+
     .navbar {
-        z-index: 2;
         background-color: #222;
         color: whitesmoke;
         border-bottom: 1px solid #444;
+        z-index: 2;
         .left {
 
             span {
@@ -32,10 +33,14 @@ $theme: (
         }
     }
 
+    .main-content {
+        z-index: 1;
+    }
+
     .leftBar {
         background-color: #222;
         color: whitesmoke;
-        z-index: 3;
+        z-index: 1;
 
         .container {
             
@@ -46,9 +51,9 @@ $theme: (
     }
 
     .rightBar {
-        z-index: 1;
         background-color: #333;
         color: whitesmoke;
+        z-index: 1; // 0
 
         .container {
             .item {
