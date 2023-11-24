@@ -61,6 +61,7 @@ import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import './modal.scss';
 
+import './interestedModal.scss'
 
 const LeftBar = () => {
 
@@ -72,28 +73,34 @@ const LeftBar = () => {
 
   const [openInterested, setOpenInterested] = useState(false);
 
+  const [followingEvent, setFollowingEvent] = useState(false);
+
   const interestedEvents = [
     {
       clubName: "ESEC",
-      eventName: "Callout 1",
+      eventName: "Callout",
     },
     {
       clubName: "Boiler League Of Tag",
-      eventName: "",
+      eventName: "NERF Armory Night",
     },
     {
-      clubName: "ESEC",
-      eventName: "Callout 1",
+      clubName: "PSUB",
+      eventName: "Halloween Ball Event"
+    },
+    {
+      clubName: "Ill Chess Players",
+      eventName: "Competition #1"
     },
   ]
-  
+
   return (
 
     <div className='leftBar'>
 
       <Modal
         open={openFeedback}
-        onClose={()=>{setOpenFeedback(!openFeedback)}}>
+        onClose={() => { setOpenFeedback(!openFeedback) }}>
 
         <div className="norm">
           <div className="modal-container">
@@ -153,13 +160,13 @@ const LeftBar = () => {
             </div>
           </Link>
 
-          <Link to="/" className="removeStyleLink">
-
+          <div onClick={() => setOpenInterested(!openInterested)} className="removeStyleLink">
             <div className='item'>
               <EventIcon />
               <span>Interested Events</span>
             </div>
-          </Link>
+          </div>
+
           <Link to="/" className="removeStyleLink">
 
             <div className='item'>
@@ -256,9 +263,49 @@ const LeftBar = () => {
             </Link>
           </div>
 
-
         </div>
       </div>
+
+      <Modal onClose={() => setOpenInterested(!openInterested)} open={openInterested}>
+        <div className='interested-container'>
+          <div className='interested-title'>
+            <span>Interested Events</span>
+            <div className='exit-modal' onClick={() => setOpenInterested(!openInterested)}>
+              <IconButton><CloseIcon /></IconButton>
+            </div>
+          </div>
+          <div className='club-container'>
+            <div className='club-item'>
+              <div className='club-info'>
+                <div className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
+                <div className='club-name'>CS Memers Discord Night!</div>
+                <div className='button-container'>
+                  <button onClick={() => setFollowingEvent(!followingEvent)} className={followingEvent ? "follow-btn" : "unfollow-btn"}>{followingEvent ? "Follow" : "Unfollow"}</button>
+                </div>
+              </div>
+            </div>
+            <div className='club-item'>
+              <div className='club-info'>
+                <div className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
+                <div className='club-name'>1st Club Callout!</div>
+                <div className='button-container'>
+                  <button onClick={() => setFollowingEvent(!followingEvent)} className={followingEvent ? "follow-btn" : "unfollow-btn"}>{followingEvent ? "Follow" : "Unfollow"}</button>
+                </div>
+              </div>
+            </div>
+            <div className='club-item'>
+              <div className='club-info'>
+                <div className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
+                <div className='club-name'>NERF Armory Fight!</div>
+                <div className='button-container'>
+                  <button onClick={() => setFollowingEvent(!followingEvent)} className={followingEvent ? "follow-btn" : "unfollow-btn"}>{followingEvent ? "Follow" : "Unfollow"}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
     </div >
   )
 }

@@ -275,8 +275,7 @@ const Profile = () => {
           <Button onClick={handleReportSend}>Send Report</Button>
         </DialogActions>
       </Dialog>
-
-
+      
       {/* MESSAGE USER DIALOG */}
       <Dialog
         className='dialog'
