@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './leftBar.scss'
 import {
   createBrowserRouter,
@@ -28,7 +28,16 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 // faq
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
-import ForumIcon from '@mui/icons-material/Forum'; const LeftBar = () => {
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+
+import ForumIcon from '@mui/icons-material/Forum';
+import SchoolIcon from '@mui/icons-material/School';
+
+const LeftBar = () => {
+  const [openFavClubs, setOpenFavClubs] = useState(false);
+  const [openFavClasses, setOpenFavClasses] = useState(false);
+
   return (
     <div className='leftBar'>
       <div className='container'>
@@ -46,7 +55,7 @@ import ForumIcon from '@mui/icons-material/Forum'; const LeftBar = () => {
               <span>Calendar</span>
             </div>
           </Link>
-          
+
           <Link to="/feedback" className="removeStyleLink">
 
             <div className='item'>
@@ -75,6 +84,65 @@ import ForumIcon from '@mui/icons-material/Forum'; const LeftBar = () => {
             </div>
           </Link>
 
+          <div className="removeStyleLink">
+            <div onClick={() => setOpenFavClasses(!openFavClasses)} className='item'>
+              {openFavClasses ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+              <span>Favorite Clubs:</span>
+            </div>
+          </div>
+
+          {openFavClasses && (
+            <div>
+              <Link to="/club/Club Name 1" className="removeStyleLink">
+                <div className='club'>
+                  <img src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" alt='' />
+                  <span>Club 1 Name</span>
+                </div>
+              </Link>
+              <Link to="/club/Club Name 2" className="removeStyleLink">
+                <div className='club'>
+                  <img src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" alt='' />
+                  <span>Club 2 Name</span>
+                </div>
+              </Link>
+              <Link to="/club/Club Name 3" className="removeStyleLink">
+                <div className='club'>
+                  <img src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" alt='' />
+                  <span>Club 3 Name</span>
+                </div>
+              </Link>
+            </div>
+          )}
+
+          <div className="removeStyleLink">
+            <div onClick={() => setOpenFavClubs(!openFavClubs)} className='item'>
+              {openFavClubs ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+              <span>Favorite Classes:</span>
+            </div>
+          </div>
+
+          {openFavClubs && (
+            <div>
+              <Link to="/class/name1" className="removeStyleLink">
+                <div className='class-choice'>
+                  <SchoolIcon />
+                  <span>Class Name 1</span>
+                </div>
+              </Link>
+              <Link to="/class/name2" className="removeStyleLink">
+                <div className='class-choice'>
+                  <SchoolIcon />
+                  <span>Class Name 2</span>
+                </div>
+              </Link>
+              <Link to="/class/name3" className="removeStyleLink">
+                <div className='class-choice'>
+                  <SchoolIcon />
+                  <span>Class Name 3</span>
+                </div>
+              </Link>
+            </div>
+          )}
           <hr />
           <div className='menu'>
             <span>Others</span>

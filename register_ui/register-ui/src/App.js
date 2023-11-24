@@ -28,6 +28,9 @@ import UsernameAuth from "./revamped/pages/username-auth/UsernameAuth";
 import ChangeUsername from "./revamped/pages/change-username/ChangeUsername"
 import ChangePassword from "./revamped/pages/change-password/ChangePassword"
 
+import Club from "./revamped/pages/club/Club"
+import Class from "./revamped/pages/class/Class";
+
 function App() {
 
   const currentUser = true;
@@ -74,6 +77,14 @@ function App() {
         {
           path: "/user-profile",
           element: <UserProfile />
+        },
+        {
+          path: "/club/:id",
+          element: <Club />
+        },
+        {
+          path: "/class/:id",
+          element: <Class />
         },
       ]
     },

@@ -43,11 +43,6 @@ const Navbar = () => {
     setSearchFocused(false);
   };
 
-  const handleBlur = () => {
-    // This function will be called when the dropdown loses focus
-    setOpen(false);
-  };
-
   const navigate = useNavigate();
 
   const fakeClubs = [
@@ -263,7 +258,7 @@ const Navbar = () => {
       </div>
 
       <div className='right'>
-        <div 
+        <div
           className='user'
           onClick={() => setOpen(!open)}
           ref={dropdownRef}>
