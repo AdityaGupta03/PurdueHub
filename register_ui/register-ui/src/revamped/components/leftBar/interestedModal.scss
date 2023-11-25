@@ -7,8 +7,8 @@
     left: 50%;
     transform: translate(-50%, -50%);
 
-    width: 400px;
-    max-height: 400px;
+    width: 500px;
+    max-height: 700px;
     overflow-x: hidden;
     overflow-y: scroll;
 
@@ -19,17 +19,19 @@
 
     .interested-title {
         display: block;
-        border-bottom: 1px solid grey;
+        border-bottom: 1px rgba(255, 255, 255, 0.05) solid;
         height: 60px;
         color: whitesmoke;
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 20px;
-
+    
         span {
+
             font-size: 20px;
             font-weight: 700;
+            text-overflow: ellipsis;
         }
 
         .exit-modal {
@@ -56,8 +58,10 @@
         flex-direction: column;
 
         .club-item {
-            padding: 20px;
-
+            padding-left: 40px;
+            padding-right: 40px;
+            padding-top: 20px;
+            padding-bottom: 20px;
             .club-info {
                 display: flex;
                 flex-direction: row;
@@ -78,7 +82,13 @@
                 .club-name {
                     display: flex;
                     align-items: center;
-                    width: 220px;
+                    margin-right: 50px;
+                    width: 150px;
+                    span {
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                    }
                 }
                 .club-name:hover {
                     opacity: 0.65;

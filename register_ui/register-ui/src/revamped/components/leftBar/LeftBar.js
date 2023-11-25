@@ -62,6 +62,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import './modal.scss';
 
 import './interestedModal.scss'
+import './optionsModal.scss'
+
 
 const LeftBar = () => {
 
@@ -71,33 +73,141 @@ const LeftBar = () => {
   const [openFeedback, setOpenFeedback] = useState(false);
   const [feedback, setFeedback] = useState('');
 
-  const [openInterested, setOpenInterested] = useState(false);
+  const [followingEvent, setFollowingEvent] = useState(false); // logic
 
-  const [followingEvent, setFollowingEvent] = useState(false);
+  const [openInterested, setOpenInterested] = useState(false); // open modal (displays: followed evemts, prof dev events, or club callout events)
+
+  const [showFollowed, setShowFollowed] = useState(false);
+  const [showProffesional, setShowProfessional] = useState(false);
+  const [showCallout, setShowCallout] = useState(false);
+
+  const [generalInterest, setGeneralInterest] = useState(false); // open modal (shows 3 options)
+
+  const [isProfDevEnabled, setIsProfEnabled] = useState(false); // check if professional development setting is enabled
+  const [isClubCallEnabled, setIsClubCallEnabled] = useState(false); // check if club callout setting is enabled
+  const sampleMessage = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+  const handleCloseAll = () => {
+    setOpenInterested(!openInterested);
+    setShowFollowed(false);
+    setShowProfessional(false);
+    setShowCallout(false);
+  }
 
   const interestedEvents = [
     {
       clubName: "ESEC",
-      eventName: "Callout",
+      eventName: "Blowing Up Night",
+      eventDescription: sampleMessage,
+      followData: true,
     },
     {
       clubName: "Boiler League Of Tag",
       eventName: "NERF Armory Night",
+      eventDescription: sampleMessage,
+      followData: true,
     },
     {
       clubName: "PSUB",
-      eventName: "Halloween Ball Event"
+      eventName: "Halloween Ball Event",
+      eventDescription: sampleMessage,
+      followData: true,
     },
     {
       clubName: "Ill Chess Players",
-      eventName: "Competition #1"
+      eventName: "Competition #1",
+      eventDescription: sampleMessage,
+      followData: true,
     },
   ]
 
+  const callouts = [
+    {
+      clubName: "NERF",
+      eventName: "First NERF Meeting!",
+      eventDescription: sampleMessage,
+      followData: true,
+    },
+    {
+      clubName: "HACKERS",
+      eventName: "General Introductioary Meeting",
+      eventDescription: sampleMessage,
+      followData: true,
+    },
+    {
+      clubName: "PSUB",
+      eventName: "Join our team!",
+      eventDescription: sampleMessage,
+      followData: true,
+    },
+    {
+      clubName: "Chess Clubbers",
+      eventName: "Intro Golf",
+      eventDescription: sampleMessage,
+      followData: true,
+    },
+  ]
+
+  const dev = [
+    {
+      clubName: "PSUB",
+      eventName: "Resume Workshop",
+      eventDescription: sampleMessage,
+      followData: true,
+    },
+    {
+      clubName: "Purdue's Young Entrepeneurs",
+      eventName: "Soft Skills Workshop",
+      eventDescription: sampleMessage,
+      followData: true,
+    },
+    {
+      clubName: "Business Club",
+      eventName: "Learn Professional Practices",
+      eventDescription: sampleMessage,
+      followData: true,
+    },
+    {
+      clubName: "Welders of Purdue",
+      eventName: "Meet Our Speakers",
+      eventDescription: sampleMessage,
+      followData: true,
+    },
+  ]
+
+  const [openProfesional, setOpenProf] = useState(false);
+  const [openCallout, setOpenCallout] = useState(false);
+  const [openFollowed, setOpenFollowed] = useState(false);
+
+  const [dataUsed, setDataUsed] = useState(interestedEvents);
+
+  const [viewingEvent, setViewingEvent] = useState('');
+  const [givenEventName, setGivenEventName] = useState('');
+  const [givenClubName, setGivenClubName] = useState('');
+  const [givenEventDescription, setGivenEventDescription] = useState('');
+  const [givenFollowData, setGivenFollowData] = useState(false);
+
+  const sendEventDataView = async (eventName, clubName, eventDescription, followData) => {
+
+    console.log(eventName);
+
+    setViewingEvent(!viewingEvent);
+    setGivenEventName(eventName);
+    setGivenClubName(clubName);
+    setGivenEventDescription(eventDescription);
+    setGivenFollowData(followData);
+  }
+  const closeViewEvent = async () => {
+    setViewingEvent(!viewingEvent);
+    setGivenEventName("");
+    setGivenClubName("");
+    setGivenEventDescription("");
+    setGivenFollowData("");
+  }
   return (
 
     <div className='leftBar'>
 
+      {/* FEEDBACK MODAL */}
       <Modal
         open={openFeedback}
         onClose={() => { setOpenFeedback(!openFeedback) }}>
@@ -266,45 +376,208 @@ const LeftBar = () => {
         </div>
       </div>
 
-      <Modal onClose={() => setOpenInterested(!openInterested)} open={openInterested}>
+      {/* INTERESTED EVENTS MODAL */}
+      <Modal onClose={handleCloseAll} open={openInterested}>
         <div className='interested-container'>
           <div className='interested-title'>
-            <span>Interested Events</span>
-            <div className='exit-modal' onClick={() => setOpenInterested(!openInterested)}>
+            <span>
+              Interested Events
+            </span>
+            <div className='exit-modal' onClick={handleCloseAll}>
               <IconButton><CloseIcon /></IconButton>
             </div>
           </div>
+
           <div className='club-container'>
-            <div className='club-item'>
-              <div className='club-info'>
-                <div className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
-                <div className='club-name'>CS Memers Discord Night!</div>
-                <div className='button-container'>
-                  <button onClick={() => setFollowingEvent(!followingEvent)} className={followingEvent ? "follow-btn" : "unfollow-btn"}>{followingEvent ? "Follow" : "Unfollow"}</button>
+
+            {/* PROFESSIONAL DEVELOPMENT EVENTS */}
+            <div className='test-ctn' onClick={() => setShowProfessional(!showProffesional)}>
+              <div className='drop-item'>
+                <div className='club-info'>
+                  <div className='drop-container'>
+                    <div className='arrow-contain'>
+                      {showProffesional ? <ArrowDropUpIcon className='icon-drop' /> : <ArrowDropDownIcon className='icon-drop' />}
+                    </div>
+                    <span>Show Professional Development</span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className='club-item'>
-              <div className='club-info'>
-                <div className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
-                <div className='club-name'>1st Club Callout!</div>
-                <div className='button-container'>
-                  <button onClick={() => setFollowingEvent(!followingEvent)} className={followingEvent ? "follow-btn" : "unfollow-btn"}>{followingEvent ? "Follow" : "Unfollow"}</button>
+            {isProfDevEnabled ? (
+              <div>
+                {showProffesional && (
+                  <div className='club-drop'>
+                    {dev.map((event, index) => (
+                      <div className='club-item' key={index}>
+                        <div className='club-info'>
+                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
+                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-name'><span>{event.eventName}</span></div>
+                          <div className='button-container'>
+                            <button onClick={() => setFollowingEvent(!followingEvent)} className={followingEvent ? "follow-btn" : "unfollow-btn"}>{followingEvent ? "Follow" : "Unfollow"}</button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div>
+                {showProffesional && (
+                  <div className='club-drop'>
+                    <div className='club-item'>
+                      <div className='club-info'>
+                        <div className='club-profile'></div>
+                        <div style={{ fontSize: '15px', fontWeight: 700 }}><span>Nothing coming up...</span></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* CLUB CALLOUT EVENTS */}
+            <div className='test-ctn' onClick={() => setShowCallout(!showCallout)}>
+              <div className='drop-item'>
+                <div className='club-info'>
+                  <div className='drop-container'>
+                    <div className='arrow-contain'>
+                      {showCallout ? <ArrowDropUpIcon className='icon-drop' /> : <ArrowDropDownIcon className='icon-drop' />}
+                    </div>
+                    <span>Show Club Callouts</span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className='club-item'>
-              <div className='club-info'>
-                <div className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
-                <div className='club-name'>NERF Armory Fight!</div>
-                <div className='button-container'>
-                  <button onClick={() => setFollowingEvent(!followingEvent)} className={followingEvent ? "follow-btn" : "unfollow-btn"}>{followingEvent ? "Follow" : "Unfollow"}</button>
+            {isClubCallEnabled ? (
+              <div>
+                {showCallout && (
+                  <div className='club-drop'>
+                    {callouts.map((event, index) => (
+                      <div className='club-item' key={index}>
+                        <div className='club-info'>
+                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
+                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-name'><span>{event.eventName}</span></div>
+                          <div className='button-container'>
+                            <button onClick={() => setFollowingEvent(!followingEvent)} className={followingEvent ? "follow-btn" : "unfollow-btn"}>{followingEvent ? "Follow" : "Unfollow"}</button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div>
+                {showCallout && (
+                  <div className='club-drop'>
+                    <div className='club-item'>
+                      <div className='club-info'>
+                        <div className='club-profile'></div>
+                        <div style={{ fontSize: '15px', fontWeight: 700 }}><span>Nothing coming up...</span></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* GENERAL INTERESTED EVENTS */}
+            <div className='test-ctn' onClick={() => setShowFollowed(!showFollowed)}>
+              <div className='drop-item'>
+                <div className='club-info'>
+                  <div className='drop-container'>
+                    <div className='arrow-contain'>
+                      {showFollowed ? <ArrowDropUpIcon className='icon-drop' /> : <ArrowDropDownIcon className='icon-drop' />}
+                    </div>
+                    <span>Show Followed Events</span>
+                  </div>
                 </div>
+              </div>
+            </div>
+            {dataUsed.length != 0 ? (
+              <div>
+                {showFollowed && (
+                  <div className='club-drop'>
+                    {interestedEvents.map((event, index) => (
+                      <div className='club-item' key={index}>
+                        <div className='club-info'>
+                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
+                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-name'><span>{event.eventName}</span></div>
+                          <div className='button-container'>
+                            <button onClick={() => setFollowingEvent(!followingEvent)} className={followingEvent ? "follow-btn" : "unfollow-btn"}>{followingEvent ? "Follow" : "Unfollow"}</button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div>
+                {showFollowed && (
+                  <div className='club-drop'>
+                    <div className='club-item'>
+                      <div className='club-info'>
+                        <div className='club-profile'></div>
+                        <div style={{ fontSize: '15px', fontWeight: 700 }}><span>Nothing followed...</span></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+
+          </div>
+
+        </div>
+      </Modal >
+
+      {/* ACTUAL EVENT PAGE INFO */}
+      <Modal onClose={closeViewEvent} open={viewingEvent}>
+        <div className='norm'>
+          <div className="modal-container">
+
+            <div className='modal-title'>
+              <span>{givenEventName}</span>
+            </div>
+
+            <div onClick={closeViewEvent} className='modal-exit' >
+              <IconButton sx={{
+                backgroundColor: '#484a4d',
+                width: '30px',
+                height: '30px',
+                padding: '20px',
+                color: 'white',
+              }}>
+                <CloseIcon />
+              </IconButton>
+            </div>
+
+            <div className='modal-content-1'>
+              <span>Club: {givenClubName}</span>
+            </div>
+
+            <div className='modal-content-1'>
+              <span>Description: </span>
+              <div className='modal-content-2'>
+                <span>{givenEventDescription}</span>
+              </div>
+            </div>
+
+            <div className='modal-content-3'>
+            <div className='contain-btn'>
+                <button onClick={closeViewEvent} className='cancel-btn'>Back</button>
+              </div>
+              <div className='contain-btn'>
+                <button className='submit-btn'>Follow</button>
               </div>
             </div>
           </div>
         </div>
-      </Modal>
+
+      </Modal >
 
     </div >
   )
