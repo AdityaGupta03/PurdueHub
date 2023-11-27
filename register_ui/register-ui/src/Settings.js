@@ -19,7 +19,14 @@ function Settings() {
     const[calloutChecked, setCalloutChecked] = useState(false);
     const[checkNotifs, setCheckNotifs] = useState(false);
     
+    const[silenceIntroNotif, setSilenceIntroNotif] = useState(false);
+
     const[directMessageCheck, setDirectMessageCheck] = useState(false);
+
+
+    const silenceIntroNotifChange = (e) => {
+        setSilenceIntroNotif(e.target.checked);
+    }
 
     // Functions to grab true or false values if toggles are checked for respective inputs
     const profDevChange = async (e) => {
@@ -162,6 +169,16 @@ function Settings() {
                 />}
             />
             <br/>
+            <FormControlLabel 
+                label='Silence Notification: Intro Message'
+                control={
+                <Switch 
+                    checked={silenceIntroNotif} 
+                    onChange={silenceIntroNotifChange}
+                    color='success'
+                />}
+            />
+            <br/>
             <br/>
             <h3>Messages:</h3>
             <FormControlLabel 
@@ -175,6 +192,7 @@ function Settings() {
                 />
             }
             />
+            <br />
             <br/>
             <Link className='link' onClick={viewNotif}>Back To Settings</Link>
         </div>
