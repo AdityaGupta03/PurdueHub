@@ -9,6 +9,11 @@ import {
   RouterProvider,
   Link
 } from "react-router-dom";
+
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import Switch from '@mui/material/Switch';
+
 // clubs
 import GolfCourseIcon from '@mui/icons-material/GolfCourse';
 // delete acc
@@ -59,32 +64,38 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { useNavigate } from 'react-router-dom';
 
 import CloseIcon from '@mui/icons-material/Close';
-import './modal.scss';
 
+import './modal.scss';
 import './interestedModal.scss'
 import './optionsModal.scss'
 
 
 const LeftBar = () => {
 
+  // FAVORITING CLUBS + CLASSES INFO
   const [openFavClubs, setOpenFavClubs] = useState(false);
   const [openFavClasses, setOpenFavClasses] = useState(false);
 
+  // FEEDBACK INFO
   const [openFeedback, setOpenFeedback] = useState(false);
   const [feedback, setFeedback] = useState('');
 
+
+  // INTERESTED EVENTS INFO
   const [followingEvent, setFollowingEvent] = useState(false); // logic
-
   const [openInterested, setOpenInterested] = useState(false); // open modal (displays: followed evemts, prof dev events, or club callout events)
-
   const [showFollowed, setShowFollowed] = useState(false);
   const [showProffesional, setShowProfessional] = useState(false);
   const [showCallout, setShowCallout] = useState(false);
 
-  const [generalInterest, setGeneralInterest] = useState(false); // open modal (shows 3 options)
 
+  // SETTINGS INFO:
+  const [openSettings, setOpenSettings] = useState(false);
   const [isProfDevEnabled, setIsProfEnabled] = useState(false); // check if professional development setting is enabled
   const [isClubCallEnabled, setIsClubCallEnabled] = useState(false); // check if club callout setting is enabled
+  const [isDirectMessageEnabled, setIsDirectMessageEnabled] = useState(false); // messaging setting
+  const [isTipsEnabled, setIsTipsisTipsEnabled] = useState(false); // setting: allow notifcaitons in top right when loading in
+
   const sampleMessage = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
   const handleCloseAll = () => {
     setOpenInterested(!openInterested);
@@ -203,9 +214,99 @@ const LeftBar = () => {
     setGivenEventDescription("");
     setGivenFollowData("");
   }
+
+  const profDevChange = async (e) => {
+    setIsProfEnabled(e.target.checked);
+  }
+  const clubCalloutChange = async (e) => {
+    setIsClubCallEnabled(e.target.checked);
+  }
+  const receiveMessagesChange = async (e) => {
+    setIsDirectMessageEnabled(e.target.checked);
+  }
+
   return (
 
     <div className='leftBar'>
+
+      {/* SETTINGS */}
+      <Modal
+        open={openSettings}
+        onClose={() => { setOpenSettings(!openSettings) }}>
+
+        <div className="norm">
+          <div className="modal-container">
+            <div className='modal-title'>
+              <span>Settings</span>
+            </div>
+
+            <div onClick={() => { setOpenSettings(!openSettings) }} className='modal-exit' >
+              <IconButton sx={{
+                backgroundColor: '#484a4d',
+                width: '30px',
+                height: '30px',
+                padding: '20px',
+                color: 'white',
+              }}>
+                <CloseIcon />
+              </IconButton>
+            </div>
+
+            <div className='modal-content-1'>
+              <span>Events</span>
+            </div>
+            <div className='settings-content-2'>
+              <span>Professional Development</span>
+              <Switch
+                checked={isProfDevEnabled}
+                onChange={profDevChange}
+                color='success'
+              />
+            </div>
+            <div className='settings-content-2'>
+              <span>Club Callouts</span>
+              <Switch
+                checked={isClubCallEnabled}
+                onChange={clubCalloutChange}
+                color='success'
+              />
+            </div>
+            <div className='line'></div>
+            <div className='modal-content-1'>
+              <span>Notifcations</span>
+            </div>
+            <div className='settings-content-2'>
+              <span>{isDirectMessageEnabled ? 'Receive Direct Messages From: Everyone' :
+                'Receive Direct Messages From: People I am Following'}</span>
+              <Switch
+                checked={isDirectMessageEnabled}
+                onChange={receiveMessagesChange}
+                color='success'
+              />
+            </div>
+            <div className='line'></div>
+            <div className='modal-content-1'>
+              <span>Other</span>
+            </div>
+            <div className='settings-content-2'>
+              <span>Allow tip notifications</span>
+              <Switch
+                checked={isClubCallEnabled}
+                onChange={clubCalloutChange}
+                color='success'
+              />
+            </div>
+            <div className='modal-content-3'>
+              <div className='contain-btn'>
+                <button onClick={() => { setOpenSettings(!openSettings) }} className='cancel-btn'>Cancel</button>
+              </div>
+              <div className='contain-btn'>
+                <button onClick={() => { setOpenSettings(!openSettings) }} className='submit-btn'>Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
 
       {/* FEEDBACK MODAL */}
       <Modal
@@ -365,12 +466,13 @@ const LeftBar = () => {
 
 
 
-            <Link to="/feedback" className="removeStyleLink">
+            {/* SETTINGS */}
+            <div onClick={() => setOpenSettings(!openSettings)} className="removeStyleLink">
               <div className='item'>
                 <SettingsIcon />
                 <span>Settings</span>
               </div>
-            </Link>
+            </div>
           </div>
 
         </div>
@@ -567,7 +669,7 @@ const LeftBar = () => {
             </div>
 
             <div className='modal-content-3'>
-            <div className='contain-btn'>
+              <div className='contain-btn'>
                 <button onClick={closeViewEvent} className='cancel-btn'>Back</button>
               </div>
               <div className='contain-btn'>
