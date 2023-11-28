@@ -31,6 +31,7 @@ import Club from "./revamped/pages/club/Club"
 import Class from "./revamped/pages/class/Class";
 import Weather from "./revamped/pages/weather/Weather";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import Calendar from "./revamped/pages/calendar/Calendar";
 
 
 function App() {
@@ -90,6 +91,10 @@ function App() {
         {
           path: "/weather",
           element: <Weather />
+        },
+        {
+          path: "/calendar",
+          element: <Calendar />
         },
       ]
     },

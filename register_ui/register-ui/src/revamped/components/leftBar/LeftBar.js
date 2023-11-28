@@ -364,7 +364,7 @@ const LeftBar = () => {
             </div>
           </Link>
 
-          <Link to="/" className="removeStyleLink">
+          <Link to="/calendar" className="removeStyleLink">
             <div className='item'>
               <CalendarMonthIcon />
               <span>Calendar</span>
