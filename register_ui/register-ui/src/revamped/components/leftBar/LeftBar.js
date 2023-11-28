@@ -378,8 +378,7 @@ const LeftBar = () => {
             </div>
           </div>
 
-          <Link to="/" className="removeStyleLink">
-
+          <Link to="/weather" className="removeStyleLink">
             <div className='item'>
               <ThermostatIcon />
               <span>Weather</span>

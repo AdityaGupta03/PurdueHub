@@ -29,21 +29,25 @@ import ChangePassword from "./revamped/pages/change-password/ChangePassword"
 
 import Club from "./revamped/pages/club/Club"
 import Class from "./revamped/pages/class/Class";
+import Weather from "./revamped/pages/weather/Weather";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+
 
 function App() {
 
   const currentUser = true;
+  const queryClient = new QueryClient();
 
   const Layout = () => {
     return (
       <div className="dark-theme">
         <Navbar />
         <div style={{ display: 'flex' }}>
-          <LeftBar/>
+          <LeftBar />
           <div className="main-content" style={{ flex: 6 }} >
             <Outlet />
           </div>
-          <RightBar/>
+          <RightBar />
         </div>
       </div>
     )
@@ -59,7 +63,9 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <ProtectedRoute><Layout /></ProtectedRoute>,
+      element:
+        <ProtectedRoute><Layout /></ProtectedRoute>
+      ,
       children: [
         {
           path: "/",
@@ -80,6 +86,10 @@ function App() {
         {
           path: "/class/:id",
           element: <Class />
+        },
+        {
+          path: "/weather",
+          element: <Weather />
         },
       ]
     },
@@ -122,8 +132,8 @@ function App() {
   ]);
 
   return (
-    <div>
-      <RouterProvider router={router} />
+    <div><QueryClientProvider client={queryClient}>      <RouterProvider router={router} />
+    </QueryClientProvider>
     </div>
   )
 }
