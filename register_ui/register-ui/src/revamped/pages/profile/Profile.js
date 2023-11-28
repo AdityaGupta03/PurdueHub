@@ -275,7 +275,7 @@ const Profile = () => {
           <Button onClick={handleReportSend}>Send Report</Button>
         </DialogActions>
       </Dialog>
-      
+
       {/* MESSAGE USER DIALOG */}
       <Dialog
         className='dialog'
@@ -358,6 +358,7 @@ const Profile = () => {
           <Button onClick={handleBlock} sx={{ ...buttonStyle, borderBottom: 'none' }}>{isBlocked ? 'Unblock' : 'Block'}</Button>
         </Box>
       </Modal>
+      
 
       {/* MUTUAL FRIENDS WITH USER */}
       <Modal

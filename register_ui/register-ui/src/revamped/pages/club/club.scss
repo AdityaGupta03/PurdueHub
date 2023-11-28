@@ -1,0 +1,199 @@
+.club-page {
+    height: 100vh;
+    overflow: scroll;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    .images {
+        width: 100%;
+        height: 300px;
+        position: relative;
+
+        .cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .club-profile {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            overflow: hidden;
+
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: auto;
+            top: 200px;
+        }
+
+        .container {
+            background-color: #333;
+            padding: 20px 70px;
+
+            .club-info {
+                height: auto;
+                box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+                border-radius: 20px;
+                background-color: #222;
+                color: whitesmoke;
+                padding-top: 30px;
+                padding-left: 50px;
+                padding-right: 50px;
+                padding-bottom: 50px;
+
+                .wrapper {
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+
+                    .top-right {
+                        color: white;
+                        top: 0;
+                        right: 0;
+                        position: absolute;
+                        display: flex;
+                        flex-direction: column;
+                        button {
+                            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                            color: whitesmoke;
+                            margin-top: 10px;
+                            border-radius: 8px;
+                            font-size: 15px;
+                            height: 36px;
+                            width: 130px;
+                            border: none;
+                            font-weight: 600;
+                        }
+                        .fav {
+                            background-color: #e0bb6b;
+                        }
+                        .follow {
+                            background-color: rgb(31, 117, 255);
+                        }
+                        button:hover {
+                            cursor: pointer;
+                            opacity: 0.85;
+                        }
+                        .un-fav {
+                            background-color: #303030;
+                            color: #e0bb6b
+                        }
+                        .unfollow {
+                            background-color: #303030;
+                            color: rgb(31, 117, 255);
+                        }
+                    }
+
+                    .club-name {
+                        margin-top: 50px;
+                        font-weight: 700;
+                        font-size: 50px;
+                    }
+
+                    .club-description {
+                        margin-top: 10px;
+                    }
+
+                    /* Add other styles for your top-right content */
+                }
+
+            }
+
+            .label {
+                display: flex;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                font-size: 25px;
+                color: white;
+                font-weight: 700;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .card-container {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: center;
+
+                .card-wrap {
+                    padding: 10px;
+
+                    .card {
+                        cursor: pointer;
+                        transition: box-shadow 0.2s ease-in-out;
+                        border-radius: 8px;
+                        background-color: #252525;
+                        color: white;
+                        width: 220px;
+                        height: auto;
+                        display: flex;
+                        flex-direction: column;
+
+                        .card-pic {
+                            border-radius: 8px;
+                            background: linear-gradient(rgba(0, 43, 111, 0.845), rgba(31, 117, 255, 0.845)), url('./purdue-university-background.jpg') center;
+                            background-size: cover;
+                            width: 100%;
+                            height: 170px;
+                            border-bottom-right-radius: 0px;
+                            border-bottom-left-radius: 0px;
+                        }
+
+                        .card-title {
+                            padding-left: 15px;
+                            padding-right: 15px;
+                            padding-top: 15px;
+                            height: 60px;
+
+                            span {
+                                font-size: 16px;
+                                font-weight: 600;
+                                text-wrap: wrap;
+                            }
+                        }
+
+                        .card-info-container {
+                            display: flex;
+                            flex-direction: column;
+                            height: auto;
+
+                            .card-details {
+                                display: flex;
+                                flex-direction: column;
+                                padding-left: 15px;
+                                padding-bottom: 15px;
+                                padding-top: 8px;
+                                margin-right: 8px;
+
+                                .start-time {
+                                    margin-bottom: 5px;
+                                }
+                            }
+
+                            .card-name {
+                                margin-top: 15px;
+                                padding-left: 15px;
+                                padding-bottom: 8px;
+                                padding-top: 8px;
+
+                                span {
+                                    text-wrap: nowrap;
+                                    padding-bottom: 8px;
+                                }
+                            }
+                        }
+                    }
+
+                    .card:hover {
+                        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+                    }
+                }
+
+            }
+        }
+    }
+
+}
