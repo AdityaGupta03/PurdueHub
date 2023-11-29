@@ -169,7 +169,7 @@ const Profile = () => {
     }
   }
 
-  const handleMessageSend = () => {
+  const handleMessageSend = async () => {
     // message or title is empty validation errors
     if (title === '') {
       setTitleError('Missing Title');
@@ -178,6 +178,26 @@ const Profile = () => {
     else if (message === '') {
       setMessageError('Missing Body');
       return;
+    }
+
+    try {
+      let res = await fetch('http://localhost:5000/api/msg_user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "user_id": user_id, "username": username, "msg": message, "title": title }),
+      });
+
+      const data = await res.json();
+
+      // if (res.status == 400 && data.error == "Sender is blocked by user.") {
+      //   return;
+      // } else if (res.status != 200) {
+      //   return;
+      // }
+    } catch (error) {
+      console.log(error);
     }
 
     // SUCCESS IN SENDING MESSAGE:
@@ -198,11 +218,78 @@ const Profile = () => {
     setReportMessage('');
     setIsReporting(false);
   }
-  const handleBlock = () => {
+
+  const handleBlock = async () => {
     if (isBlocked) {
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/unblock_user", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ "user_id": user_id, "unblock_username": username }),
+        });
+
+        console.log(response);
+        const data = await response.json();
+
+        if (response.status === 200) {
+          // setIsBlocked(false);
+        } else {
+          const err_msg = "Error: " + data.error;
+          console.log(err_msg);
+        }
+      } catch (error) {
+        console.log('Error:', error);
+      }
+
       setIsBlocked(false);
     }
     else {
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/block_user", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ "user_id": user_id, "block_username": username }),
+        });
+
+        console.log(response);
+        const data = await response.json();
+
+        if (response.status === 200) {
+          // SET LOGIC HERE FOR WHENEVER BLOCK IS SUCCESSFUL
+        } else {
+          const err_msg = "Error: " + data.error;
+          console.log(err_msg);
+        }
+
+        if (isFollow) {
+          await fetch("http://127.0.0.1:5000/api/unfollow_user", {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "user_id": user_id, "to_unfollow_username": username }),
+          });
+
+          console.log(response);
+          const data = await response.json();
+
+          if (response.status === 200) {
+            setIsFollow(false);
+          } else {
+            const err_msg = "Error: " + data.error;
+            console.log(err_msg);
+          }
+        }
+
+        setIsBlocked(true);
+        setIsFollow(false);
+      } catch (error) {
+        console.log('Error:', error);
+      }
       setIsBlocked(true);
     }
   }
@@ -261,11 +348,38 @@ const Profile = () => {
     }
   }
 
-  const handleReportSend = () => {
+  const handleReportSend = async () => {
     // message or title is empty validation errors
     if (reportMessage === '') {
       setReportError('Missing Report');
       return;
+    }
+
+    let reportee_user = sessionStorage.getItem('username');
+    try {
+      console.log(username);
+      console.log(reportee_user);
+      console.log(reportMessage);
+      const response = await fetch("http://127.0.0.1:5000/api/report_user", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "reported": username, "reportee": reportee_user, "msg": reportMessage }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        // setSuccess(true);
+      } else {
+        const error_msg = 'Error: ' + data.error;
+        setReportError(error_msg);
+        // setSuccess(false);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setReportError('Error occurred when submitting the report');
     }
 
     // SUCCESS IN SENDING REPORT:
