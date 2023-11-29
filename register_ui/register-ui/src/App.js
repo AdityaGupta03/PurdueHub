@@ -31,7 +31,7 @@ import Club from "./revamped/pages/club/Club"
 import Class from "./revamped/pages/class/Class";
 import Weather from "./revamped/pages/weather/Weather";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-import Calendar from "./revamped/pages/calendar/Calendar";
+import ViewCalendar from "./revamped/pages/calendar/ViewCalendar";
 
 
 function App() {
@@ -94,7 +94,7 @@ function App() {
         },
         {
           path: "/calendar",
-          element: <Calendar />
+          element: <ViewCalendar />
         },
       ]
     },

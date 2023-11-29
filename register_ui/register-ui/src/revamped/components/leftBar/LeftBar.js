@@ -69,6 +69,23 @@ import './modal.scss';
 import './interestedModal.scss'
 import './optionsModal.scss'
 
+// CALENDAR IMPORTS
+import './calendar.scss'
+import { set } from "date-fns";
+import format from "date-fns/format";
+import getDay from "date-fns/getDay";
+import parse from "date-fns/parse";
+import startOfWeek from "date-fns/startOfWeek";
+import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import AddIcon from '@mui/icons-material/Add';
+
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+
+import CustomToolbar from './CustomToolBar';
 
 const LeftBar = () => {
 
@@ -225,6 +242,23 @@ const LeftBar = () => {
     setIsDirectMessageEnabled(e.target.checked);
   }
 
+  // CALENDAR INFO
+  const locales = {
+    "en-US": require("date-fns/locale/en-US")
+  };
+
+  const localizer = dateFnsLocalizer({
+    format,
+    parse,
+    startOfWeek,
+    getDay,
+    locales
+  });
+
+  const [openCalendar, setOpenCalendar] = useState(false);
+  const [openAddEvent, setOpenAddEvent] = useState(false);
+
+
   return (
 
     <div className='leftBar'>
@@ -364,12 +398,12 @@ const LeftBar = () => {
             </div>
           </Link>
 
-          <Link to="/calendar" className="removeStyleLink">
+          <div onClick={() => setOpenCalendar(!openCalendar)} className="removeStyleLink">
             <div className='item'>
               <CalendarMonthIcon />
               <span>Calendar</span>
             </div>
-          </Link>
+          </div>
 
           <div onClick={() => setOpenInterested(!openInterested)} className="removeStyleLink">
             <div className='item'>
@@ -680,6 +714,44 @@ const LeftBar = () => {
 
       </Modal >
 
+      <Modal onClose={() => { setOpenCalendar(!openCalendar) }} open={openCalendar}>
+        <div className='calendar-container'>
+          <div onClick={() => { setOpenCalendar(!openCalendar) }} className='modal-exit' >
+            <IconButton sx={{
+              backgroundColor: '#484a4d',
+              width: '30px',
+              height: '30px',
+              padding: '20px',
+              color: 'white',
+            }}>
+              <CloseIcon />
+            </IconButton>
+          </div>
+          <div onClick={() => { setOpenCalendar(!openCalendar) }} className='modal-create' >
+            <div className='create-container'>
+              <div className='create-button'>
+                <AddIcon className='add-icon' />
+                <span >Create</span>
+              </div>
+            </div>
+          </div>
+          <div className='modal-title'>
+          </div>
+          <Calendar localizer={localizer}
+            className="calendar-itself"
+            startAccessor="start" endAccessor="end"
+            components={{
+              toolbar: (toolbarProps) => <CustomToolbar {...toolbarProps} />,
+            }}
+          />
+        </div>
+      </Modal>
+
+      <Modal onClose={() => { setOpenAddEvent(!openAddEvent) }} open={openAddEvent}>
+        <div>
+
+        </div>
+      </Modal>
     </div >
   )
 }
