@@ -491,7 +491,7 @@ const LeftBar = () => {
             </div>
           </Link>
 
-          <Link to="/" className="removeStyleLink">
+          <Link to="/faq" className="removeStyleLink">
             <div className='item'>
               <HelpOutlineIcon />
               <span>FAQ</span>
