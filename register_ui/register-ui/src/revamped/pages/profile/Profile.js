@@ -47,6 +47,9 @@ const Profile = () => {
   const user_id = localStorage.getItem('user_id');
   const my_username = localStorage.getItem('username');
 
+  const [mutualFriends, setMutualFriends] = useState([]);
+  const [noMutualFriends, setNoMutualFriends] = useState(false);
+
   const [isOpenMessage, setIsOpenMessage] = useState(false); // open up message dialog
   const [isOpenMore, setIsOpenMore] = useState(false);  // open up 'more' dialog
   const [isReporting, setIsReporting] = useState(false); // open up 'report' dialog
@@ -87,7 +90,41 @@ const Profile = () => {
     fetchProfileData();
   }, [title, message, reportMessage])
 
+  useEffect(() => {
+    fetchProfileData();
+    fetchMutualData();
+  }, [username])
+
+  async function fetchMutualData() {
+    try {
+      let response = await fetch("http://127.0.0.1:5000/api/get_mutual_friends", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "user_id": user_id, "other_username": username }),
+      });
+
+      let data = await response.json();
+      console.log(data);
+
+      if (response.status === 200) {
+        if (data.mutual_friends.length === 0) {
+          setNoMutualFriends(true);
+        } else {
+          setNoMutualFriends(false);
+        }
+        setMutualFriends(data.mutual_friends);
+      } else {
+        const err_msg = "Error: " + data.error;
+      }
+    } catch (error) {
+      console.log(error);
+    } 
+  }
+
   async function fetchProfileData() {
+    console.log("Fetching profile data...")
     try {
       let response = await fetch("http://127.0.0.1:5000/api/get_profile_info", {
         method: "POST",
@@ -151,6 +188,7 @@ const Profile = () => {
       console.log(data);
 
       if (response.status === 200) {
+        setIsFollow(false);
         for (let i = 0; i < data.following.length; i++) {
           if (data.following[i] == username) {
             console.log(data.following[i]);
@@ -623,13 +661,28 @@ const Profile = () => {
           </Box>
           <Box sx={containUsers}>
             <Box sx={containActualUser}>
-              <Box sx={userInfo}>
-                <Box sx={{ ...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" />
-                <Box sx={{ ...userName, "&:hover": { cursor: 'pointer' } }}>Username</Box>
-                <Box sx={userButton}>
-                  <Button sx={userBut}>Unfollow</Button>
-                </Box>
-              </Box>
+              {
+                noMutualFriends && (
+                  <div>
+                    <p>No Mutual Friends!</p>
+                  </div>
+                )
+              }
+              {
+                noMutualFriends === false && (
+                  <div>
+                    {mutualFriends.map((item, index) => {
+                      return (
+                        <Box sx={userInfo}>
+                          <Box sx={{ ...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" />
+                          <Box sx={{ ...userName, "&:hover": { cursor: 'pointer' } }}>{item}</Box>
+                        </Box>
+
+                      )
+                    })}
+                  </div>
+                )
+              }
             </Box>
           </Box>
         </Box>
