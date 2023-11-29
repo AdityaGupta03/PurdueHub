@@ -1,0 +1,182 @@
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(36, 37, 38);
+    border-radius: 8px;
+    animation: fadeIn 0.1s ease;
+
+    width: 80vw;
+    height: 80vh;
+    color: whitesmoke;
+
+    .modal-exit {
+        position: absolute;
+        right: 16px;
+        top: 12px;
+
+        button {
+            background-color: #484a4d;
+            width: 30px;
+            height: 30px;
+            padding: 20px;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.5;
+        }
+
+    }
+
+    .modal-create {
+        position: absolute;
+        left: 16px;
+        top: 12px;
+
+        .create-container {
+            background-color: #484a4d;
+            border-radius: 48px;
+            height: 48px;
+            width: 150px;
+
+            .create-button {
+                .add-icon {
+                    margin-right: 15px;
+                }
+
+                height: 100%;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        .create-container:hover {
+            opacity: 0.5;
+            cursor: pointer;
+        }
+    }
+
+    .modal-title {
+        justify-content: center;
+        border-top-right-radius: 8px;
+        border-top-left-radius: 8px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: 60px;
+        margin-bottom: 15px;
+
+        span {
+            font-size: 20px;
+            font-weight: 700;
+        }
+    }
+
+    .line {
+        border-bottom: 1px rgba(255, 255, 255, 0.05) solid;
+    }
+
+    .calendar-itself {
+        height: 702.68px;
+        width: 100%;
+        padding: 20px;
+    }
+}
+
+.rbc-header {
+    padding: 10px;
+    font-size: 15px;
+}
+.rbc-day-bg.rbc-off-range-bg {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+.rbc-day-bg {
+    border: 1px rgba(255, 255, 255, 0.05) solid !important;
+}
+.rbc-day-bg.rbc-today {
+    background-color: transparent;
+}
+.rbc-month-row {
+    border: none !important;
+}
+.rbc-month-view {
+    border: none !important;
+}
+.rbc-row.rbc-month-header {
+}
+
+.rbc-row.rbc-time-header-cell {
+    height: 50px !important;
+}
+
+.rbc-header {
+    border: none !important;
+    border-bottom: 1px rgba(255, 255, 255, 0.05) solid !important;
+    border-right: 1px rgba(255, 255, 255, 0.05) solid !important;
+}
+
+.rbc-date-cell.rbc-now.rbc-current{
+    .rbc-button-link {
+        margin-top: 5px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: rgb(31, 117, 255) !important;
+    }
+    .rbc-button-link:hover {
+        opacity: 0.75;
+    }
+}
+.rbc-day-slot.rbc-time-column.rbc-now.rbc-today {
+    background-color: transparent !important;
+}
+
+.rbc-time-view {
+    border: none !important;
+}
+.rbc-header.rbc-today {
+    background-color: rgb(31, 117, 255) !important;
+    color: white !important;
+}   
+.rbc-timeslot-group {
+    border-bottom: 1px rgba(255, 255, 255, 0.05) solid !important;
+    border-left: 1px rgba(255, 255, 255, 0.05) solid !important;
+    border-right: 1px rgba(255, 255, 255, 0.05) solid !important;
+}
+.rbc-time-slot {
+    border-top: 1px rgba(255, 255, 255, 0.05) solid !important;
+}
+.rbc-time-header.rbc-overflowing {
+    border-right: 1px rgba(255, 255, 255, 0.05) solid !important;
+
+}
+.rbc-time-header-content {
+    border-left: 1px rgba(255, 255, 255, 0.05) solid !important;
+}
+
+.rbc-time-content {
+    border-top: 1px rgba(255, 255, 255, 0.05) solid !important;
+}
+.rbc-day-slot.rbc-time-column {
+    border-left: 1px rgba(255, 255, 255, 0.05) solid !important;
+    border-right: 1px rgba(255, 255, 255, 0.05) solid !important;
+}
+.rbc-events-container {
+    border-left: 1px rgba(255, 255, 255, 0.05) solid !important;
+}

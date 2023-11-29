@@ -1,3 +1,4 @@
+const { config } = require("dotenv");
 const express = require("express");
 const bodyParser = require("body-parser");
 const router = require("./routes/router");
@@ -6,6 +7,7 @@ const multer = require('multer');
 const accountQueries = require("./database/queries/accountQueries");
 const path = require('path');
 const helperFuncs = require("./controllers/helperFunctions");
+const { loadModel } = require("./controllers/faqController");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -14,10 +16,16 @@ app.use(cors({
   origin: "http://localhost:3000",
 }));
 
+config();
+
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
 app.use("/api", router);
+
+if (process.env.NODE_ENV !== 'test') {
+  loadModel();
+}
 
 let saveToDatabase;
 const storage = multer.diskStorage({
@@ -39,7 +47,7 @@ const upload = multer({
   },
 });
 
-if (!process.env.TEST_ENV) {
+if (process.env.NODE_ENV !== 'test') {
   app.listen(port, () => {
     console.log(`Server has started on port ${port}\n`);
   });
@@ -62,7 +70,9 @@ app.post("/update_profile_picture", upload.single('file'), async (req, res) => {
   return res.status(200).json({ message: "Successfully updated profile picture" });
 });
 
-helperFuncs.printAllAccounts();
+if (process.env.NODE_ENV !== 'test') {
+  helperFuncs.printAllAccounts();
+}
 
 module.exports = {
   upload,

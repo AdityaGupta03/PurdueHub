@@ -1,0 +1,121 @@
+.leftBar {
+    flex: 2;
+    position: sticky;
+    top: 70px;
+    height: calc(100vh - 70px); // since nav bar takes up 50px in height + 20px in padding = 70px to account for
+    overflow: scroll; // allow more items in the left bar if needed
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    // dont display the scroll bar
+    .club {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+
+
+        img {
+            width: 30px;
+            height: 30px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        span {
+            font-size: 14px;
+        }
+    }
+
+    .club:hover {
+        background-color: #333;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .class-choice {
+        color: whitesmoke;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+
+        span {
+            font-size: 14px;
+        }
+    }
+
+    .class-choice:hover {
+        background-color: #333;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .container {
+        padding: 20px;
+
+        hr {
+            margin: 20px 0px;
+            border: none;
+            height: 0.5px;
+            background-color: lightgray;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+
+            span {
+                font-size: 12px;
+            }
+
+            .user {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px;
+
+                img {
+                    width: 30px;
+                    height: 30px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+
+                span {
+                    font-size: 14px;
+                }
+            }
+
+            .removeStyleLink {
+                text-decoration: none;
+            }
+
+            .removeStyleLink:visited {
+                color: whitesmoke;
+            }
+
+            .removeStyleLink:hover {
+                background-color: #333;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+
+            .item {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px;
+
+                span {
+                    font-size: 14px;
+                }
+            }
+
+        }
+    }
+}

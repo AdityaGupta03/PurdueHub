@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-//import './App.css' // This is a temporary file pulled from tutorial
 import App from './App';
-
+import './index.css'
 import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

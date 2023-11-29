@@ -1,0 +1,47 @@
+.drop-container {
+    display: flex;
+}
+.drop-container:hover {
+    cursor: pointer;
+}
+.drop-item {
+    padding: 20px;
+}
+.icon-drop {
+    margin-right: 10px;
+}
+.club-drop {
+    max-height: 200px;
+    overflow-y: scroll;
+}
+.test-ctn:hover {
+    background-color: #525357;
+    cursor: pointer;
+}
+.interested-container {
+    .interested-title {
+
+    }
+    .club-container {
+        .option-button {
+            button {
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                border: none;
+                background-color: transparent;
+                font-size: 16px;
+                font-weight: 700px;
+                border-bottom: 1px rgba(255, 255, 255, 0.05) solid;
+                width: 100%;
+                height: 100%;
+                padding: 20px;
+                color: rgb(1, 132, 240);
+            }
+        }
+        .option-button:hover {
+            button {
+                background-color: #444;
+                cursor: pointer;
+            }
+        }
+    }
+}

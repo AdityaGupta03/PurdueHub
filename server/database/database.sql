@@ -87,3 +87,19 @@ CREATE TABLE feedback (
   feedback_title TEXT,
   feedback_body TEXT
 );
+
+CREATE TABLE faq (
+  id SERIAL PRIMARY KEY,
+  count INTEGER DEFAULT 0,
+  question TEXT,
+  answer TEXT
+);
+
+
+/* Inserting fake data */
+INSERT INTO faq (question, answer) VALUES
+('What is your product?', 'A student portal for Purdue students!'),
+('How can I contact support?', 'You can contact our support team by leaving feedback through the app!'),
+('Is there a free trial?', 'We are a completley free service!'),
+('How can I find other people', 'Use the username search bar to look up other users!'),
+('Can I cancel my subscription?', 'We are a completley free service so there is no subscription!');
