@@ -363,10 +363,7 @@ export default function Home() {
           <div className='view-weather'>
             <Link to="/weather">View Weather</Link>
           </div>
-
-
-
-
+          <Link to="/chat-bot">Chatbot</Link>
         </section>
       </div >
     </div >
