@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './home.scss';
 
 import { Modal } from '@mui/material';
@@ -6,13 +6,24 @@ import "../../components/leftBar/modal.scss"
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
+import { useNavigate } from 'react-router-dom';
+
 const Home = () => {
+  const navigate = useNavigate();
   const [openFeedback, setOpenFeedback] = useState(false);
   const [feedback, setFeedback] = useState('');
 
   const handleClose = () => {
     setOpenFeedback(false);
   }
+
+  useEffect(() => {
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+    if (isLoggedIn === 'false') {
+      navigate('/login');
+    }
+  }, [])
+
 
   return (
     <div className='home'>
