@@ -37,18 +37,23 @@ import styled from '@emotion/styled';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import PeopleIcon from '@mui/icons-material/People';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 const Profile = () => {
 
   const navigate = useNavigate();
+  const { username } = useParams();
+  const user_id = localStorage.getItem('user_id');
+  const my_username = localStorage.getItem('username');
 
   const [isOpenMessage, setIsOpenMessage] = useState(false); // open up message dialog
   const [isOpenMore, setIsOpenMore] = useState(false);  // open up 'more' dialog
   const [isReporting, setIsReporting] = useState(false); // open up 'report' dialog
   const [isBlocked, setIsBlocked] = useState(false);
+  const [isBanned, setIsBanned] = useState(false);
+
+  const [bio, setBio] = useState(''); // bio is empty at first
 
   const [title, setTitle] = useState(''); // form data for messsaging (title)
   const [message, setMessage] = useState(''); // form data for messaging (message)
@@ -79,7 +84,90 @@ const Profile = () => {
     setTitleError('');
     setMessageError('');
     setReportError('');
+    fetchProfileData();
   }, [title, message, reportMessage])
+
+  async function fetchProfileData() {
+    try {
+      let response = await fetch("http://127.0.0.1:5000/api/get_profile_info", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "username": username }),
+      });
+
+      let data = await response.json();
+
+      if (response.status === 200) {
+        console.log(data);
+        setBio(data.user_info.bio);
+        if (data.user_info.banned == 1) {
+          setIsBanned(true);
+        }
+      } else {
+        console.log(data.error)
+      }
+
+      response = await fetch("http://127.0.0.1:5000/api/get_block_list", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "username": my_username }),
+      });
+
+      data = await response.json();
+      console.log(data);
+
+      if (response.status === 200) {
+        if (data.blocked.length === 0) {
+          setIsBlocked(false);
+        } else {
+          for (let i = 0; i < data.blocked.length; i++) {
+            if (data.blocked[i] == username) {
+              console.log(data.blocked[i]);
+              setIsBlocked(true);
+              break;
+            }
+          }
+        }
+      } else {
+        const err_msg = "Error: " + data.error;
+        console.log(err_msg);
+      }
+
+      console.log(isBlocked);
+
+      response = await fetch("http://127.0.0.1:5000/api/get_follow_list", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "username": my_username }),
+      });
+
+      data = await response.json();
+      console.log(data);
+
+      if (response.status === 200) {
+        for (let i = 0; i < data.following.length; i++) {
+          if (data.following[i] == username) {
+            console.log(data.following[i]);
+            setIsFollow(true);
+            break;
+          }
+        }
+      } else {
+        const err_msg = "Error: " + data.error;
+        console.log(err_msg);
+      }
+
+      console.log(isFollow);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleMessageSend = () => {
     // message or title is empty validation errors
@@ -120,11 +208,56 @@ const Profile = () => {
   }
 
   const toggleFollow = async () => {
+    if (isBlocked) {
+      return;
+    }
     if (isFollow) {
-      setIsFollow(false);
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/unfollow_user", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ "user_id": user_id, "to_unfollow_username": username }),
+        });
+
+        console.log(response);
+        const data = await response.json();
+
+        if (response.status === 200) {
+          // SET LOGIC HERE FOR WHENEVER UNFOLLOW IS SUCCESSFUL
+          setIsFollow(false);
+        } else {
+          const err_msg = "Error: " + data.error;
+          console.log(err_msg);
+        }
+
+      } catch (error) {
+        console.log('Error:', error);
+      }
     }
     else {
       setIsFollow(true);
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/follow_user", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ "user_id": user_id, "to_follow_username": username }),
+        });
+
+        console.log(response);
+        const data = await response.json();
+
+        if (response.status === 200) {
+          // SET LOGIC HERE FOR WHENEVER FOLLOW IS SUCCESSFUL
+        } else {
+          const err_msg = "Error: " + data.error;
+        }
+      } catch (error) {
+        console.log('Error:', error);
+      }
     }
   }
 
@@ -358,7 +491,7 @@ const Profile = () => {
           <Button onClick={handleBlock} sx={{ ...buttonStyle, borderBottom: 'none' }}>{isBlocked ? 'Unblock' : 'Block'}</Button>
         </Box>
       </Modal>
-      
+
 
       {/* MUTUAL FRIENDS WITH USER */}
       <Modal
@@ -410,7 +543,7 @@ const Profile = () => {
             </div>
 
             <div className='center'>
-              <span>Username</span>
+              <span>{username}</span>
               <div className='info'>
                 <div className='item'>
                   <PlaceIcon />
@@ -425,7 +558,7 @@ const Profile = () => {
               </div>
               <button className={isBlocked ? 'disabled' : 'button'} disabled={isBlocked ? true : false} onClick={toggleFollow}>{isFollow ? 'Unfollow' : 'Follow'}</button>
               <div className='bioSection'>
-                <p>Bio: Random spiel about something. That something is something I do not know unfortunately. I am looking to expand the character count to around 150.</p>
+                <p>Bio: {bio}</p>
               </div>
             </div>
 

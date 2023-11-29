@@ -453,6 +453,9 @@ async function followUser(req, res) {
   console.log("[INFO] Follow user api.");
   const { user_id, to_follow_username } = req.body;
 
+  console.log("user_id: " + user_id);
+  console.log("to_follow_username: " + to_follow_username);
+
   if (!user_id) {
     return res.status(400).json({ error: "Missing user_id" }); 
   }
