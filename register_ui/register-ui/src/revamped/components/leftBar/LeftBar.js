@@ -89,6 +89,8 @@ import CustomToolbar from './CustomToolBar';
 
 const LeftBar = () => {
 
+  // **************************************************************************************************************
+
   // FAVORITING CLUBS + CLASSES INFO
   const [openFavClubs, setOpenFavClubs] = useState(false);
   const [openFavClasses, setOpenFavClasses] = useState(false);
@@ -98,12 +100,7 @@ const LeftBar = () => {
   const [feedback, setFeedback] = useState('');
 
 
-  // INTERESTED EVENTS INFO
-  const [followingEvent, setFollowingEvent] = useState(false); // logic
-  const [openInterested, setOpenInterested] = useState(false); // open modal (displays: followed evemts, prof dev events, or club callout events)
-  const [showFollowed, setShowFollowed] = useState(false);
-  const [showProffesional, setShowProfessional] = useState(false);
-  const [showCallout, setShowCallout] = useState(false);
+  // **************************************************************************************************************
 
 
   // SETTINGS INFO:
@@ -113,13 +110,11 @@ const LeftBar = () => {
   const [isDirectMessageEnabled, setIsDirectMessageEnabled] = useState(false); // messaging setting
   const [isTipsEnabled, setIsTipsisTipsEnabled] = useState(false); // setting: allow notifcaitons in top right when loading in
 
+  // **************************************************************************************************************
+
+  // FAKE DATA
+
   const sampleMessage = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-  const handleCloseAll = () => {
-    setOpenInterested(!openInterested);
-    setShowFollowed(false);
-    setShowProfessional(false);
-    setShowCallout(false);
-  }
 
   const interestedEvents = [
     {
@@ -202,9 +197,15 @@ const LeftBar = () => {
     },
   ]
 
-  const [openProfesional, setOpenProf] = useState(false);
-  const [openCallout, setOpenCallout] = useState(false);
-  const [openFollowed, setOpenFollowed] = useState(false);
+  // **************************************************************************************************************
+
+  // VIEWING INTERESTED EVENTS DATA
+
+  const [followingEvent, setFollowingEvent] = useState(false); // logic
+  const [openInterested, setOpenInterested] = useState(false); // open modal (displays: followed evemts, prof dev events, or club callout events)
+  const [showFollowed, setShowFollowed] = useState(false);
+  const [showProffesional, setShowProfessional] = useState(false);
+  const [showCallout, setShowCallout] = useState(false);
 
   const [dataUsed, setDataUsed] = useState(interestedEvents);
 
@@ -242,7 +243,18 @@ const LeftBar = () => {
     setIsDirectMessageEnabled(e.target.checked);
   }
 
-  // CALENDAR INFO
+  const handleCloseAll = () => {
+    setOpenInterested(!openInterested);
+    setShowFollowed(false);
+    setShowProfessional(false);
+    setShowCallout(false);
+  }
+
+
+  // **************************************************************************************************************
+
+  // CALENDAR DATA
+
   const locales = {
     "en-US": require("date-fns/locale/en-US")
   };
@@ -255,10 +267,69 @@ const LeftBar = () => {
     locales
   });
 
+  //const my_username = sessionStorage.getItem('username');
+
   const [openCalendar, setOpenCalendar] = useState(false);
   const [openAddEvent, setOpenAddEvent] = useState(false);
+  const [openEditEvent, setOpenEditEvent] = useState(false);
 
+  const [editedEvent, setEditedEvent] = useState({ title: "", start: "", end: "" });
+  const [oldEditEvent, setOldEditEvent] = useState({ title: "", start: "", end: "" });
+  const errRef = useRef(); /* Set focus on an error, to allow accessibility purposes */
+  const ref = useRef(null);
 
+  const [errMsg, setErrMsg] = useState('');
+  const [newEvent, setNewEvent] = useState({ title: "", start: "", end: "" });
+  const [isCreating, setisCreating] = useState(false);
+  const [isAdding, setisAdding] = useState(false);
+  const [allEvents, setAllEvents] = useState([]);
+  const [calEvents, setCalEvents] = useState([]);
+
+  const filterPassedTime = (time) => {
+    const currentDate = new Date();
+    const selectedDate = new Date(time);
+    return currentDate.getTime() < selectedDate.getTime();
+  };
+
+  async function handleAddEvent() {
+
+  }
+  const handleSave = async () => {
+
+  }
+  async function getEvents() {
+
+  }
+
+  const handleTitleChange = (e) => {
+    setEditedEvent({ ...editedEvent, title: e.target.value });
+  };
+
+  const handleStartChange = (date) => {
+    setEditedEvent({ ...editedEvent, start: date });
+  };
+
+  const handleEndChange = (date) => {
+    setEditedEvent({ ...editedEvent, end: date });
+  };
+
+  const onAddCancel = () => {
+    setisAdding(false);
+  }
+
+  const handleEdit = (e) => {
+    console.log(e);
+    setEditedEvent(e);
+    setOldEditEvent(e);
+  }
+
+  const addNewEvent = () => {
+  }
+
+  const onCancel = () => {}
+
+  const onDelete = async () => { }
+  // **************************************************************************************************************
   return (
 
     <div className='leftBar'>
@@ -389,6 +460,7 @@ const LeftBar = () => {
         </div>
       </Modal>
 
+      {/* CONTENT INSIDE LEFT NAV BAAR */}
       <div className='container'>
         <div className='menu'>
           <Link to="/user-profile" className="removeStyleLink">
@@ -714,6 +786,9 @@ const LeftBar = () => {
 
       </Modal >
 
+
+      {/* CALENDAR */}
+
       <Modal onClose={() => { setOpenCalendar(!openCalendar) }} open={openCalendar}>
         <div className='calendar-container'>
           <div onClick={() => { setOpenCalendar(!openCalendar) }} className='modal-exit' >
@@ -727,7 +802,7 @@ const LeftBar = () => {
               <CloseIcon />
             </IconButton>
           </div>
-          <div onClick={() => { setOpenCalendar(!openCalendar) }} className='modal-create' >
+          <div onClick={() => { setOpenAddEvent(!openAddEvent) }} className='modal-create' >
             <div className='create-container'>
               <div className='create-button'>
                 <AddIcon className='add-icon' />
@@ -747,10 +822,70 @@ const LeftBar = () => {
         </div>
       </Modal>
 
+      {/* ADDING EVENT MODAL */}
       <Modal onClose={() => { setOpenAddEvent(!openAddEvent) }} open={openAddEvent}>
         <div>
-
+          <div style={{ background: 'black', padding: '20px' }}>
+            <h2>Add New Event:</h2>
+            <div>
+              <input type="text"
+                placeholder="Add Title"
+                style={{ width: "20%", marginRight: "10px" }}
+                value={newEvent.title}
+                onChange={(e) => setNewEvent(
+                  { ...newEvent, title: e.target.value }
+                )}
+              />
+              <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</p>
+              <DatePicker placeholderText="Start Date"
+                showTimeSelect
+                minDate={new Date()}
+                filterTime={filterPassedTime}
+                style={{ marginRight: "10px" }}
+                selected={newEvent.start}
+                onChange={(start) => setNewEvent({ ...newEvent, start })}
+              />
+              <DatePicker placeholderText="End Date"
+                showTimeSelect
+                filterTime={filterPassedTime}
+                minDate={new Date()}
+                style={{ marginRight: "10px" }}
+                selected={newEvent.end}
+                onChange={(end) => setNewEvent({ ...newEvent, end })}
+              />
+              <button style={{ marginTop: "10px" }} onClick={handleAddEvent}>
+                Add Event
+              </button>
+              <button onClick={onAddCancel}>Cancel</button>
+            </div>
+          </div>
         </div>
+      </Modal>
+
+      {/* EDITING EVENT MODAL */}
+      <Modal onClose={() => setOpenEditEvent(!openEditEvent)} open={openEditEvent}>
+          <div>
+            <h2>Editing Event:</h2>
+            <input type="text"
+              value={editedEvent.title}
+              onChange={handleTitleChange}
+              filterTime={filterPassedTime}
+              placeholder={editedEvent.title} />
+            <DatePicker
+              minDate={new Date()}
+              showTimeSelect
+              selected={editedEvent.start}
+              onChange={handleStartChange} />
+            <DatePicker
+              showTimeSelect
+              selected={editedEvent.end}
+              filterTime={filterPassedTime}
+              minDate={new Date()}
+              onChange={handleEndChange} />
+            <button onClick={handleSave}>Save</button>
+            <button onClick={onDelete}>Delete</button>
+            <button onClick={onCancel}>Cancel</button>
+          </div>
       </Modal>
     </div >
   )
