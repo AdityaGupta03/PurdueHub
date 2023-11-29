@@ -666,6 +666,8 @@ async function getProfileData(req, res) {
   console.log("[INFO] Get profile data api.");
   const { username } = req.body;
 
+  console.log(username);
+
   if (!username) {
     return res.status(400).json({ error: "Missing username field" });
   }

@@ -54,8 +54,11 @@ const UserProfile = () => {
     }
     const handleEditOpen = () => setIsEditing(true);
 
+    const user_id = sessionStorage.getItem('user_id');
+    let user = sessionStorage.getItem('username');
+
     const [usernameError, setUsernameError] = useState('');
-    const [username, setUsername] = useState("Billy Joel")
+    const [username, setUsername] = useState("")
     const [newUser, setNewUser] = useState(username);
 
     const CHARACTER_LIMIT = 150;
@@ -63,6 +66,14 @@ const UserProfile = () => {
 
     const [bio, setBio] = useState("Current User Bio");
     const [newBio, setNewBio] = useState(bio);
+
+    const [nobodyBlocked, setNobodyBlocked] = useState(false); // if user doesn't have any blocked users
+    const [nobodyFollows, setNobodyFollows] = useState(false); // if user doesn't have any followers
+    const [nobodyFollowed, setNobodyFollowed] = useState(false); // if use doesn't have anyone added
+
+    const [blockedUsernames, setBlockedUsernames] = useState([]);
+    const [ followedUsernames, setFollowedUsernames ] = useState([]);
+    const [ followersUsernames, setFollowersUsernames ] = useState([]);
 
     const handleEditPicture = () => {
         console.log('picture edit');
@@ -73,8 +84,125 @@ const UserProfile = () => {
         setUsernameError('');
     }, [newUser])
 
+    useEffect(() => {
+        const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+        if (isLoggedIn == "false") {
+            navigate('/login');
+        }
+        setUsername(user);
 
-    {/*  MUI CSS: EDIT PROFILE */}
+        fetchProfileData();
+        fetchRelationData();
+    }, [])
+
+    async function fetchRelationData() {
+        try {
+            let response = await fetch("http://127.0.0.1:5000/api/get_block_list", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "username": username }),
+            });
+
+            let data = await response.json();
+            console.log(data.blocked.length);
+
+            if (response.status === 200) {
+                if (data.blocked.length === 0) {
+                    setNobodyBlocked(true);
+                }
+                setBlockedUsernames(data.blocked);
+            } else {
+                const err_msg = "Error: " + data.error;
+                console.log(err_msg);
+            }
+
+            response = await fetch("http://127.0.0.1:5000/api/get_follow_list", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "username": username }),
+            });
+
+            data = await response.json();
+            console.log(data);
+            console.log(data.following.length);
+
+            if (response.status === 200) {
+                if (data.following.length === 0) {
+                    setNobodyFollowed(true);
+                }
+                console.log(data.following);
+                setFollowedUsernames(data.following);
+            } else {
+                const err_msg = "Error: " + data.error;
+                console.log(err_msg);
+            }
+
+            response = await fetch("http://127.0.0.1:5000/api/get_followed_by", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "username": username }),
+            });
+
+            data = await response.json();
+            console.log(data);
+            console.log(data.followed_by.length);
+
+            if (response.status === 200) {
+                if (data.followed_by.length === 0) {
+                    setNobodyFollows(true);
+                }
+                setFollowersUsernames(data.followed_by);
+            } else {
+                const err_msg = "Error: " + data.error;
+                console.log(err_msg);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function fetchProfileData() {
+        try {
+            const response = await fetch("http://127.0.0.1:5000/api/get_profile_info", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "username": user }),
+            });
+
+            const data = await response.json();
+
+            if (response.status === 200) {
+                console.log(data);
+                setUsername(user);
+                setBio(data.user_info.bio);
+                const profile_pic_path = "/Users/aditya/Programming/PurdueHub/server/" + data.user_info.profile_picture;
+                console.log(profile_pic_path);
+                const image = await fetch(profile_pic_path);
+                console.log(image);
+
+                const reader = new FileReader();
+                // reader.onload = (e) => {
+                //     setProfilePictrue(e.target.result);
+                // };
+                // reader.readAsDataURL(profile_pic_path);
+                // setProfilePictrue(profile_pic_path);
+            } else {
+                console.log(data.error)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    {/*  MUI CSS: EDIT PROFILE */ }
     const style = {
         position: 'absolute',
         top: '50%',
@@ -93,11 +221,11 @@ const UserProfile = () => {
         color: '#32de84',
         backgroundColor: 'transparent',
         '&:hover': {
-          backgroundColor: '#333',
+            backgroundColor: '#333',
         },
         width: '100%',
         borderBottom: '1px solid grey',
-      }
+    }
     const title = {
         display: 'flex',
         justifyContent: 'center',
@@ -145,8 +273,8 @@ const UserProfile = () => {
         flexDirection: 'row',
         justifyContent: 'flex-end',
     }
-    
-    const handleEditSubmit = () => {
+
+    const handleEditSubmit = async () => {
         const a1 = USER_REGEX.test(newUser);
         if (!a1) {
             const message = <>
@@ -157,8 +285,71 @@ const UserProfile = () => {
             setUsernameError(message)
         }
         else {
-            setUsername(newUser);
-            setBio(newBio);
+            try {
+                if (username != newUser) {
+                    let response = await fetch("http://127.0.0.1:5000/api/update_username_id", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ "newUsername": newUser, "user_id": user_id }),
+                    });
+
+                    let data = await response.json();
+
+                    if (response.status === 200) {
+                        setUsername(newUser);
+                        user = newUser;
+                        sessionStorage.setItem('username', newUser);
+                    } else {
+                        setUsernameError(data.error)
+                        return;
+                    }
+                }
+
+                let response = await fetch("http://127.0.0.1:5000/api/update_bio", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "bio": newBio, "user_id": user_id }),
+                });
+
+                let data = await response.json();
+
+                if (response.status !== 200) {
+                    setUsernameError(data.error)
+                    return;
+                }
+
+                setBio(newBio);
+
+                // if (profilePicture === undefined) {
+                //     setIsEditing(false);
+                //     return;
+                // }
+
+                // const formData = new FormData();
+                // formData.append("username", user);
+                // formData.append("user_id", user_id);
+                // formData.append("file", profilePicture);
+
+                // response = await fetch("http://127.0.0.1:5000/update_profile_picture", {
+                //     method: "POST",
+                //     body: formData,
+                // });
+
+                // data = await response.json();
+
+                // if (response.status !== 200) {
+                //     setErrMsg("Error: " + data.error);
+                //     return;
+                // }
+            } catch (error) {
+                console.log(error);
+                setUsernameError("Error editing account");
+                return;
+            }
             handleEditClose();
         }
     }
@@ -173,16 +364,16 @@ const UserProfile = () => {
     const [openFollowers, setOpenFollowers] = useState(false);
     const [openBlocked, setOpenBlocked] = useState(false);
 
-    const handleOpenFollowed = () => {setOpenFollowed(true); handleCloseMore()}
+    const handleOpenFollowed = () => { setOpenFollowed(true); handleCloseMore() }
     const handleCloseFollowed = () => setOpenFollowed(false);
 
-    const handleOpenFollowers = () => {setOpenFollowers(true); handleCloseMore()}
+    const handleOpenFollowers = () => { setOpenFollowers(true); handleCloseMore() }
     const handleCloseFollowers = () => setOpenFollowers(false);
 
-    const handleOpenBlocked = () => {setOpenBlocked(true); handleCloseMore()}
+    const handleOpenBlocked = () => { setOpenBlocked(true); handleCloseMore() }
     const handleCloseBlocked = () => setOpenBlocked(false);
 
-    
+
     const containUsers = {
         display: 'flex',
         flexDirection: 'column',
@@ -217,8 +408,8 @@ const UserProfile = () => {
         color: 'whitesmoke',
         borderRadius: '10px',
         fontSize: '13px',
-        "&:hover": { backgroundColor: '#333' } 
-    }   
+        "&:hover": { backgroundColor: '#333' }
+    }
 
     return (
 
@@ -229,7 +420,7 @@ const UserProfile = () => {
                 open={openFollowers}
                 onClose={handleCloseFollowers}
             >
-                <Box sx={{...style, width: 400, overflowX: 'hidden', overflowY: 'scroll', maxHeight: '400px'}}>
+                <Box sx={{ ...style, width: 400, overflowX: 'hidden', overflowY: 'scroll', maxHeight: '400px' }}>
                     <Box sx={containTitle}>
                         <Box sx={title}>
                             <Typography sx={{ fontWeight: 'bold' }}>Followed By</Typography>
@@ -240,13 +431,33 @@ const UserProfile = () => {
                     </Box>
                     <Box sx={containUsers}>
                         <Box sx={containActualUser}>
-                            <Box sx={userInfo}>
-                                <Box sx={{...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" />
-                                <Box sx={{...userName, "&:hover": { cursor: 'pointer' } }}>Username</Box>
-                                <Box sx={userButton}>
-                                    <Button sx={userBut}>Follow</Button>
-                                </Box>
-                            </Box>
+                                <div>
+                                    {
+                                        nobodyFollows && (
+                                            <div>
+                                                <p>Nobody Follows You!</p>
+                                            </div>
+                                        )
+                                    }
+                                    {
+                                        nobodyFollows === false && (
+                                            <div>
+                                                {followersUsernames.map((item, index) => {
+                                                    console.log(item);
+                                                    return (
+                                                        <Box sx={userInfo} key={index}>
+                                                            <Box sx={{ ...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" />
+                                                            <Box sx={{ ...userName, "&:hover": { cursor: 'pointer' } }}>{item}</Box>
+                                                            <Box sx={userButton}>
+                                                                <Button sx={userBut}>Follow</Button>
+                                                            </Box>
+                                                        </Box>
+                                                    )
+                                                })}
+                                        </div>
+                                    )
+                                }
+                            </div>
                         </Box>
                     </Box>
                 </Box>
@@ -257,7 +468,7 @@ const UserProfile = () => {
                 open={openBlocked}
                 onClose={handleCloseBlocked}
             >
-                <Box sx={{...style, width: 400, overflowX: 'hidden', overflowY: 'scroll', maxHeight: '400px'}}>
+                <Box sx={{ ...style, width: 400, overflowX: 'hidden', overflowY: 'scroll', maxHeight: '400px' }}>
                     <Box sx={containTitle}>
                         <Box sx={title}>
                             <Typography sx={{ fontWeight: 'bold' }}>Blocked Users</Typography>
@@ -268,13 +479,33 @@ const UserProfile = () => {
                     </Box>
                     <Box sx={containUsers}>
                         <Box sx={containActualUser}>
-                            <Box sx={userInfo}>
-                                <Box sx={{...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" />
-                                <Box sx={{...userName, "&:hover": { cursor: 'pointer' } }}>Username</Box>
-                                <Box sx={userButton}>
-                                    <Button sx={userBut}>Unblock</Button>
-                                </Box>
-                            </Box>
+                        <div>
+                                    {
+                                        nobodyBlocked && (
+                                            <div>
+                                                <p>Nobody Follows You!</p>
+                                            </div>
+                                        )
+                                    }
+                                    {
+                                        nobodyBlocked === false && (
+                                            <div>
+                                                {blockedUsernames.map((item, index) => {
+                                                    console.log(item);
+                                                    return (
+                                                        <Box sx={userInfo} key={index}>
+                                                            <Box sx={{ ...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" />
+                                                            <Box sx={{ ...userName, "&:hover": { cursor: 'pointer' } }}>{item}</Box>
+                                                            <Box sx={userButton}>
+                                                                <Button sx={userBut}>Follow</Button>
+                                                            </Box>
+                                                        </Box>
+                                                    )
+                                                })}
+                                        </div>
+                                    )
+                                }
+                            </div>
                         </Box>
                     </Box>
                 </Box>
@@ -285,7 +516,7 @@ const UserProfile = () => {
                 open={openFollowed}
                 onClose={handleCloseFollowed}
             >
-                <Box sx={{...style, width: 400, overflowX: 'hidden', overflowY: 'scroll', maxHeight: '400px'}}>
+                <Box sx={{ ...style, width: 400, overflowX: 'hidden', overflowY: 'scroll', maxHeight: '400px' }}>
                     <Box sx={containTitle}>
                         <Box sx={title}>
                             <Typography sx={{ fontWeight: 'bold' }}>You Are Following</Typography>
@@ -297,8 +528,8 @@ const UserProfile = () => {
                     <Box sx={containUsers}>
                         <Box sx={containActualUser}>
                             <Box sx={userInfo}>
-                                <Box sx={{...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" />
-                                <Box sx={{...userName, "&:hover": { cursor: 'pointer' } }}>Username</Box>
+                                <Box sx={{ ...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" />
+                                <Box sx={{ ...userName, "&:hover": { cursor: 'pointer' } }}>Username</Box>
                                 <Box sx={userButton}>
                                     <Button sx={userBut}>Unfollow</Button>
                                 </Box>
@@ -315,10 +546,10 @@ const UserProfile = () => {
                 open={isOpenMore}
                 onClose={handleCloseMore}
             >
-                <Box sx={{...style, width:'500px'}}>
+                <Box sx={{ ...style, width: '500px' }}>
                     <Button onClick={handleOpenFollowed} sx={buttonStyle}>Followed</Button>
                     <Button onClick={handleOpenFollowers} sx={buttonStyle}>Followers</Button>
-                    <Button onClick={handleOpenBlocked} sx={{...buttonStyle, borderBottom: 'none'}}>Blocked</Button>
+                    <Button onClick={handleOpenBlocked} sx={{ ...buttonStyle, borderBottom: 'none' }}>Blocked</Button>
                 </Box>
             </Modal>
 
@@ -482,7 +713,7 @@ const UserProfile = () => {
                         </div>
 
                         <div className='center'>
-                            <span>User Profile</span>
+                            <span>{username}</span>
                             <div className='info'>
                                 <div className='item'>
                                     <PlaceIcon />
@@ -496,8 +727,8 @@ const UserProfile = () => {
                                 </div>
                             </div>
                             <div className='bioSection'>
-                                    <p>Bio: Random spiel about something. That something is something I do not know unfortunately. I am looking to expand the character count to around 150.</p>
-                                </div>
+                                <p>Bio: {bio}</p>
+                            </div>
                         </div>
 
                         <div className='right'>

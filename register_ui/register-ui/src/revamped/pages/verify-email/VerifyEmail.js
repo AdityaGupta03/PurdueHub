@@ -1,9 +1,11 @@
 import React, { useState, useEffect, } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import './verifyEmail.scss'
 
 const VerifyEmail = () => {
+
+    const { email } = useParams();
 
     const [authCode, setAuthCode] = useState('');
     const [success, setSuccess] = useState(false);
@@ -16,23 +18,45 @@ const VerifyEmail = () => {
         setErrMsg('');
     }, [authCode])
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const isValidCode = authCode_regex.test(authCode);
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // avoid reloading the page as default
+        const isValidCode = authCode_regex.test(authCode); // test validity (has @purdue.edu in it)
+
         if (!isValidCode) { // Is invalid code
             setErrMsg("Please enter a valid authentication code (6 digits).");
             setSuccess(false);
             return;
         }
-        else {
-            setSuccess(true);
-            setTimeout(() => {
-                setSuccess(false);
-                navigate('/login');
-            }, 1500);
-            return;
+
+        try {
+            const response = await fetch("http://127.0.0.1:5000/api/verify_email", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "authCode": authCode, "email": email }),
+            });
+
+            const data = await response.json();
+
+            if (response.status === 200) {
+                setSuccess(true);
+                setErrMsg('');
+                setTimeout(() => {
+                    setSuccess(false);
+                    navigate("/login");
+                }, 1500);
+                return;
+            } else {
+                const error_msg = "Error: " + data.error;
+                setErrMsg(error_msg);
+            }
+        } catch (error) {
+            console.log('Error:', error);
+            setErrMsg('Error occurred when changing password');
         }
     }
+
     return (
         <div className='verify-email'>
             {success && (

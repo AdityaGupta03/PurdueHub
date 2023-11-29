@@ -34,26 +34,43 @@ const Login = () => {
   }, [user, pwd])
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); 
-    if(badUser) {
-      setErrMsg(usernameMessage);
-      return;
-    }
-    else if(badPass) {
-      setErrMsg(passwordMessage);
-      return;
-    }
-    else if(exist) {
-      setErrMsg('Username does not exist');
-      return;
-    }
-    else {
-      setSuccess(true);
-      setTimeout(() => {
-        navigate('/profile/1'); 
-    }, 1000);
-    }
+    e.preventDefault();
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/login", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "username": user, "password": pwd }),
+      });
 
+      const data = await response.json();
+
+      if (response.status === 200) {
+        sessionStorage.setItem("user_id", data.user_id);
+        sessionStorage.setItem("username", user);
+        sessionStorage.setItem("isLoggedIn", "true");
+        sessionStorage.setItem("show_advice", data.show_advice);
+        localStorage.setItem("user_id", data.user_id);
+        localStorage.setItem("username", user);
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("show_advice", data.show_advice);
+        setSuccess(true);
+        setTimeout(() => {
+          setSuccess(false);
+          navigate("/user-profile");
+        }, 1500);
+      return;
+      } else {
+        const error_msg = "Error: " + data.error;
+        console.log(error_msg);
+        setErrMsg(error_msg);
+        setSuccess(false);
+      }
+    } catch (error) {
+      console.log('Error:', error);
+      setErrMsg('Error occurred when logging in');
+    }
   }
 
   return (
