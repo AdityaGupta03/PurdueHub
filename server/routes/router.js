@@ -4,6 +4,7 @@ const accountController = require("../controllers/accountController");
 const messagingController = require("../controllers/messagingController");
 const organizationController = require("../controllers/organizationController");
 const faqController = require("../controllers/faqController");
+const chatController = require("../controllers/chatController");
 
 const router = express.Router();
 
@@ -57,5 +58,6 @@ router.post("/is_following_org", organizationController.isFollowingOrg);
 router.post("/get_friends_org", organizationController.getFriendsOrg);
 router.get("/get_faqs", faqController.getFaqs);
 router.post("/ask_question", faqController.askQuestionAPI);
+router.post("/chat_bot", chatController.chatAPI);
 
 module.exports = router;
