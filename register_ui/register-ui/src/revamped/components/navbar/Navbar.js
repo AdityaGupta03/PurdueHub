@@ -108,15 +108,65 @@ const Navbar = () => {
     navigate(`/class/${searchTerm}`);
   };
 
-  const handleSubmitDelete = () => {
-    setOpenDelete(!openDelete); 
+  const handleSubmitDelete = async () => {
+    let my_username = sessionStorage.getItem('username');
+    console.log("Deleting account for: " + my_username);
+
+    if (deleteFeedback != '') {
+      let my_userid = sessionStorage.getItem('user_id');
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/submit_feedback", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ "user_id": my_userid, "feedback_title": "Delete Account", "feedback_body": deleteFeedback }),
+        });
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+    }
+
+    try {
+      let res = await fetch('http://localhost:5000/api/delete_account', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: my_username }),
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.log("Error:" + error);
+    }
+
+    setOpenDelete(!openDelete);
     // send feedback to the database here
     // delete account procedue here
     setDeleteFeedback("");
     navigate("/login");
   }
 
-  const handleSubmitFeedback = () => {
+  const handleSubmitFeedback = async () => {
+    let my_userid = sessionStorage.getItem('user_id');
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/submit_feedback", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "user_id": my_userid, "feedback_title": "PurdueHub General Feedback", "feedback_body": feedback }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+
     setOpenFeedback(!openFeedback);
     // send feedback to the database here
     setFeedback(""); // clear existing feedback
@@ -315,12 +365,12 @@ const Navbar = () => {
               </Link>
               <span>Log Out</span>
             </div>
-            <div className='menu-item'>
+            {/* <div className='menu-item'>
               <Link className='icon-button'>
                 <SettingsIcon />
               </Link>
               <span>Settings</span>
-            </div>
+            </div> */}
           </div>
 
         )}

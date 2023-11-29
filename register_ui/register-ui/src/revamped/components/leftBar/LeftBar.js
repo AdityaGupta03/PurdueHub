@@ -241,6 +241,25 @@ const LeftBar = () => {
   }
   const receiveMessagesChange = async (e) => {
     setIsDirectMessageEnabled(e.target.checked);
+
+    console.log(isDirectMessageEnabled);
+    let option = isDirectMessageEnabled ? "0" : "1";
+    console.log(option);
+
+    let my_userid = sessionStorage.getItem('user_id');
+    try {
+      let res = await fetch('http://localhost:5000/api/toggle_dm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "user_id": my_userid, "option": option }),
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const handleCloseAll = () => {
@@ -248,6 +267,29 @@ const LeftBar = () => {
     setShowFollowed(false);
     setShowProfessional(false);
     setShowCallout(false);
+  }
+
+  const handleSubmitFeedback = async () => {
+    let my_userid = sessionStorage.getItem('user_id');
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/submit_feedback", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "user_id": my_userid, "feedback_title": "PurdueHub General Feedback", "feedback_body": feedback }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+
+    setOpenFeedback(!openFeedback);
+    // send feedback to the database here
+    setFeedback(""); // clear existing feedback
   }
 
 
@@ -357,25 +399,6 @@ const LeftBar = () => {
               </IconButton>
             </div>
 
-            <div className='modal-content-1'>
-              <span>Events</span>
-            </div>
-            <div className='settings-content-2'>
-              <span>Professional Development</span>
-              <Switch
-                checked={isProfDevEnabled}
-                onChange={profDevChange}
-                color='success'
-              />
-            </div>
-            <div className='settings-content-2'>
-              <span>Club Callouts</span>
-              <Switch
-                checked={isClubCallEnabled}
-                onChange={clubCalloutChange}
-                color='success'
-              />
-            </div>
             <div className='line'></div>
             <div className='modal-content-1'>
               <span>Notifcations</span>
@@ -453,7 +476,7 @@ const LeftBar = () => {
                 <button onClick={() => { setOpenFeedback(!openFeedback) }} className='cancel-btn'>Cancel</button>
               </div>
               <div className='contain-btn'>
-                <button disabled={feedback ? false : true} onClick={() => { setOpenFeedback(!openFeedback); setFeedback("") }} className='submit-btn'>Submit</button>
+                <button disabled={feedback ? false : true} onClick={() => { handleSubmitFeedback(); }} className='submit-btn'>Submit</button>
               </div>
             </div>
           </div>
@@ -466,7 +489,7 @@ const LeftBar = () => {
           <Link to="/user-profile" className="removeStyleLink">
             <div className='user'>
               <img src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" alt='' />
-              <span>John Doe</span>
+              <span>Your Profile</span>
             </div>
           </Link>
 
