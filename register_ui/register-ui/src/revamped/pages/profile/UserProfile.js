@@ -58,7 +58,7 @@ const UserProfile = () => {
     let user = sessionStorage.getItem('username');
 
     const [usernameError, setUsernameError] = useState('');
-    const [username, setUsername] = useState("")
+    const [username, setUsername] = useState(user)
     const [newUser, setNewUser] = useState(username);
 
     const CHARACTER_LIMIT = 150;
@@ -72,8 +72,8 @@ const UserProfile = () => {
     const [nobodyFollowed, setNobodyFollowed] = useState(false); // if use doesn't have anyone added
 
     const [blockedUsernames, setBlockedUsernames] = useState([]);
-    const [ followedUsernames, setFollowedUsernames ] = useState([]);
-    const [ followersUsernames, setFollowersUsernames ] = useState([]);
+    const [followedUsernames, setFollowedUsernames ] = useState([]);
+    const [followersUsernames, setFollowersUsernames ] = useState([]);
 
     const handleEditPicture = () => {
         console.log('picture edit');
@@ -96,6 +96,7 @@ const UserProfile = () => {
     }, [])
 
     async function fetchRelationData() {
+        console.log("fetching relation data")
         try {
             let response = await fetch("http://127.0.0.1:5000/api/get_block_list", {
                 method: "POST",
@@ -106,7 +107,7 @@ const UserProfile = () => {
             });
 
             let data = await response.json();
-            console.log(data.blocked.length);
+            console.log(data.blocked);
 
             if (response.status === 200) {
                 if (data.blocked.length === 0) {
@@ -446,11 +447,8 @@ const UserProfile = () => {
                                                     console.log(item);
                                                     return (
                                                         <Box sx={userInfo} key={index}>
-                                                            <Box sx={{ ...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" />
+                                                            <Box sx={{ ...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" />
                                                             <Box sx={{ ...userName, "&:hover": { cursor: 'pointer' } }}>{item}</Box>
-                                                            <Box sx={userButton}>
-                                                                <Button sx={userBut}>Follow</Button>
-                                                            </Box>
                                                         </Box>
                                                     )
                                                 })}
@@ -479,29 +477,26 @@ const UserProfile = () => {
                     </Box>
                     <Box sx={containUsers}>
                         <Box sx={containActualUser}>
-                        <div>
-                                    {
-                                        nobodyBlocked && (
-                                            <div>
-                                                <p>Nobody Follows You!</p>
-                                            </div>
-                                        )
-                                    }
-                                    {
-                                        nobodyBlocked === false && (
-                                            <div>
-                                                {blockedUsernames.map((item, index) => {
-                                                    console.log(item);
-                                                    return (
-                                                        <Box sx={userInfo} key={index}>
-                                                            <Box sx={{ ...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" />
-                                                            <Box sx={{ ...userName, "&:hover": { cursor: 'pointer' } }}>{item}</Box>
-                                                            <Box sx={userButton}>
-                                                                <Button sx={userBut}>Follow</Button>
-                                                            </Box>
-                                                        </Box>
-                                                    )
-                                                })}
+                            <div>
+                                {
+                                    nobodyBlocked && (
+                                        <div>
+                                            <p>You haven't blocked anyone!</p>
+                                        </div>
+                                    )
+                                }
+                                {
+                                    nobodyBlocked === false && (
+                                        <div>
+                                            {blockedUsernames.map((item, index) => {
+                                                console.log(item);
+                                                return (
+                                                    <Box sx={userInfo} key={index}>
+                                                        <Box sx={{ ...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" />
+                                                        <Box sx={{ ...userName, "&:hover": { cursor: 'pointer' } }}>{item}</Box>
+                                                    </Box>
+                                                )
+                                            })}
                                         </div>
                                     )
                                 }
@@ -527,13 +522,30 @@ const UserProfile = () => {
                     </Box>
                     <Box sx={containUsers}>
                         <Box sx={containActualUser}>
-                            <Box sx={userInfo}>
-                                <Box sx={{ ...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" />
-                                <Box sx={{ ...userName, "&:hover": { cursor: 'pointer' } }}>Username</Box>
-                                <Box sx={userButton}>
-                                    <Button sx={userBut}>Unfollow</Button>
-                                </Box>
-                            </Box>
+                            <div>
+                                {
+                                    nobodyFollowed && (
+                                        <div>
+                                            <p>You haven't followed anyone!</p>
+                                        </div>
+                                    )
+                                }
+                                {
+                                    nobodyFollowed === false && (
+                                        <div>
+                                            {followedUsernames.map((item, index) => {
+                                                console.log(item);
+                                                return (
+                                                    <Box sx={userInfo} key={index}>
+                                                        <Box sx={{ ...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" />
+                                                        <Box sx={{ ...userName, "&:hover": { cursor: 'pointer' } }}>{item}</Box>
+                                                    </Box>
+                                                )
+                                            })}
+                                        </div>
+                                    )
+                                }
+                            </div>
                         </Box>
                     </Box>
                 </Box>
