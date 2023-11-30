@@ -1,6 +1,8 @@
 import React from 'react';
 import { useRef, useState, useEffect } from 'react';
 
+import SmartToyIcon from '@mui/icons-material/SmartToy';
+
 import './leftBar.scss'
 import {
   createBrowserRouter,
@@ -94,9 +96,11 @@ import Shepherd from 'shepherd.js';
 
 const LeftBar = () => {
 
+  const navigate = useNavigate();
+
   // SHOW TUTORIAL INFO
 
-  const [showTour, setShowTour] = useState(true);
+  const [showTour, setShowTour] = useState(false);
   const [completed, setCompleted] = useState(false);
 
   const tour = new Shepherd.Tour({
@@ -509,6 +513,8 @@ const LeftBar = () => {
       console.log(error);
     }
   }
+
+  const [openChatbot, setOpenChatbot] = useState(false);
 
   const handleCloseAll = () => {
     setOpenInterested(!openInterested);
@@ -1049,6 +1055,14 @@ const LeftBar = () => {
                 <span>Settings</span>
               </div>
             </div>
+
+            {/* Chatbot */}
+            <div onClick={() => navigate('/chat-bot')} className="removeStyleLink">
+            <div className='item chatbot-tut'>
+              <SmartToyIcon />
+              <span>Chatbot</span>
+            </div>
+          </div>
           </div>
 
         </div>

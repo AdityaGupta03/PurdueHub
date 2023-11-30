@@ -34,6 +34,7 @@ import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import ViewCalendar from "./revamped/pages/calendar/ViewCalendar";
 import FAQ from "./revamped/pages/faq/FAQPage";
 import FAQPage from "./revamped/pages/faq/FAQPage";
+import ChatBot from "./revamped/pages/chatbot/Chatbot";
 
 
 function App() {
@@ -106,6 +107,10 @@ function App() {
         {
           path: "/faq",
           element: <FAQPage />
+        },
+        {
+          path: "/chat-bot",
+          element: <ChatBot />
         },
       ]
     },
