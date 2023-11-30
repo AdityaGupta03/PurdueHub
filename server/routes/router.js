@@ -64,5 +64,6 @@ router.get("/get_faqs", faqController.getFaqs);
 router.post("/ask_question", faqController.askQuestionAPI);
 router.post("/chat_bot", chatController.chatAPI);
 router.post("/get_all_usernames", searchController.getAllUsernames);
+router.get("/get_all_classes", searchController.getAllClasses);
 
 module.exports = router;
