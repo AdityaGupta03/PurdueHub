@@ -584,7 +584,7 @@ async function friendsWhoFollowClubQuery(user_id, org_id) {
 }
 
 async function updateTutorialQuery(username) {
-  const query = "UPDATE users SET tutorial = 1 WHERE username = $1";
+  const query = "UPDATE users SET tutorial = 0 WHERE username = $1";
   const data = [ username ];
   
   try {
@@ -606,6 +606,19 @@ async function setAdviceQuery(user_id, toggleAdvice) {
   } catch (error) {
     console.error(error);
     return false;
+  }
+}
+
+async function getFollowedOrgsQuery(user_id) {
+  const query = "SELECT array_agg(name) AS followed_orgs FROM organization WHERE org_id = ANY(SELECT unnest(saved_orgs) FROM users WHERE user_id = $1)";
+  const data = [ user_id ];
+
+  try {
+    const orgs = await pool.query(query, data);
+    return orgs;
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 }
 
@@ -654,4 +667,5 @@ module.exports = {
   friendsWhoFollowClubQuery,
   updateTutorialQuery,
   setAdviceQuery,
+  getFollowedOrgsQuery,
 };
