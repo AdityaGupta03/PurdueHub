@@ -44,6 +44,8 @@ export const Login = () => {
                 sessionStorage.setItem("isLoggedIn", "true");
                 localStorage.setItem("user_id", data.user_id);
                 localStorage.setItem("isLoggedIn", "true");
+                sessionStorage.setItem("show_advice", data.show_advice);
+                localStorage.setItem("show_advice", data.show_advice);
                 setSuccess(true);
             } else {
                 const error_msg = "Error: " + data.error;
