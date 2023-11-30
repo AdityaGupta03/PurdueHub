@@ -205,7 +205,7 @@ const LeftBar = () => {
 
   const [followingEvent, setFollowingEvent] = useState(false); // logic
   const [openInterested, setOpenInterested] = useState(false); // open modal (displays: followed evemts, prof dev events, or club callout events)
-  const [showFollowed, setShowFollowed] = useState(false);
+  const [showFollowed, setShowFollowed] = useState(true);
   const [showProffesional, setShowProfessional] = useState(false);
   const [showCallout, setShowCallout] = useState(false);
 
@@ -328,6 +328,8 @@ const LeftBar = () => {
   const [isAdding, setisAdding] = useState(false);
   const [allEvents, setAllEvents] = useState([]);
   const [calEvents, setCalEvents] = useState([]);
+
+  const [interestedEventsArr, setInterestedEvents] = useState(interestedEvents);
 
   const filterPassedTime = (time) => {
     const currentDate = new Date();
@@ -552,6 +554,13 @@ const LeftBar = () => {
     }
 
     setOpenEditEvent(!openEditEvent);
+  }
+
+  function unfollowEvent(index) {
+    const updateEvents = [...interestedEventsArr];
+    updateEvents.splice(index, 1);
+    console.log(updateEvents);
+    setInterestedEvents(updateEvents);
   }
   // **************************************************************************************************************
   return (
@@ -801,146 +810,21 @@ const LeftBar = () => {
           </div>
 
           <div className='club-container'>
-
-            {/* PROFESSIONAL DEVELOPMENT EVENTS */}
-            <div className='test-ctn' onClick={() => setShowProfessional(!showProffesional)}>
-              <div className='drop-item'>
-                <div className='club-info'>
-                  <div className='drop-container'>
-                    <div className='arrow-contain'>
-                      {showProffesional ? <ArrowDropUpIcon className='icon-drop' /> : <ArrowDropDownIcon className='icon-drop' />}
+            <div>
+              <div className='club-drop'>
+                {interestedEventsArr.map((event, index) => (
+                  <div className='club-item' key={index}>
+                    <div className='club-info'>
+                      <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
+                      <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-name'><span>{event.eventName}</span></div>
+                      <div className='button-container'>
+                        <button onClick={() => unfollowEvent(index)} className={"unfollow-btn"}>{"Unfollow"}</button>
+                      </div>
                     </div>
-                    <span>Show Professional Development</span>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
-            {isProfDevEnabled ? (
-              <div>
-                {showProffesional && (
-                  <div className='club-drop'>
-                    {dev.map((event, index) => (
-                      <div className='club-item' key={index}>
-                        <div className='club-info'>
-                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
-                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-name'><span>{event.eventName}</span></div>
-                          <div className='button-container'>
-                            <button onClick={() => setFollowingEvent(!followingEvent)} className={followingEvent ? "follow-btn" : "unfollow-btn"}>{followingEvent ? "Follow" : "Unfollow"}</button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div>
-                {showProffesional && (
-                  <div className='club-drop'>
-                    <div className='club-item'>
-                      <div className='club-info'>
-                        <div className='club-profile'></div>
-                        <div style={{ fontSize: '15px', fontWeight: 700 }}><span>Nothing coming up...</span></div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* CLUB CALLOUT EVENTS */}
-            <div className='test-ctn' onClick={() => setShowCallout(!showCallout)}>
-              <div className='drop-item'>
-                <div className='club-info'>
-                  <div className='drop-container'>
-                    <div className='arrow-contain'>
-                      {showCallout ? <ArrowDropUpIcon className='icon-drop' /> : <ArrowDropDownIcon className='icon-drop' />}
-                    </div>
-                    <span>Show Club Callouts</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {isClubCallEnabled ? (
-              <div>
-                {showCallout && (
-                  <div className='club-drop'>
-                    {callouts.map((event, index) => (
-                      <div className='club-item' key={index}>
-                        <div className='club-info'>
-                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
-                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-name'><span>{event.eventName}</span></div>
-                          <div className='button-container'>
-                            <button onClick={() => setFollowingEvent(!followingEvent)} className={followingEvent ? "follow-btn" : "unfollow-btn"}>{followingEvent ? "Follow" : "Unfollow"}</button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div>
-                {showCallout && (
-                  <div className='club-drop'>
-                    <div className='club-item'>
-                      <div className='club-info'>
-                        <div className='club-profile'></div>
-                        <div style={{ fontSize: '15px', fontWeight: 700 }}><span>Nothing coming up...</span></div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* GENERAL INTERESTED EVENTS */}
-            <div className='test-ctn' onClick={() => setShowFollowed(!showFollowed)}>
-              <div className='drop-item'>
-                <div className='club-info'>
-                  <div className='drop-container'>
-                    <div className='arrow-contain'>
-                      {showFollowed ? <ArrowDropUpIcon className='icon-drop' /> : <ArrowDropDownIcon className='icon-drop' />}
-                    </div>
-                    <span>Show Followed Events</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {dataUsed.length != 0 ? (
-              <div>
-                {showFollowed && (
-                  <div className='club-drop'>
-                    {interestedEvents.map((event, index) => (
-                      <div className='club-item' key={index}>
-                        <div className='club-info'>
-                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
-                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-name'><span>{event.eventName}</span></div>
-                          <div className='button-container'>
-                            <button onClick={() => setFollowingEvent(!followingEvent)} className={followingEvent ? "follow-btn" : "unfollow-btn"}>{followingEvent ? "Follow" : "Unfollow"}</button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div>
-                {showFollowed && (
-                  <div className='club-drop'>
-                    <div className='club-item'>
-                      <div className='club-info'>
-                        <div className='club-profile'></div>
-                        <div style={{ fontSize: '15px', fontWeight: 700 }}><span>Nothing followed...</span></div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-
           </div>
 
         </div>
