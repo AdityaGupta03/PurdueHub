@@ -3,7 +3,7 @@ const pool = require("../database/db");
 const { app } = require("../server");
 const accountQueries = require("../database/queries/accountQueries");
 
-describe("Testing getAdvice API:", () => {
+describe("Testing setAdvice API:", () => {
 
   let consoleLogSpy, consoleErrSpy;
 
@@ -58,9 +58,11 @@ describe("Testing getAdvice API:", () => {
   });
 
   it("should return 500 if query error", async() => {
+    jest.spyOn(accountQueries, 'setAdviceQuery').mockReturnValue(false);
+
     let res = await request(app)
-        .post("/api/set_advice_setting")
-        .send({ user_id: 1, toggleAdvice: 1});
+      .post("/api/set_advice_setting")
+      .send({ user_id: 1, toggleAdvice: 1});
 
     expect(res.statusCode).toEqual(500);
     expect(res.body.error).toEqual("Internal Server Error.");
@@ -73,13 +75,14 @@ describe("Testing getAdvice API:", () => {
     
     expect(createAcc.statusCode).toEqual(200);
     
+    jest.spyOn(accountQueries, 'setAdviceQuery').mockReturnValue(true);
+
     let uid = createAcc.body.user_id;
     let res = await request(app)
         .post("/api/set_advice_setting")
         .send({ user_id: uid, toggleAdvice: 1});
 
-    expect(res.statusCode).toEqual(500);
-    expect(res.body.error).toEqual("Internal Server Error.");
+    expect(res.statusCode).toEqual(200);
   });
 
 });
