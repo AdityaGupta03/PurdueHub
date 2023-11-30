@@ -47,6 +47,7 @@ const Navbar = () => {
   const [deleteFeedback, setDeleteFeedback] = useState('');
 
   const [allUsernames, setAllUsernames] = useState([]);
+  const [allClasses, setAllClasses] = useState([]);
 
   const handleInputFocus = () => {
     // Input is in focus, make the div visible
@@ -78,22 +79,7 @@ const Navbar = () => {
     "Example 3",
     "Example 3",
   ]
-  const fakeUsers = [
-    "Mike101",
-    "Jenny9",
-    "lddeLg",
-    "woah0",
-    "g4m3er",
-    "Jan9",
-    "pUrD3h",
-    "Eddy",
-    "Ed",
-    "M1k3B",
-    "ha__",
-    "leo",
-    "Alice",
-    "a11y"
-  ]
+
   const fakeClasses = [
     "CS251",
     "CS180",
@@ -103,7 +89,7 @@ const Navbar = () => {
     "CS871",
   ]
 
-  const [usingData, setUsingData] = useState(fakeUsers);
+  const [usingData, setUsingData] = useState([]);
   const [value, setValue] = useState("");
 
   const onSearch = (searchTerm) => {
@@ -194,7 +180,7 @@ const Navbar = () => {
     }
     else if (e.target.value === 3) {
       setPlaceholderSearch("Search For Classes...");
-      setUsingData(fakeClasses);
+      setUsingData(allClasses);
     }
 
   }
@@ -260,7 +246,27 @@ const Navbar = () => {
   }
 
   async function fetchClasses() {
+    try {
+      let res = await fetch('http://localhost:5000/api/get_all_classes', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
 
+      const data = await res.json();
+
+      if (res.status === 200) {
+        const course_list = data.classes.map((course) => {
+          return course.name;
+        });
+        setAllClasses(course_list);
+      } else {
+        setAllClasses([]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
   
   return (
