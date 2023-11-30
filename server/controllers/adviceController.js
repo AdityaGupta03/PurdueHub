@@ -24,6 +24,7 @@ async function setAdviceAPI(req, res) {
     return res.status(500).json({ error: "Internal Server Error." });
   }
 
+  console.log("Successfully set advice setting.");
   return res.status(200).json({ message: "Successfully set advice setting." });
 
 }

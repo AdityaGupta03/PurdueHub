@@ -47,6 +47,8 @@ const Login = () => {
       const data = await response.json();
 
       if (response.status === 200) {
+        console.log("Logged in successfully");
+        console.log(data);
         sessionStorage.setItem("user_id", data.user_id);
         sessionStorage.setItem("username", user);
         sessionStorage.setItem("isLoggedIn", "true");

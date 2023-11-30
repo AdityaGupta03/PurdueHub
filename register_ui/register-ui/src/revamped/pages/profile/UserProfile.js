@@ -44,7 +44,7 @@ import { useNavigate } from 'react-router-dom';
 import './Notification.scss';
 
 const UserProfile = () => {
-
+    const show_advice = sessionStorage.getItem('show_advice');
     const navigate = useNavigate();
     const [isEditing, setIsEditing] = useState(false);
     const [isOpenMore, setIsOpenMore] = useState(false);
@@ -105,17 +105,19 @@ const UserProfile = () => {
         if (isLoggedIn == "false") {
            navigate('/login');
         }
+        
         setUsername(user);
-        //setUsername("Hello");
-        const notificationDiv = document.getElementById('notification');
-        notificationDiv.classList.add('show');
 
-        const randomTip = sampleMessages[Math.floor(Math.random() * sampleMessages.length)];
-        setNotificationMessage(randomTip);
-
-        setTimeout(() => {
-            notificationDiv.classList.remove('show');
-        }, 6000);
+        if (show_advice == "1") {
+            const notificationDiv = document.getElementById('notification');
+            notificationDiv.classList.add('show');
+    
+            const randomTip = sampleMessages[Math.floor(Math.random() * sampleMessages.length)];
+            setNotificationMessage(randomTip);
+            setTimeout(() => {
+                notificationDiv.classList.remove('show');
+            }, 6000);
+        }
 
         fetchProfileData();
         fetchRelationData();

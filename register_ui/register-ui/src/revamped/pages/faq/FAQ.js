@@ -1,5 +1,5 @@
 // FAQ.js
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
@@ -68,10 +68,54 @@ const FAQ = () => {
   const [errMsg, setErrMsg] = useState('');
   const errRef = useRef(); /* Set focus on an error, to allow accessibility purposes */
 
-  const handleQuestionGiven = () => {
+  const [faqData, setFaqData] = useState([]); // faq data from backend
 
-    setShowSubmitQuestionPage(!showSubmitQuestionPage);
-    setQuestionGiven("");
+  useEffect(() => {
+    getFaqs();
+  }, []);
+
+  async function getFaqs() {
+    try {
+      const response = await fetch("http://localhost:5000/api/get_faqs", {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const data = await response.json();
+
+      if (response.status !== 200) {
+        console.log(data); 
+        setFaqData([]);       
+      } else {
+        console.log(data);
+        setFaqData(data.faq_arr);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleQuestionGiven = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/ask_question", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "question": questionGiven })
+      });
+      const data = await res.json();
+      if (res.status == 200) {
+        setQuestionGiven("");
+        setShowSubmitQuestionPage(!showSubmitQuestionPage);
+      } else {
+        console.log("Something went wrong in asking a question: " + res.status);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -81,6 +125,9 @@ const FAQ = () => {
         <IconButton>
           <InsertCommentIcon />
         </IconButton>
+      </div>
+      <div className='wrapper'>
+        <h1 style={{fontSize:'70px', marginBottom:'0', paddingBottom:'0'}}>FAQ</h1>
       </div>
       <div className='wrapper'>
         <h1>General Purdue FAQ</h1>
@@ -94,7 +141,7 @@ const FAQ = () => {
           </div>
         ))}
         <h1>PurdueHub FAQ</h1>
-        {purdueHubQuestions.map((faqItem, index) => (
+        {faqData.map((faqItem, index) => (
           <div key={index} className="faq-item">
             <div className="faq-question" onClick={() => toggleHubAnswer(index)}>
               {openHubIndex === index ? <ArrowDropUpIcon className='icon' /> : <ArrowDropDownIcon className='icon' />}
