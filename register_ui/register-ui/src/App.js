@@ -88,11 +88,11 @@ function App() {
           element: <UserProfile />
         },
         {
-          path: "/club/:id",
+          path: "/club/:clubName",
           element: <Club />
         },
         {
-          path: "/class/:id",
+          path: "/class/:className",
           element: <Class />
         },
         {
