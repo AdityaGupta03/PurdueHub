@@ -10,9 +10,15 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 import { Modal, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
-
+import { useParams } from 'react-router-dom'
 import "../../components/leftBar/modal.scss"
 const Club = () => {
+
+  const { clubName } = useParams();
+  const [clubDescription, setClubDescription] = useState("The Purdue Student Union Board provides a variety of programs and services that enrich and entertain. Every day the Purdue Student Union Board (PSUB) works hard to bring fun-filled excitement to the lives of every students of Purdue University and every citizen of the Greater Lafayette area through programming, event planning, and project presentations.  PSUB members serve as the voice of Purdue students as they participate in cooperative management of the Purdue Memorial Union.  It's easy to get involved with PSUB! Simply come to our callout, stop by the office, email, or call us and we will set up a time to tell you more about PSUB.")
+  
+  
+  
   const sampleMessage = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
   const location = "Purdue Memorial Union";
   const time = "Wednesday, November 29 at 5:30PM EST";
@@ -25,16 +31,26 @@ const Club = () => {
   const [eventLocation, setEventLocation] = useState(false);
   const [eventDescription, setEvenDescription] = useState(false);
   const [eventTime, setEventTime] = useState(false);
-  const [isFollowingEvent, setIsFollowingEvent] = useState(false);
 
   const setupEventInfo = async (nameOf, locationOf, timeOf, descriptionOf, isFollow) => {
     setEventName(nameOf);
     setEventLocation(locationOf);
     setEventTime(timeOf);
     setEvenDescription(descriptionOf);
-    setIsFollowingEvent(isFollow);
   }
 
+  const handleFavorite = () => {
+    // ADD TO LEFT NAV BAR FOR QUICK ACCESS:
+
+    setIsFavorite(!isFavorite);
+  }
+  const handleFollow = () => {  
+    // ADD ALL EVENTS UNDER THIS CLUB TO INTERESTED EVENTS:
+
+    setIsFollowingClub(!isFollowingClub);
+  } 
+
+  // FAKE DATA 
   const events = [
     {
       eventName: "Movie Watch Along",
@@ -55,6 +71,7 @@ const Club = () => {
       eventTime: time
     },
   ]
+
   return (
     <div className='club-page'>
       <div className='images'>
@@ -65,12 +82,12 @@ const Club = () => {
           <div className='club-info'>
             <div className='wrapper'>
               <div className='top-right'>
-                <button className={isFollowingClub ? "un-fav" : "fav"}>{isFollowingClub ? "Unfavorite" : "Favorite"}</button>
-                <button className={isFavorite ? "unfollow" : "follow"}>{isFavorite ? "Unfollow" : "Follow"}</button>
+                <button onClick={handleFollow} className={isFollowingClub ? "un-fav" : "fav"} >{isFollowingClub ? "Unfavorite" : "Favorite"}</button>
+                <button onClick={handleFavorite} className={isFavorite ? "unfollow" : "follow"} >{isFavorite ? "Unfollow" : "Follow"}</button>
               </div>
-              <div className='club-name'>PSUB</div>
+              <div className='club-name'>{clubName}</div>
               <div className='club-description'>
-                <span>The Purdue Student Union Board provides a variety of programs and services that enrich and entertain. Every day the Purdue Student Union Board (PSUB) works hard to bring fun-filled excitement to the lives of every students of Purdue University and every citizen of the Greater Lafayette area through programming, event planning, and project presentations.  PSUB members serve as the voice of Purdue students as they participate in cooperative management of the Purdue Memorial Union.  It's easy to get involved with PSUB! Simply come to our callout, stop by the office, email, or call us and we will set up a time to tell you more about PSUB.</span>
+                <span>{clubDescription}</span>
               </div>
             </div>
           </div>
@@ -127,15 +144,6 @@ const Club = () => {
               <span>Description: </span>
               <div className='modal-content-2'>
                 <span>{eventDescription}</span>
-              </div>
-            </div>
-
-            <div className='modal-content-3'>
-              <div className='contain-btn'>
-                <button onClick={() => setIsViewingEvent(!isViewingEvent)} className='cancel-btn'>Back</button>
-              </div>
-              <div className='contain-btn'>
-                <button className='submit-btn'>Follow</button>
               </div>
             </div>
           </div>

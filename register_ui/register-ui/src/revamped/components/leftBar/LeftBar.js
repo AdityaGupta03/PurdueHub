@@ -426,65 +426,67 @@ const LeftBar = () => {
       "id": matchingEvent.id
     }
 
-    try {
-      let res = await fetch('http://localhost:5000/api/update_calendar_event', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body_vals),
-      });
+    // try {
+    //   let res = await fetch('http://localhost:5000/api/update_calendar_event', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(body_vals),
+    //   });
 
-      const data = await res.json();
-      if (res.status != 200) {
-        setErrMsg(data.error);
-        console.log(data.error)
-        return;
-      } else {
-        setEditedEvent({ title: "", start: "", end: "" });
-        setisCreating(false);
-        getEvents();
-      }
-    } catch (error) {
-      setErrMsg(error);
-      console.log(error);
-      return;
-    }
+    //   const data = await res.json();
+    //   if (res.status != 200) {
+    //     setErrMsg(data.error);
+    //     console.log(data.error)
+    //     return;
+    //   } else {
+    //     setEditedEvent({ title: "", start: "", end: "" });
+    //     setisCreating(false);
+    //     getEvents();
+    //   }
+    // } catch (error) {
+    //   setErrMsg(error);
+    //   console.log(error);
+    //   return;
+    // }
 
     setOpenEditEvent(!openEditEvent);
   }
 
+  const what = true;
+
   async function getEvents() {
-    console.log("Getting calendar events for user " + my_username);
-    try {
-      let res = await fetch('http://localhost:5000/api/get_calendar', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ "username": my_username }),
-      });
+    // console.log("Getting calendar events for user " + my_username);
+    // try {
+    //   let res = await fetch('http://localhost:5000/api/get_calendar', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({ "username": my_username }),
+    //   });
 
-      const data = await res.json();
-      console.log(data);
+    //   const data = await res.json();
+    //   console.log(data);
 
-      if (res.status == 500) {
-        setErrMsg(data.error);
-        return;
-      } else if (res.status == 200) {
-        setCalEvents(data.calendar);
-        setAllEvents(data.calendar.map(event => ({
-          title: event.title,
-          start: new Date(event.start_date),
-          end: new Date(event.end_date),
-        })));
-        return;
-      }
-    } catch (error) {
-      setErrMsg(error);
-      console.log(error);
-      return;
-    }
+    //   if (res.status == 500) {
+    //     setErrMsg(data.error);
+    //     return;
+    //   } else if (res.status == 200) {
+    //     setCalEvents(data.calendar);
+    //     setAllEvents(data.calendar.map(event => ({
+    //       title: event.title,
+    //       start: new Date(event.start_date),
+    //       end: new Date(event.end_date),
+    //     })));
+    //     return;
+    //   }
+    // } catch (error) {
+    //   setErrMsg(error);
+    //   console.log(error);
+    //   return;
+    // }
   }
 
   const handleTitleChange = (e) => {
@@ -528,30 +530,30 @@ const LeftBar = () => {
       "id": matchingEvent.id
     }
 
-    try {
-      let res = await fetch('http://localhost:5000/api/delete_calendar_event', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body_vals),
-      });
+    // try {
+    //   let res = await fetch('http://localhost:5000/api/delete_calendar_event', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(body_vals),
+    //   });
 
-      const data = await res.json();
-      if (res.status != 200) {
-        setErrMsg(data.error);
-        console.log(data.error)
-        return;
-      } else {
-        setEditedEvent({ title: "", start: "", end: "" });
-        setisCreating(false);
-        getEvents();
-      }
-    } catch (error) {
-      setErrMsg(error);
-      console.log(error);
-      return;
-    }
+    //   const data = await res.json();
+    //   if (res.status != 200) {
+    //     setErrMsg(data.error);
+    //     console.log(data.error)
+    //     return;
+    //   } else {
+    //     setEditedEvent({ title: "", start: "", end: "" });
+    //     setisCreating(false);
+    //     getEvents();
+    //   }
+    // } catch (error) {
+    //   setErrMsg(error);
+    //   console.log(error);
+    //   return;
+    // }
 
     setOpenEditEvent(!openEditEvent);
   }
@@ -915,7 +917,7 @@ const LeftBar = () => {
 
       {/* ADDING EVENT MODAL */}
       <Modal onClose={() => { setOpenAddEvent(!openAddEvent) }} open={openAddEvent}>
-        <div>
+        {/* <div>
           <div style={{ background: 'black', padding: '20px' }}>
             <h2>Add New Event:</h2>
             <div>
@@ -950,12 +952,73 @@ const LeftBar = () => {
               <button onClick={onAddCancel}>Cancel</button>
             </div>
           </div>
+        </div> */}
+        <div className='norm'>
+          <div className="modal-container">
+
+            <div className='modal-title'>
+              <span>Adding Event</span>
+            </div>
+
+            <div onClick={onAddCancel} className='modal-exit' >
+              <IconButton>
+                <CloseIcon />
+              </IconButton>
+            </div>
+
+            <div className='modal-content-1'>
+              <input type="text"
+                placeholder="Add Title"
+                className="calendar-input"
+                value={newEvent.title}
+                onChange={(e) => setNewEvent(
+                  { ...newEvent, title: e.target.value }
+                )}
+              />
+            </div>
+
+            <div className='calendar-content-1'>
+              <span>Start Date:</span>
+              <DatePicker placeholderText="Start Date"
+                showTimeSelect
+                minDate={new Date()}
+                filterTime={filterPassedTime}
+                style={{ marginRight: "10px" }}
+                selected={newEvent.start}
+                onChange={(start) => setNewEvent({ ...newEvent, start })}
+              />
+            </div>
+
+            <div className='calendar-content-1'>
+              <span>End Date:</span>
+              <DatePicker placeholderText="End Date"
+                showTimeSelect
+                filterTime={filterPassedTime}
+                minDate={new Date()}
+                style={{ marginRight: "10px" }}
+                selected={newEvent.end}
+                onChange={(end) => setNewEvent({ ...newEvent, end })}
+              />
+            </div>
+            <div className="err-msg-container">
+              <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} style={{ color: "red" }}>{errMsg}</p>
+            </div>
+            <div className='modal-content-3'>
+              <div className='contain-btn'>
+                <button onClick={onAddCancel} className='cancel-btn'>Cancel</button>
+              </div>
+              <div className='contain-btn'>
+                <button className='submit-btn' onClick={handleAddEvent}>Add Event</button>
+              </div>
+            </div>
+          </div>
         </div>
       </Modal>
 
+      {/* openEditEvent */}
       {/* EDITING EVENT MODAL */}
       <Modal onClose={() => setOpenEditEvent(!openEditEvent)} open={openEditEvent}>
-        <div>
+        {/* <div>
           <h2>Editing Event:</h2>
           <input type="text"
             value={editedEvent.title}
@@ -976,6 +1039,64 @@ const LeftBar = () => {
           <button onClick={handleSave}>Save</button>
           <button onClick={onDelete}>Delete</button>
           <button onClick={onCancel}>Cancel</button>
+        </div> */}
+
+        <div className='norm'>
+          <div className="modal-container">
+
+            <div className='modal-title'>
+              <span>Editing An Event</span>
+            </div>
+
+            <div onClick={onAddCancel} className='modal-exit' >
+              <IconButton>
+                <CloseIcon />
+              </IconButton>
+            </div>
+
+            <div className='modal-content-1'>
+              <input type="text"
+                className="calendar-input"
+                value={editedEvent.title}
+                onChange={handleTitleChange}
+                filterTime={filterPassedTime}
+                placeholder={editedEvent.title} />
+            </div>
+
+            <div className='calendar-content-1'>
+              <span>Start Date:</span>
+              <DatePicker
+                className=""
+                minDate={new Date()}
+                showTimeSelect
+                selected={editedEvent.start}
+                onChange={handleStartChange} />
+            </div>
+
+            <div className='calendar-content-1'>
+              <span>End Date:</span>
+              <DatePicker
+                showTimeSelect
+                selected={editedEvent.end}
+                filterTime={filterPassedTime}
+                minDate={new Date()}
+                onChange={handleEndChange} />
+            </div>
+
+            <div className='modal-content-3'>
+            
+              <div className='contain-btn'>
+                <button onClick={onCancel} className='cancel-btn'>Cancel</button>
+              </div>
+              <div className='contain-btn'>
+                <button className='submit-btn' onClick={onDelete}>Delete</button>
+              </div>
+              <div className='contain-btn'>
+                <button className='submit-btn' onClick={handleSave}>Save</button>
+              </div>
+
+            </div>
+          </div>
         </div>
       </Modal>
     </div >

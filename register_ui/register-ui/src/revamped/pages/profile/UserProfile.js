@@ -41,6 +41,8 @@ import PeopleIcon from '@mui/icons-material/People';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 
+import './Notification.scss';
+
 const UserProfile = () => {
 
     const navigate = useNavigate();
@@ -58,7 +60,8 @@ const UserProfile = () => {
     let user = sessionStorage.getItem('username');
 
     const [usernameError, setUsernameError] = useState('');
-    const [username, setUsername] = useState(user)
+    const [username, setUsername] = useState(user);
+    //const [username, setUsername] = useState("Hello");
     const [newUser, setNewUser] = useState(username);
 
     const CHARACTER_LIMIT = 150;
@@ -72,8 +75,8 @@ const UserProfile = () => {
     const [nobodyFollowed, setNobodyFollowed] = useState(false); // if use doesn't have anyone added
 
     const [blockedUsernames, setBlockedUsernames] = useState([]);
-    const [followedUsernames, setFollowedUsernames ] = useState([]);
-    const [followersUsernames, setFollowersUsernames ] = useState([]);
+    const [followedUsernames, setFollowedUsernames] = useState([]);
+    const [followersUsernames, setFollowersUsernames] = useState([]);
 
     const handleEditPicture = () => {
         console.log('picture edit');
@@ -84,16 +87,43 @@ const UserProfile = () => {
         setUsernameError('');
     }, [newUser])
 
+    const [showNotification, setShowNotification] = useState(true);
+    const [showTour, setShowTour] = useState(true);
+    const [completed, setCompleted] = useState(false);
+    const [notifcationMessage, setNotificationMessage] = useState('');
+
+    const sampleMessages =
+        ["Checkout your personal calendar to schedule your events and get on top of your tasks!",
+            "Enjoying PurdueHub? Give us your feedback located on your homescreen!",
+            "Want to turn off these notifications? Head over to your settings page!",
+            "Question about Purdue? Checkout the FAQ page for answers!",
+            "Want to find a specific user? Go ahead and use the search bar in the Username Lookup page!"
+        ]
+
     useEffect(() => {
         const isLoggedIn = sessionStorage.getItem('isLoggedIn');
         if (isLoggedIn == "false") {
-            navigate('/login');
+           navigate('/login');
         }
         setUsername(user);
+        //setUsername("Hello");
+        const notificationDiv = document.getElementById('notification');
+        notificationDiv.classList.add('show');
+
+        const randomTip = sampleMessages[Math.floor(Math.random() * sampleMessages.length)];
+        setNotificationMessage(randomTip);
+
+        setTimeout(() => {
+            notificationDiv.classList.remove('show');
+        }, 6000);
 
         fetchProfileData();
         fetchRelationData();
     }, [])
+
+    const handleCloseNotification = () => {
+        setShowNotification(false);
+    }
 
     async function fetchRelationData() {
         console.log("fetching relation data")
@@ -416,6 +446,15 @@ const UserProfile = () => {
 
         <div className="profile">
 
+            {showNotification && (
+                <div id="notification" className="notification">
+                    {notifcationMessage}
+                    <span style={{ color: 'red' }} className="close" onClick={handleCloseNotification}>
+                        &times;
+                    </span>
+                </div>
+            )}
+
             {/* AS IN YOU ARE FOLLOWED BY: FOLLOWERS LIST */}
             <Modal
                 open={openFollowers}
@@ -432,26 +471,26 @@ const UserProfile = () => {
                     </Box>
                     <Box sx={containUsers}>
                         <Box sx={containActualUser}>
-                                <div>
-                                    {
-                                        nobodyFollows && (
-                                            <div>
-                                                <p>Nobody Follows You!</p>
-                                            </div>
-                                        )
-                                    }
-                                    {
-                                        nobodyFollows === false && (
-                                            <div>
-                                                {followersUsernames.map((item, index) => {
-                                                    console.log(item);
-                                                    return (
-                                                        <Box sx={userInfo} key={index}>
-                                                            <Box sx={{ ...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" />
-                                                            <Box sx={{ ...userName, "&:hover": { cursor: 'pointer' } }}>{item}</Box>
-                                                        </Box>
-                                                    )
-                                                })}
+                            <div>
+                                {
+                                    nobodyFollows && (
+                                        <div>
+                                            <p>Nobody Follows You!</p>
+                                        </div>
+                                    )
+                                }
+                                {
+                                    nobodyFollows === false && (
+                                        <div>
+                                            {followersUsernames.map((item, index) => {
+                                                console.log(item);
+                                                return (
+                                                    <Box sx={userInfo} key={index}>
+                                                        <Box sx={{ ...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" />
+                                                        <Box sx={{ ...userName, "&:hover": { cursor: 'pointer' } }}>{item}</Box>
+                                                    </Box>
+                                                )
+                                            })}
                                         </div>
                                     )
                                 }
