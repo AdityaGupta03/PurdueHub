@@ -27,14 +27,34 @@ const ForgotUsername = () => {
       setErrMsg(emailInvalid);
       return;
     }
-    else {
-      setSuccess(true);
-      setTimeout(() => {
-        navigate('/username-auth');
-      }, 1500);
-    }
 
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/request_new_username", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "email": email }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        sessionStorage.setItem('user_email', email);
+        setSuccess(true);
+        setTimeout(() => {
+          navigate('/username-auth');
+        }, 1500);
+      } else {
+        const error_msg = "Error: " + data.error;
+        setErrMsg(error_msg);
+      }
+    } catch (error) {
+      console.log('Error:', error);
+      setErrMsg('Error occurred when changing username');
+    }
   }
+
   useEffect(() => {
     setErrMsg('');
   }, [email])

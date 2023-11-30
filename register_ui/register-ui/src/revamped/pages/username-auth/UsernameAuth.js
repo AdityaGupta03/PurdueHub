@@ -6,6 +6,7 @@ import './usernameAuth.scss'
 import '../login/LoadingSpinner.css';
 
 const UsernameAuth = () => {
+  const user_email = sessionStorage.getItem('user_email');
   const navigate = useNavigate();
 
   const [errMsg, setErrMsg] = useState('');
@@ -27,14 +28,35 @@ const UsernameAuth = () => {
       setErrMsg("Please enter a valid authentication code (6 digits).");
       return;
     }
-    else {
-      setSuccess(true);
-      setTimeout(() => {
-        navigate('/change-username');
-      }, 750);
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/verify_username_reset_code", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "authCode": authCode, "email": user_email }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        setSuccess(true);
+        setTimeout(() => {
+          navigate('/change-username');
+        }, 750);
+      } else {
+        const error_msg = "Error: " + data.error;
+        setErrMsg(error_msg);
+      }
+    } catch (error) {
+      console.log('Error:', error);
+      setErrMsg('Error occurred when changing password');
     }
 
+
   }
+
   useEffect(() => {
     setErrMsg('');
   }, [authCode])
