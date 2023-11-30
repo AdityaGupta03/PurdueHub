@@ -87,7 +87,221 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 import CustomToolbar from './CustomToolBar';
 
+//import Shepherd from "./shepherd.js;"
+import "shepherd.js/dist/css/shepherd.css";
+import './shepherd.css';
+import Shepherd from 'shepherd.js';
+
 const LeftBar = () => {
+
+  // SHOW TUTORIAL INFO
+
+  const [showTour, setShowTour] = useState(true);
+  const [completed, setCompleted] = useState(false);
+
+  const tour = new Shepherd.Tour({
+    defaultStepOptions: {
+      classes: 'shadow-md bg-purple-dark',
+      scrollTo: true,
+    },
+    useModalOverlay: true,
+  });
+
+  const buttonConfig = [
+    {
+      classes: 'shepherd-button-secondary',
+      text: 'Exit',
+      action: () => {
+        setCompleted(true);
+        tour.cancel();
+      },
+    },
+    {
+      text: 'Back',
+      action: () => {
+        tour.back();
+      },
+    },
+    {
+      text: 'Next',
+      action: () => {
+        tour.next();
+      },
+    },
+  ]
+  tour.addStep({
+    id: '1',
+    title: 'Welcome to PurdueHub!',
+    text: 'Glad to have you here, this is a general layout view of our application to get you started!',
+    attachTo: {
+      element: '.base-home',
+      on: 'right',
+    },
+    arrow: true,
+    classes: 'example-step-extra-class',
+    buttons: [
+      {
+        classes: 'shepherd-button-secondary',
+        text: 'Exit',
+        action: () => {
+          console.log('Exited');
+          setCompleted(true);
+          tour.cancel();
+        },
+      },
+      {
+        text: 'Next',
+        action: () => {
+          console.log('Yo');
+          tour.next();
+        },
+      },
+    ],
+  },
+  );
+
+  tour.addStep({
+    id: '2',
+    title: 'Viewing Your Profile',
+    text: 'You can click on this profile icon to be able to see a list of items, including navigation to your personal profile page!',
+    attachTo: {
+      element: '.user',
+      on: 'right',
+    },
+    arrow: true,
+    classes: 'example-step-extra-class',
+    buttons: buttonConfig,
+  },
+  );
+
+  tour.addStep({
+    id: '3',
+    title: 'Viewing Your Profile PT2',
+    text: 'You can click on this profile icon to be able to your personal profile page directly',
+    attachTo: {
+      element: '.user-tut',
+      on: 'right',
+    },
+    arrow: true,
+    classes: 'example-step-extra-class',
+    buttons: buttonConfig,
+  },
+  );
+
+  tour.addStep({
+    id: '4',
+    title: 'Viewing Your Calendar',
+    text: 'You can click on this calendar icon to be show your own personal calendar which you can personalize',
+    attachTo: {
+      element: '.calendar-tut',
+      on: 'right',
+    },
+    arrow: true,
+    classes: 'example-step-extra-class',
+    buttons: buttonConfig,
+  },
+  );
+
+  tour.addStep({
+    id: '5',
+    title: 'Viewing Your Interested Events',
+    text: 'When you follow a club, you can click here to view all the events you are automatically signed up for and remove any you wish not to partake in',
+    attachTo: {
+      element: '.interested-tut',
+      on: 'right',
+    },
+    arrow: true,
+    classes: 'example-step-extra-class',
+    buttons: buttonConfig,
+  },
+  );
+  tour.addStep({
+    id: '6',
+    title: 'Viewing Weather',
+    text: 'If you are wondering how is the weather today, you can checkout this weather page to view it',
+    attachTo: {
+      element: '.weather-tut',
+      on: 'right',
+    },
+    arrow: true,
+    classes: 'example-step-extra-class',
+    buttons: buttonConfig,
+  },
+  );
+  tour.addStep({
+    id: '7',
+    title: 'Viewing FAQ',
+    text: 'Checkout this page to view FAQs regarding our application but also tips if you are new to Purdue. We also gave the ability for people to ask a question to the team here at PurdueHub if they would like to',
+    attachTo: {
+      element: '.faq-tut',
+      on: 'right',
+    },
+    arrow: true,
+    classes: 'example-step-extra-class',
+    buttons: buttonConfig,
+  },
+  );
+  tour.addStep({
+    id: '8',
+    title: 'Viewing Favorite Clubs',
+    text: 'This dropdown will display all the clubs you have personally favorited for quick access',
+    attachTo: {
+      element: '.fav-clubs-tut',
+      on: 'right',
+    },
+    arrow: true,
+    classes: 'example-step-extra-class',
+    buttons: buttonConfig,
+  },
+  );
+  tour.addStep({
+    id: '9',
+    title: 'Viewing Favorite Classes',
+    text: 'This dropdown will display all the classes you have personally favorited for quick access',
+    attachTo: {
+      element: '.fav-classes-tut',
+      on: 'right',
+    },
+    arrow: true,
+    classes: 'example-step-extra-class',
+    buttons: buttonConfig,
+  },
+  );
+  tour.addStep({
+    id: '10',
+    title: 'Providing Feedback',
+    text: 'If you have feedback regarding our application, you can check out this page and send it over to us. We appreciate it!',
+    attachTo: {
+      element: '.feedback-tut',
+      on: 'right',
+    },
+    arrow: true,
+    classes: 'example-step-extra-class',
+    buttons: buttonConfig,
+  },
+  );
+  tour.addStep({
+    id: '11',
+    title: 'Managing settings',
+    text: 'If you want to disable or enable certain features of our application, you can do so here',
+    attachTo: {
+      element: '.settings-tut',
+      on: 'right',
+    },
+    arrow: true,
+    classes: 'example-step-extra-class',
+    buttons: [
+      {
+        text: 'Finish',
+        action: () => {
+          console.log('Finished');
+          setCompleted(true);
+          tour.next();
+        },
+      },
+    ],
+  },
+  );
 
   // **************************************************************************************************************
 
@@ -342,6 +556,15 @@ const LeftBar = () => {
     getEvents();
   }, [newEvent.title, newEvent.start, newEvent.end])
 
+  useEffect(() => {
+    if (showTour) {
+      tour.start();
+    }
+    else {
+    }
+
+  }, []);
+
   async function handleAddEvent() {
     console.log("Adding event!");
     if (newEvent.title === "") {
@@ -530,30 +753,30 @@ const LeftBar = () => {
       "id": matchingEvent.id
     }
 
-    // try {
-    //   let res = await fetch('http://localhost:5000/api/delete_calendar_event', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(body_vals),
-    //   });
+    try {
+      let res = await fetch('http://localhost:5000/api/delete_calendar_event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body_vals),
+      });
 
-    //   const data = await res.json();
-    //   if (res.status != 200) {
-    //     setErrMsg(data.error);
-    //     console.log(data.error)
-    //     return;
-    //   } else {
-    //     setEditedEvent({ title: "", start: "", end: "" });
-    //     setisCreating(false);
-    //     getEvents();
-    //   }
-    // } catch (error) {
-    //   setErrMsg(error);
-    //   console.log(error);
-    //   return;
-    // }
+      const data = await res.json();
+      if (res.status != 200) {
+        setErrMsg(data.error);
+        console.log(data.error)
+        return;
+      } else {
+        setEditedEvent({ title: "", start: "", end: "" });
+        setisCreating(false);
+        getEvents();
+      }
+    } catch (error) {
+      setErrMsg(error);
+      console.log(error);
+      return;
+    }
 
     setOpenEditEvent(!openEditEvent);
   }
@@ -680,42 +903,42 @@ const LeftBar = () => {
       <div className='container'>
         <div className='menu'>
           <Link to="/user-profile" className="removeStyleLink">
-            <div className='user'>
+            <div className='user user-tut'>
               <img src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" alt='' />
               <span>Your Profile</span>
             </div>
           </Link>
 
           <div onClick={() => setOpenCalendar(!openCalendar)} className="removeStyleLink">
-            <div className='item'>
+            <div className='item calendar-tut'>
               <CalendarMonthIcon />
               <span>Calendar</span>
             </div>
           </div>
 
           <div onClick={() => setOpenInterested(!openInterested)} className="removeStyleLink">
-            <div className='item'>
+            <div className='item interested-tut'>
               <EventIcon />
               <span>Interested Events</span>
             </div>
           </div>
 
           <Link to="/weather" className="removeStyleLink">
-            <div className='item'>
+            <div className='item weather-tut'>
               <ThermostatIcon />
               <span>Weather</span>
             </div>
           </Link>
 
           <Link to="/faq" className="removeStyleLink">
-            <div className='item'>
+            <div className='item faq-tut'>
               <HelpOutlineIcon />
               <span>FAQ</span>
             </div>
           </Link>
 
           <div className="removeStyleLink">
-            <div onClick={() => setOpenFavClasses(!openFavClasses)} className='item'>
+            <div onClick={() => setOpenFavClasses(!openFavClasses)} className='item fav-clubs-tut'>
               {openFavClasses ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
               <span>Favorite Clubs:</span>
             </div>
@@ -745,7 +968,7 @@ const LeftBar = () => {
           )}
 
           <div className="removeStyleLink">
-            <div onClick={() => setOpenFavClubs(!openFavClubs)} className='item'>
+            <div onClick={() => setOpenFavClubs(!openFavClubs)} className='item fav-classes-tut'>
               {openFavClubs ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
               <span>Favorite Classes:</span>
             </div>
@@ -779,7 +1002,7 @@ const LeftBar = () => {
 
             {/* FEED BACK */}
             <div onClick={() => setOpenFeedback(!openFeedback)} className="removeStyleLink">
-              <div className='item'>
+              <div className='item feedback-tut'>
                 <ForumIcon />
                 <span>Give Feedback</span>
               </div>
@@ -789,7 +1012,7 @@ const LeftBar = () => {
 
             {/* SETTINGS */}
             <div onClick={() => setOpenSettings(!openSettings)} className="removeStyleLink">
-              <div className='item'>
+              <div className='item settings-tut'>
                 <SettingsIcon />
                 <span>Settings</span>
               </div>
@@ -1084,7 +1307,7 @@ const LeftBar = () => {
             </div>
 
             <div className='modal-content-3'>
-            
+
               <div className='contain-btn'>
                 <button onClick={onCancel} className='cancel-btn'>Cancel</button>
               </div>
