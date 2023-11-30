@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 
 import defaultBG from './basic.jpeg'
 import './class.scss'
-import { useParams } from 'react-router-dom'
-const Class = () => {
+import { useParams, useNavigate } from 'react-router-dom'
 
+const Class = () => {
+  const navigate = useNavigate();
   const { className } = useParams();
 
   const [classDescription, setClassDescription] = useState("Digital logic: transistors, gates, and combinatorial circuits; clocks; registers and register banks; arithmetic-logic units; data representation: big-endian and little-endian integers; ones and twos complement arithmetic; signed and unsigned values; Von-Neumann architecture and bottleneck; instruction sets; RISC and CISC designs; instruction pipelines and stalls; rearranging code; memory and address spaces; physical and virtual memory; interleaving; page tables; memory caches; bus architecture; polling and interrupts; DMA; device programming; assembly language; optimizations; parallelism; data pipelining. Typically offered Fall Spring.");
@@ -14,6 +15,14 @@ const Class = () => {
   const handleFavorite = () => {
     setIsFavorited(!isFavorited);
   }
+
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn == 'false') {
+      navigate("/login");
+    }
+  }, [className])
+
 
   return (
     <div className='class-page'>

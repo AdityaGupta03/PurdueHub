@@ -584,7 +584,7 @@ async function friendsWhoFollowClubQuery(user_id, org_id) {
 }
 
 async function setAdviceQuery(user_id, toggleAdvice) {
-  const query = "UPDATE users SET send_advce = $1 WHERE user_id = $2";
+  const query = "UPDATE users SET send_advice = $1 WHERE user_id = $2";
   const data = [ toggleAdvice, user_id ];
 
   try {

@@ -102,6 +102,7 @@ const LeftBar = () => {
 
   // **************************************************************************************************************
 
+  const show_advice = sessionStorage.getItem('show_advice');
 
   // SETTINGS INFO:
   const [openSettings, setOpenSettings] = useState(false);
@@ -113,6 +114,7 @@ const LeftBar = () => {
   // **************************************************************************************************************
 
   const my_username = sessionStorage.getItem('username');
+  const my_userid = sessionStorage.getItem('user_id');
 
   // FAKE DATA
 
@@ -238,9 +240,39 @@ const LeftBar = () => {
   const profDevChange = async (e) => {
     setIsProfEnabled(e.target.checked);
   }
+
   const clubCalloutChange = async (e) => {
+    const choice = e.target.checked ? "1" : "0";
     setIsClubCallEnabled(e.target.checked);
+    sessionStorage.setItem("show_advice", choice);
+
+    try {
+      let res = await fetch('http://localhost:5000/api/set_advice_setting', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "user_id": my_userid, "toggleAdvice": choice }),
+      });
+      const data = await res.json();
+      if (res.status == 200) {
+      } else {
+        console.log("Something went wrong in changing advice toggle: " + res.status);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  useEffect(() => {
+    console.log("Setting show advice: " + show_advice);
+    if (show_advice == "1") {
+      setIsClubCallEnabled(true);
+    } else {
+      setIsClubCallEnabled(false);
+    }
+  }, [])
+
   const receiveMessagesChange = async (e) => {
     setIsDirectMessageEnabled(e.target.checked);
 
@@ -610,7 +642,7 @@ const LeftBar = () => {
               <span>Other</span>
             </div>
             <div className='settings-content-2'>
-              <span>Allow tip notifications</span>
+              <span>Silence Notification: Intro Message</span>
               <Switch
                 checked={isClubCallEnabled}
                 onChange={clubCalloutChange}

@@ -61,7 +61,7 @@ const Weather = () => {
     <div className='whole' style={{ color: 'whitesmoke' }}>
       <div className='weather-info'>
         <div className='label'>
-          <span>Weather In West Lafayette</span>
+          <span>Weather In West Lafayette, IN</span>
         </div>
         <CurrentWeather data={currentWeather} />
         <Forecast data={weatherForecast} />
