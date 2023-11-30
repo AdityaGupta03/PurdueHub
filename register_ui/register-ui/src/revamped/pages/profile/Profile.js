@@ -723,7 +723,7 @@ const Profile = () => {
                   <span>English</span>
                 </div>
               </div>
-              <button className={isBlocked ? 'disabled' : 'button'} disabled={isBlocked ? true : false} onClick={toggleFollow}>{isFollow ? 'Unfollow' : 'Follow'}</button>
+              <button className={isBlocked ? 'disabled' : 'isAble'} disabled={isBlocked ? true : false} onClick={toggleFollow}>{isFollow ? 'Unfollow' : 'Follow'}</button>
               <div className='bioSection'>
                 <p>Bio: {bio}</p>
               </div>
