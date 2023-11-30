@@ -660,7 +660,19 @@ async function getFavoriteCoursesQuery(user_id) {
     console.error(error);
     return null;
   }
+}
 
+async function isFavoriteCourseQuery(user_id, course_id) {
+  const query = "SELECT * FROM users WHERE user_id = $1 AND $2 = ANY(favorite_courses)";
+  const data = [ user_id, course_id ];
+
+  try {
+    const db_res = await pool.query(query, data);
+    return db_res.rows.length > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 }
 
 module.exports = {
@@ -712,4 +724,5 @@ module.exports = {
   favoriteCourseQuery,
   unfavoriteCourseQuery,
   getFavoriteCoursesQuery,
+  isFavoriteCourseQuery,
 };

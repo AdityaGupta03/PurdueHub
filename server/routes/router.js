@@ -70,5 +70,6 @@ router.post("/get_followed_orgs", organizationController.getFollowedOrgs);
 router.post("/fav_course", courseController.favoriteCourse);
 router.post("/unfav_course", courseController.unfavoriteCourse);
 router.post("/get_fav_courses", courseController.getFavoriteCourses);
+router.post("/is_fav_course", courseController.isFavoriteCourse);
 
 module.exports = router;

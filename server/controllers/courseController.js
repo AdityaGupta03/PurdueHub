@@ -56,8 +56,33 @@ async function getFavoriteCourses(req, res) {
     return res.status(500).json({ error: "Internal Server Error" });
 }
 
+async function isFavoriteCourse(req, res) {
+    console.log("isFavoriteCourse");
+
+    const { user_id, course_name } = req.body;
+    if (!user_id || !course_name) {
+        return res.status(400).json({ message: "Missing user_id or course_id" });
+    }
+
+    const course_id = await courseQueries.getCourseID(course_name);
+
+    let db_res = await accountQueries.isFavoriteCourseQuery(user_id, course_id);
+    if (db_res == null) {
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    if (db_res) {
+        console.log("Is a favorited course!");
+        return res.status(200).json({ isFav: true });
+    } else {
+        console.log("Is not a favorited course!");
+        return res.status(200).json({ isFav: false });
+    }
+}
+
 module.exports = {
     favoriteCourse,
     unfavoriteCourse,
     getFavoriteCourses,
+    isFavoriteCourse,
 };
