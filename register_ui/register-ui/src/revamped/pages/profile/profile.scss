@@ -104,14 +104,6 @@
                         flex-direction: column;
                     }
 
-                    .disabled {
-                        border: none;
-                        background-color: #CEB888;
-                        color: black;
-                        border-radius: 5px;
-                        cursor: pointer;
-                    }
-
                 }
 
                 .right {
@@ -173,4 +165,9 @@
     border: none;
     font-weight: 600;
     background-color: rgb(31, 117, 255);
+    cursor: pointer;
+}
+
+.isAble:hover {
+    opacity: 0.85;
 }
