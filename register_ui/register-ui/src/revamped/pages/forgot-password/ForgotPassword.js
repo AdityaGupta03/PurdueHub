@@ -20,27 +20,34 @@ const ForgotPassword = () => {
   const usernameNotExist = <>
     Username does not exist
   </>
-  const exist = true; // testing
-  const badUser = true; // testing 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (badUser === false) {
-      setErrMsg(usernameMessage);
-      return;
-    }
-    else if (exist === false) {
-      setErrMsg('Username does not exist');
-      return;
-    }
-    else {
-      setSuccess(true);
-      setTimeout(() => {
-        navigate('/password-auth');
-      }, 1500);
-    }
 
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/request_new_password", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "username": user }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      if (response.status === 200) {
+        sessionStorage.setItem('username', user);
+        navigate("/password-auth");
+      } else {
+        setErrMsg(data.error);
+      }
+    } catch (error) {
+      console.log('Error:', error);
+      setErrMsg('Error occurred when changing password');
+    }
   }
+
   useEffect(() => {
     setErrMsg('');
   }, [user])

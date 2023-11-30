@@ -23,6 +23,7 @@ const Register = () => {
   const [emailError, setEmailError] = useState(false);
   const [pwdError, setPwdError] = useState(false);
   const [matchError, setMatchError] = useState(false);
+  const [errMsg, setErrMsg] = useState('');
 
   const navigate = useNavigate();
   const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;;
@@ -49,35 +50,41 @@ const Register = () => {
     setMatchError(false);
   }, [matchPwd])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+    // avoid JS tricks from enabling user submit button,
+    // by validating the existing fields and making sure they are valid
     const a1 = USER_REGEX.test(user);
     const a2 = PWD_REGEX.test(pwd);
     const a3 = EMAIL_REGEX.test(email);
-    const a4 = matchPwd === pwd;
-
-    if (!a4) {
-      setMatchError(true);
-    }
-    if (!a1) {
-      setUsernameError(true);
-    }
-    if (!a2) {
-      setPwdError(true);
-    }
-    if (!a3) {
-      setEmailError(true);
-    }
-    if (a1 && a2 && a3 && a4) {
-      //SUCCESS DATA
-      setSuccess(true);
-      setTimeout(() => {
-        navigate('/verify-email');
-      }, 1000);
+    if (!a1 || !a2 || !a3) {
+      setErrMsg("Doesn't match requirements!");
       return;
     }
 
+    // INSERT DATA TO SEND TO BACKEND HERE
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/create_account", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "username": user, "email": email, "password": pwd }),
+      });
+
+      console.log(response);
+      const data = await response.json();
+
+      if (response.status === 200) {
+        navigate("/login");
+      } else {
+        const err_msg = "Error: " + data.error;
+        setErrMsg(err_msg);
+      }
+    } catch (error) {
+      console.log('Error:', error);
+      setErrMsg('An error occurred while creating the account');
+    }
   }
 
   return (
@@ -170,6 +177,9 @@ const Register = () => {
 
             </div>
             <button onClick={handleSubmit} className='register-button'>Register</button>
+            <div style={{color:"red"}}>
+              {errMsg}
+            </div>
           </form>
         </div>
       </div>

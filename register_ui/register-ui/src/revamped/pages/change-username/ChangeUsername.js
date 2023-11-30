@@ -5,6 +5,8 @@ import './changeUsername.scss'
 import '../login/LoadingSpinner.css';
 
 const ChangeUsername = () => {
+  const user_email = sessionStorage.getItem('user_email');
+
   const [user, setUser] = useState('');
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
@@ -27,14 +29,33 @@ const ChangeUsername = () => {
       setErrMsg(usernameMessage);
       return;
     }
-    else {
-      setSuccess(true);
-      setTimeout(() => {
-        navigate('/login');
-      }, 1500);
-    }
 
+    try { // Make api call
+      const response = await fetch("http://127.0.0.1:5000/api/update_username", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "newUsername": user, "email": user_email }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        sessionStorage.setItem('user_email', "");
+        setSuccess(true);
+        setTimeout(() => {
+          navigate('/login');
+        }, 1500);
+      } else {
+        setErrMsg(data.error);
+      }
+    } catch (error) {
+      console.log('Error:', error);
+      setErrMsg('An error occurred while creating the account');
+    }
   }
+
   useEffect(() => {
     setErrMsg('');
   }, [user])

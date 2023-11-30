@@ -37,18 +37,26 @@ import styled from '@emotion/styled';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import PeopleIcon from '@mui/icons-material/People';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 const Profile = () => {
 
   const navigate = useNavigate();
+  const { username } = useParams();
+  const user_id = localStorage.getItem('user_id');
+  const my_username = localStorage.getItem('username');
+
+  const [mutualFriends, setMutualFriends] = useState([]);
+  const [noMutualFriends, setNoMutualFriends] = useState(false);
 
   const [isOpenMessage, setIsOpenMessage] = useState(false); // open up message dialog
   const [isOpenMore, setIsOpenMore] = useState(false);  // open up 'more' dialog
   const [isReporting, setIsReporting] = useState(false); // open up 'report' dialog
   const [isBlocked, setIsBlocked] = useState(false);
+  const [isBanned, setIsBanned] = useState(false);
+
+  const [bio, setBio] = useState(''); // bio is empty at first
 
   const [title, setTitle] = useState(''); // form data for messsaging (title)
   const [message, setMessage] = useState(''); // form data for messaging (message)
@@ -79,9 +87,127 @@ const Profile = () => {
     setTitleError('');
     setMessageError('');
     setReportError('');
+    fetchProfileData();
   }, [title, message, reportMessage])
 
-  const handleMessageSend = () => {
+  useEffect(() => {
+    fetchProfileData();
+    fetchMutualData();
+  }, [username])
+
+  async function fetchMutualData() {
+    try {
+      let response = await fetch("http://127.0.0.1:5000/api/get_mutual_friends", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "user_id": user_id, "other_username": username }),
+      });
+
+      let data = await response.json();
+      console.log(data);
+
+      if (response.status === 200) {
+        if (data.mutual_friends.length === 0) {
+          setNoMutualFriends(true);
+        } else {
+          setNoMutualFriends(false);
+        }
+        setMutualFriends(data.mutual_friends);
+      } else {
+        const err_msg = "Error: " + data.error;
+      }
+    } catch (error) {
+      console.log(error);
+    } 
+  }
+
+  async function fetchProfileData() {
+    console.log("Fetching profile data...")
+    try {
+      let response = await fetch("http://127.0.0.1:5000/api/get_profile_info", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "username": username }),
+      });
+
+      let data = await response.json();
+
+      if (response.status === 200) {
+        console.log(data);
+        setBio(data.user_info.bio);
+        if (data.user_info.banned == 1) {
+          setIsBanned(true);
+        }
+      } else {
+        console.log(data.error)
+      }
+
+      response = await fetch("http://127.0.0.1:5000/api/get_block_list", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "username": my_username }),
+      });
+
+      data = await response.json();
+      console.log(data);
+
+      if (response.status === 200) {
+        if (data.blocked.length === 0) {
+          setIsBlocked(false);
+        } else {
+          for (let i = 0; i < data.blocked.length; i++) {
+            if (data.blocked[i] == username) {
+              console.log(data.blocked[i]);
+              setIsBlocked(true);
+              break;
+            }
+          }
+        }
+      } else {
+        const err_msg = "Error: " + data.error;
+        console.log(err_msg);
+      }
+
+      console.log(isBlocked);
+
+      response = await fetch("http://127.0.0.1:5000/api/get_follow_list", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "username": my_username }),
+      });
+
+      data = await response.json();
+      console.log(data);
+
+      if (response.status === 200) {
+        setIsFollow(false);
+        for (let i = 0; i < data.following.length; i++) {
+          if (data.following[i] == username) {
+            console.log(data.following[i]);
+            setIsFollow(true);
+            break;
+          }
+        }
+      } else {
+        const err_msg = "Error: " + data.error;
+        console.log(err_msg);
+      }
+
+      console.log(isFollow);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleMessageSend = async () => {
     // message or title is empty validation errors
     if (title === '') {
       setTitleError('Missing Title');
@@ -90,6 +216,26 @@ const Profile = () => {
     else if (message === '') {
       setMessageError('Missing Body');
       return;
+    }
+
+    try {
+      let res = await fetch('http://localhost:5000/api/msg_user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "user_id": user_id, "username": username, "msg": message, "title": title }),
+      });
+
+      const data = await res.json();
+
+      // if (res.status == 400 && data.error == "Sender is blocked by user.") {
+      //   return;
+      // } else if (res.status != 200) {
+      //   return;
+      // }
+    } catch (error) {
+      console.log(error);
     }
 
     // SUCCESS IN SENDING MESSAGE:
@@ -110,29 +256,168 @@ const Profile = () => {
     setReportMessage('');
     setIsReporting(false);
   }
-  const handleBlock = () => {
+
+  const handleBlock = async () => {
     if (isBlocked) {
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/unblock_user", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ "user_id": user_id, "unblock_username": username }),
+        });
+
+        console.log(response);
+        const data = await response.json();
+
+        if (response.status === 200) {
+          // setIsBlocked(false);
+        } else {
+          const err_msg = "Error: " + data.error;
+          console.log(err_msg);
+        }
+      } catch (error) {
+        console.log('Error:', error);
+      }
+
       setIsBlocked(false);
     }
     else {
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/block_user", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ "user_id": user_id, "block_username": username }),
+        });
+
+        console.log(response);
+        const data = await response.json();
+
+        if (response.status === 200) {
+          // SET LOGIC HERE FOR WHENEVER BLOCK IS SUCCESSFUL
+        } else {
+          const err_msg = "Error: " + data.error;
+          console.log(err_msg);
+        }
+
+        if (isFollow) {
+          await fetch("http://127.0.0.1:5000/api/unfollow_user", {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "user_id": user_id, "to_unfollow_username": username }),
+          });
+
+          console.log(response);
+          const data = await response.json();
+
+          if (response.status === 200) {
+            setIsFollow(false);
+          } else {
+            const err_msg = "Error: " + data.error;
+            console.log(err_msg);
+          }
+        }
+
+        setIsBlocked(true);
+        setIsFollow(false);
+      } catch (error) {
+        console.log('Error:', error);
+      }
       setIsBlocked(true);
     }
   }
 
   const toggleFollow = async () => {
+    if (isBlocked) {
+      return;
+    }
     if (isFollow) {
-      setIsFollow(false);
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/unfollow_user", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ "user_id": user_id, "to_unfollow_username": username }),
+        });
+
+        console.log(response);
+        const data = await response.json();
+
+        if (response.status === 200) {
+          // SET LOGIC HERE FOR WHENEVER UNFOLLOW IS SUCCESSFUL
+          setIsFollow(false);
+        } else {
+          const err_msg = "Error: " + data.error;
+          console.log(err_msg);
+        }
+
+      } catch (error) {
+        console.log('Error:', error);
+      }
     }
     else {
       setIsFollow(true);
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/follow_user", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ "user_id": user_id, "to_follow_username": username }),
+        });
+
+        console.log(response);
+        const data = await response.json();
+
+        if (response.status === 200) {
+          // SET LOGIC HERE FOR WHENEVER FOLLOW IS SUCCESSFUL
+        } else {
+          const err_msg = "Error: " + data.error;
+        }
+      } catch (error) {
+        console.log('Error:', error);
+      }
     }
   }
 
-  const handleReportSend = () => {
+  const handleReportSend = async () => {
     // message or title is empty validation errors
     if (reportMessage === '') {
       setReportError('Missing Report');
       return;
+    }
+
+    let reportee_user = sessionStorage.getItem('username');
+    try {
+      console.log(username);
+      console.log(reportee_user);
+      console.log(reportMessage);
+      const response = await fetch("http://127.0.0.1:5000/api/report_user", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "reported": username, "reportee": reportee_user, "msg": reportMessage }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        // setSuccess(true);
+      } else {
+        const error_msg = 'Error: ' + data.error;
+        setReportError(error_msg);
+        // setSuccess(false);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setReportError('Error occurred when submitting the report');
     }
 
     // SUCCESS IN SENDING REPORT:
@@ -358,7 +643,7 @@ const Profile = () => {
           <Button onClick={handleBlock} sx={{ ...buttonStyle, borderBottom: 'none' }}>{isBlocked ? 'Unblock' : 'Block'}</Button>
         </Box>
       </Modal>
-      
+
 
       {/* MUTUAL FRIENDS WITH USER */}
       <Modal
@@ -376,13 +661,28 @@ const Profile = () => {
           </Box>
           <Box sx={containUsers}>
             <Box sx={containActualUser}>
-              <Box sx={userInfo}>
-                <Box sx={{ ...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" />
-                <Box sx={{ ...userName, "&:hover": { cursor: 'pointer' } }}>Username</Box>
-                <Box sx={userButton}>
-                  <Button sx={userBut}>Unfollow</Button>
-                </Box>
-              </Box>
+              {
+                noMutualFriends && (
+                  <div>
+                    <p>No Mutual Friends!</p>
+                  </div>
+                )
+              }
+              {
+                noMutualFriends === false && (
+                  <div>
+                    {mutualFriends.map((item, index) => {
+                      return (
+                        <Box sx={userInfo}>
+                          <Box sx={{ ...userProfile, "&:hover": { cursor: 'pointer' } }} component="img" src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" />
+                          <Box sx={{ ...userName, "&:hover": { cursor: 'pointer' } }}>{item}</Box>
+                        </Box>
+
+                      )
+                    })}
+                  </div>
+                )
+              }
             </Box>
           </Box>
         </Box>
@@ -410,7 +710,7 @@ const Profile = () => {
             </div>
 
             <div className='center'>
-              <span>Username</span>
+              <span>{username}</span>
               <div className='info'>
                 <div className='item'>
                   <PlaceIcon />
@@ -425,7 +725,7 @@ const Profile = () => {
               </div>
               <button className={isBlocked ? 'disabled' : 'button'} disabled={isBlocked ? true : false} onClick={toggleFollow}>{isFollow ? 'Unfollow' : 'Follow'}</button>
               <div className='bioSection'>
-                <p>Bio: Random spiel about something. That something is something I do not know unfortunately. I am looking to expand the character count to around 150.</p>
+                <p>Bio: {bio}</p>
               </div>
             </div>
 

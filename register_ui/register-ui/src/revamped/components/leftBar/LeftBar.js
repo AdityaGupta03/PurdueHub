@@ -112,6 +112,8 @@ const LeftBar = () => {
 
   // **************************************************************************************************************
 
+  const my_username = sessionStorage.getItem('username');
+
   // FAKE DATA
 
   const sampleMessage = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
@@ -203,7 +205,7 @@ const LeftBar = () => {
 
   const [followingEvent, setFollowingEvent] = useState(false); // logic
   const [openInterested, setOpenInterested] = useState(false); // open modal (displays: followed evemts, prof dev events, or club callout events)
-  const [showFollowed, setShowFollowed] = useState(false);
+  const [showFollowed, setShowFollowed] = useState(true);
   const [showProffesional, setShowProfessional] = useState(false);
   const [showCallout, setShowCallout] = useState(false);
 
@@ -241,6 +243,25 @@ const LeftBar = () => {
   }
   const receiveMessagesChange = async (e) => {
     setIsDirectMessageEnabled(e.target.checked);
+
+    console.log(isDirectMessageEnabled);
+    let option = isDirectMessageEnabled ? "0" : "1";
+    console.log(option);
+
+    let my_userid = sessionStorage.getItem('user_id');
+    try {
+      let res = await fetch('http://localhost:5000/api/toggle_dm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "user_id": my_userid, "option": option }),
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const handleCloseAll = () => {
@@ -248,6 +269,29 @@ const LeftBar = () => {
     setShowFollowed(false);
     setShowProfessional(false);
     setShowCallout(false);
+  }
+
+  const handleSubmitFeedback = async () => {
+    let my_userid = sessionStorage.getItem('user_id');
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/submit_feedback", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "user_id": my_userid, "feedback_title": "PurdueHub General Feedback", "feedback_body": feedback }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+
+    setOpenFeedback(!openFeedback);
+    // send feedback to the database here
+    setFeedback(""); // clear existing feedback
   }
 
 
@@ -285,20 +329,162 @@ const LeftBar = () => {
   const [allEvents, setAllEvents] = useState([]);
   const [calEvents, setCalEvents] = useState([]);
 
+  const [interestedEventsArr, setInterestedEvents] = useState(interestedEvents);
+
   const filterPassedTime = (time) => {
     const currentDate = new Date();
     const selectedDate = new Date(time);
     return currentDate.getTime() < selectedDate.getTime();
   };
 
+  useEffect(() => {
+    setErrMsg('');
+    getEvents();
+  }, [newEvent.title, newEvent.start, newEvent.end])
+
   async function handleAddEvent() {
+    console.log("Adding event!");
+    if (newEvent.title === "") {
+      setErrMsg('Event Not Possible: Empty Title!');
+      return;
+    }
 
+    if (newEvent.start === "") {
+      setErrMsg('Event Not Possible: Empty Start Date!');
+      return;
+    }
+
+    if (newEvent.end === "") {
+      setErrMsg('Event Not Possible: Empty End Date!');
+      return;
+    }
+
+    let body_vals = {
+      "username": my_username,
+      "title": newEvent.title,
+      "start": newEvent.start,
+      "end": newEvent.end,
+      "description": "",
+      "location": "",
+      "organization_id": "0"
+    }
+
+    try {
+      let res = await fetch('http://localhost:5000/api/add_calendar_event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body_vals),
+      });
+
+      const data = await res.json();
+
+      if (res.status != 200) {
+        setErrMsg(data.error);
+        console.log(data.error)
+        return;
+      } else {
+        setNewEvent({ title: "", start: new Date(), end: new Date() });
+        setOpenAddEvent(!openAddEvent);
+        getEvents();
+      }
+    } catch (error) {
+      console.log(error);
+      return;
+    }
   }
+
   const handleSave = async () => {
+    if (editedEvent.title === "") {
+      setErrMsg('Event Not Possible: Empty Title!');
+      return;
+    }
 
+    if (editedEvent.start === "") {
+      setErrMsg('Event Not Possible: Empty Start Date!');
+      return;
+    }
+
+    if (editedEvent.end === "") {
+      setErrMsg('Event Not Possible: Empty End Date!');
+      return;
+    }
+
+    const matchingEvent = calEvents.find((event) =>
+      event.title === oldEditEvent.title
+    );
+
+    let body_vals = {
+      "username": my_username,
+      "title": editedEvent.title,
+      "start": editedEvent.start,
+      "end": editedEvent.end,
+      "description": "",
+      "location": "",
+      "organization_id": "0",
+      "id": matchingEvent.id
+    }
+
+    try {
+      let res = await fetch('http://localhost:5000/api/update_calendar_event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body_vals),
+      });
+
+      const data = await res.json();
+      if (res.status != 200) {
+        setErrMsg(data.error);
+        console.log(data.error)
+        return;
+      } else {
+        setEditedEvent({ title: "", start: "", end: "" });
+        setisCreating(false);
+        getEvents();
+      }
+    } catch (error) {
+      setErrMsg(error);
+      console.log(error);
+      return;
+    }
+
+    setOpenEditEvent(!openEditEvent);
   }
-  async function getEvents() {
 
+  async function getEvents() {
+    console.log("Getting calendar events for user " + my_username);
+    try {
+      let res = await fetch('http://localhost:5000/api/get_calendar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "username": my_username }),
+      });
+
+      const data = await res.json();
+      console.log(data);
+
+      if (res.status == 500) {
+        setErrMsg(data.error);
+        return;
+      } else if (res.status == 200) {
+        setCalEvents(data.calendar);
+        setAllEvents(data.calendar.map(event => ({
+          title: event.title,
+          start: new Date(event.start_date),
+          end: new Date(event.end_date),
+        })));
+        return;
+      }
+    } catch (error) {
+      setErrMsg(error);
+      console.log(error);
+      return;
+    }
   }
 
   const handleTitleChange = (e) => {
@@ -314,21 +500,68 @@ const LeftBar = () => {
   };
 
   const onAddCancel = () => {
-    setisAdding(false);
+    setOpenAddEvent(!openAddEvent);
   }
 
   const handleEdit = (e) => {
     console.log(e);
     setEditedEvent(e);
     setOldEditEvent(e);
+    setOpenEditEvent(!openEditEvent);
   }
 
-  const addNewEvent = () => {
+  const onCancel = () => {
+    setOpenEditEvent(!openEditEvent);
   }
 
-  const onCancel = () => {}
+  const onDelete = async () => {
+    console.log("Deleting event");
+    const matchingEvent = calEvents.find((event) =>
+      event.title === oldEditEvent.title
+    );
 
-  const onDelete = async () => { }
+    console.log(calEvents);
+    console.log(matchingEvent);
+
+    let body_vals = {
+      "username": my_username,
+      "id": matchingEvent.id
+    }
+
+    try {
+      let res = await fetch('http://localhost:5000/api/delete_calendar_event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body_vals),
+      });
+
+      const data = await res.json();
+      if (res.status != 200) {
+        setErrMsg(data.error);
+        console.log(data.error)
+        return;
+      } else {
+        setEditedEvent({ title: "", start: "", end: "" });
+        setisCreating(false);
+        getEvents();
+      }
+    } catch (error) {
+      setErrMsg(error);
+      console.log(error);
+      return;
+    }
+
+    setOpenEditEvent(!openEditEvent);
+  }
+
+  function unfollowEvent(index) {
+    const updateEvents = [...interestedEventsArr];
+    updateEvents.splice(index, 1);
+    console.log(updateEvents);
+    setInterestedEvents(updateEvents);
+  }
   // **************************************************************************************************************
   return (
 
@@ -357,25 +590,6 @@ const LeftBar = () => {
               </IconButton>
             </div>
 
-            <div className='modal-content-1'>
-              <span>Events</span>
-            </div>
-            <div className='settings-content-2'>
-              <span>Professional Development</span>
-              <Switch
-                checked={isProfDevEnabled}
-                onChange={profDevChange}
-                color='success'
-              />
-            </div>
-            <div className='settings-content-2'>
-              <span>Club Callouts</span>
-              <Switch
-                checked={isClubCallEnabled}
-                onChange={clubCalloutChange}
-                color='success'
-              />
-            </div>
             <div className='line'></div>
             <div className='modal-content-1'>
               <span>Notifcations</span>
@@ -453,7 +667,7 @@ const LeftBar = () => {
                 <button onClick={() => { setOpenFeedback(!openFeedback) }} className='cancel-btn'>Cancel</button>
               </div>
               <div className='contain-btn'>
-                <button disabled={feedback ? false : true} onClick={() => { setOpenFeedback(!openFeedback); setFeedback("") }} className='submit-btn'>Submit</button>
+                <button disabled={feedback ? false : true} onClick={() => { handleSubmitFeedback(); }} className='submit-btn'>Submit</button>
               </div>
             </div>
           </div>
@@ -466,7 +680,7 @@ const LeftBar = () => {
           <Link to="/user-profile" className="removeStyleLink">
             <div className='user'>
               <img src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" alt='' />
-              <span>John Doe</span>
+              <span>Your Profile</span>
             </div>
           </Link>
 
@@ -596,146 +810,21 @@ const LeftBar = () => {
           </div>
 
           <div className='club-container'>
-
-            {/* PROFESSIONAL DEVELOPMENT EVENTS */}
-            <div className='test-ctn' onClick={() => setShowProfessional(!showProffesional)}>
-              <div className='drop-item'>
-                <div className='club-info'>
-                  <div className='drop-container'>
-                    <div className='arrow-contain'>
-                      {showProffesional ? <ArrowDropUpIcon className='icon-drop' /> : <ArrowDropDownIcon className='icon-drop' />}
+            <div>
+              <div className='club-drop'>
+                {interestedEventsArr.map((event, index) => (
+                  <div className='club-item' key={index}>
+                    <div className='club-info'>
+                      <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
+                      <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-name'><span>{event.eventName}</span></div>
+                      <div className='button-container'>
+                        <button onClick={() => unfollowEvent(index)} className={"unfollow-btn"}>{"Unfollow"}</button>
+                      </div>
                     </div>
-                    <span>Show Professional Development</span>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
-            {isProfDevEnabled ? (
-              <div>
-                {showProffesional && (
-                  <div className='club-drop'>
-                    {dev.map((event, index) => (
-                      <div className='club-item' key={index}>
-                        <div className='club-info'>
-                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
-                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-name'><span>{event.eventName}</span></div>
-                          <div className='button-container'>
-                            <button onClick={() => setFollowingEvent(!followingEvent)} className={followingEvent ? "follow-btn" : "unfollow-btn"}>{followingEvent ? "Follow" : "Unfollow"}</button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div>
-                {showProffesional && (
-                  <div className='club-drop'>
-                    <div className='club-item'>
-                      <div className='club-info'>
-                        <div className='club-profile'></div>
-                        <div style={{ fontSize: '15px', fontWeight: 700 }}><span>Nothing coming up...</span></div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* CLUB CALLOUT EVENTS */}
-            <div className='test-ctn' onClick={() => setShowCallout(!showCallout)}>
-              <div className='drop-item'>
-                <div className='club-info'>
-                  <div className='drop-container'>
-                    <div className='arrow-contain'>
-                      {showCallout ? <ArrowDropUpIcon className='icon-drop' /> : <ArrowDropDownIcon className='icon-drop' />}
-                    </div>
-                    <span>Show Club Callouts</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {isClubCallEnabled ? (
-              <div>
-                {showCallout && (
-                  <div className='club-drop'>
-                    {callouts.map((event, index) => (
-                      <div className='club-item' key={index}>
-                        <div className='club-info'>
-                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
-                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-name'><span>{event.eventName}</span></div>
-                          <div className='button-container'>
-                            <button onClick={() => setFollowingEvent(!followingEvent)} className={followingEvent ? "follow-btn" : "unfollow-btn"}>{followingEvent ? "Follow" : "Unfollow"}</button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div>
-                {showCallout && (
-                  <div className='club-drop'>
-                    <div className='club-item'>
-                      <div className='club-info'>
-                        <div className='club-profile'></div>
-                        <div style={{ fontSize: '15px', fontWeight: 700 }}><span>Nothing coming up...</span></div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* GENERAL INTERESTED EVENTS */}
-            <div className='test-ctn' onClick={() => setShowFollowed(!showFollowed)}>
-              <div className='drop-item'>
-                <div className='club-info'>
-                  <div className='drop-container'>
-                    <div className='arrow-contain'>
-                      {showFollowed ? <ArrowDropUpIcon className='icon-drop' /> : <ArrowDropDownIcon className='icon-drop' />}
-                    </div>
-                    <span>Show Followed Events</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {dataUsed.length != 0 ? (
-              <div>
-                {showFollowed && (
-                  <div className='club-drop'>
-                    {interestedEvents.map((event, index) => (
-                      <div className='club-item' key={index}>
-                        <div className='club-info'>
-                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-profile'><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" /></div>
-                          <div onClick={() => sendEventDataView(event.eventName, event.clubName, event.eventDescription, event.followData)} className='club-name'><span>{event.eventName}</span></div>
-                          <div className='button-container'>
-                            <button onClick={() => setFollowingEvent(!followingEvent)} className={followingEvent ? "follow-btn" : "unfollow-btn"}>{followingEvent ? "Follow" : "Unfollow"}</button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div>
-                {showFollowed && (
-                  <div className='club-drop'>
-                    <div className='club-item'>
-                      <div className='club-info'>
-                        <div className='club-profile'></div>
-                        <div style={{ fontSize: '15px', fontWeight: 700 }}><span>Nothing followed...</span></div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-
           </div>
 
         </div>
@@ -815,6 +904,8 @@ const LeftBar = () => {
           <Calendar localizer={localizer}
             className="calendar-itself"
             startAccessor="start" endAccessor="end"
+            events={allEvents}
+            onSelectEvent={handleEdit}
             components={{
               toolbar: (toolbarProps) => <CustomToolbar {...toolbarProps} />,
             }}
@@ -836,7 +927,7 @@ const LeftBar = () => {
                   { ...newEvent, title: e.target.value }
                 )}
               />
-              <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</p>
+              <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} style={{ color: "red" }}>{errMsg}</p>
               <DatePicker placeholderText="Start Date"
                 showTimeSelect
                 minDate={new Date()}
@@ -864,28 +955,28 @@ const LeftBar = () => {
 
       {/* EDITING EVENT MODAL */}
       <Modal onClose={() => setOpenEditEvent(!openEditEvent)} open={openEditEvent}>
-          <div>
-            <h2>Editing Event:</h2>
-            <input type="text"
-              value={editedEvent.title}
-              onChange={handleTitleChange}
-              filterTime={filterPassedTime}
-              placeholder={editedEvent.title} />
-            <DatePicker
-              minDate={new Date()}
-              showTimeSelect
-              selected={editedEvent.start}
-              onChange={handleStartChange} />
-            <DatePicker
-              showTimeSelect
-              selected={editedEvent.end}
-              filterTime={filterPassedTime}
-              minDate={new Date()}
-              onChange={handleEndChange} />
-            <button onClick={handleSave}>Save</button>
-            <button onClick={onDelete}>Delete</button>
-            <button onClick={onCancel}>Cancel</button>
-          </div>
+        <div>
+          <h2>Editing Event:</h2>
+          <input type="text"
+            value={editedEvent.title}
+            onChange={handleTitleChange}
+            filterTime={filterPassedTime}
+            placeholder={editedEvent.title} />
+          <DatePicker
+            minDate={new Date()}
+            showTimeSelect
+            selected={editedEvent.start}
+            onChange={handleStartChange} />
+          <DatePicker
+            showTimeSelect
+            selected={editedEvent.end}
+            filterTime={filterPassedTime}
+            minDate={new Date()}
+            onChange={handleEndChange} />
+          <button onClick={handleSave}>Save</button>
+          <button onClick={onDelete}>Delete</button>
+          <button onClick={onCancel}>Cancel</button>
+        </div>
       </Modal>
     </div >
   )

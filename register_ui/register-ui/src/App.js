@@ -1,123 +1,159 @@
-import Register from './Register';
-import Login from './Login';
-import Home from './Home';
-import ForgotPassword from './ForgotPassword';
-import ForgotUsername from './ForgotUsername';
-import ChangeUsername from './ChangeUsername';
-import ChangePassword from './ChangePassword';
-import PasswordAuthCode from './PasswordAuthCode';
-import UserProfile from './UserProfile';
-import ViewProfile from './ViewProfile';
-import ViewList from './ViewList';
-import UsernameAuthCode from './UsernameAuthCode';
-import VerifyEmail from './VerifyEmail';
-import ViewCalendar from './ViewCalendar';
-import ReportSubmission from './Report';
-import ViewMutuals from './ViewMutuals';
-import Feedback from './Feedback';
-import MessagePage from './MessagePage';
+import Login from "./revamped/pages/login/Login";
+import Register from "./revamped/pages/register/Register";
+import Home from "./revamped/pages/home/Home";
+import Profile from "./revamped/pages/profile/Profile";
+import Navbar from "./revamped/components/navbar/Navbar"
+import LeftBar from "./revamped/components/leftBar/LeftBar";
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import './App.css' // This is a temporary file pulled from tutorial
-import DeleteAccount from './DeleteAccount';
-import Settings from './Settings';
-import TestProfile from './TestProfile';
-import ClubPage from './ClubPage';
-import EventsInterestedPage from './EventsInterestedPage';
-import UsernameLookup from './UsernameLookup';
-import ChatBot from './Chatbot';
-import FAQ from './FAQ';
-import Weather from './Weather';
+import './revamped/styles.scss'
 
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  RouterProvider,
+} from "react-router-dom";
+
+import RightBar from "./revamped/components/rightBar/RightBar";
+import UserProfile from "./revamped/pages/profile/UserProfile";
+
+import ForgotPassword from "./revamped/pages/forgot-password/ForgotPassword";
+import ForgotUsername from "./revamped/pages/forgot-username/ForgotUsername";
+import VerifyEmail from "./revamped/pages/verify-email/VerifyEmail";
+
+import PasswordAuth from "./revamped/pages/password-auth/PasswordAuth";
+import UsernameAuth from "./revamped/pages/username-auth/UsernameAuth";
+
+import ChangeUsername from "./revamped/pages/change-username/ChangeUsername"
+import ChangePassword from "./revamped/pages/change-password/ChangePassword"
+
+import Club from "./revamped/pages/club/Club"
+import Class from "./revamped/pages/class/Class";
+import Weather from "./revamped/pages/weather/Weather";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-import ClassLookup from './ClassLookup';
-import ClassPage from './ClassPage';
-import Favorites from './Favorites';
+import ViewCalendar from "./revamped/pages/calendar/ViewCalendar";
+import FAQ from "./revamped/pages/faq/FAQPage";
+import FAQPage from "./revamped/pages/faq/FAQPage";
 
-const queryClient = new QueryClient();
 
 function App() {
 
-  sessionStorage.setItem('isLoggedIn', "false");
-  localStorage.setItem('isLoggedIn', "false");
+  sessionStorage.setItem('isLoggedIn', 'false');
+  localStorage.setItem('isLoggedIn', 'false');
+  localStorage.setItem('user_id', '-1');
+
+
+  const currentUser = localStorage.getItem('user_id');
+  const queryClient = new QueryClient();
+
+  const Layout = () => {
+    return (
+      <div className="dark-theme">
+        <Navbar />
+        <div style={{ display: 'flex' }}>
+          <LeftBar />
+          <div className="main-content" style={{ flex: 6 }} >
+            <Outlet />
+          </div>
+          {/* <RightBar /> */}
+        </div>
+      </div>
+    )
+  }
+  // if there is not a user, navigate to homepage, if there is one, show them the appropiate screen
+  const ProtectedRoute = ({ children }) => {
+    if (!currentUser) {
+      return <Navigate to="/login" />
+    }
+    return children;
+  }
+  // children [] = allow sticky nav bar to exist in any of the children pages
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element:
+        <ProtectedRoute><Layout /></ProtectedRoute>
+      ,
+      children: [
+        {
+          path: "/",
+          element: <Home />
+        },
+        {
+          path: "/profile/:username",
+          element: <Profile />
+        },
+        {
+          path: "/user-profile",
+          element: <UserProfile />
+        },
+        {
+          path: "/club/:id",
+          element: <Club />
+        },
+        {
+          path: "/class/:id",
+          element: <Class />
+        },
+        {
+          path: "/weather",
+          element: <Weather />
+        },
+        {
+          path: "/calendar",
+          element: <ViewCalendar />
+        },
+        {
+          path: "/faq",
+          element: <FAQPage />
+        },
+      ]
+    },
+    {
+      path: "/login",
+      element: <Login />
+    },
+    {
+      path: "/register",
+      element: <Register />
+    },
+    {
+      path: "/forgot-password",
+      element: <ForgotPassword />
+    },
+    {
+      path: "/forgot-username",
+      element: <ForgotUsername />
+    },
+    {
+      path: "/verify_email/:email",
+      element: <VerifyEmail />
+    },
+    {
+      path: "/password-auth",
+      element: <PasswordAuth />
+    },
+    {
+      path: "/username-auth",
+      element: <UsernameAuth />
+    },
+    {
+      path: "/change-password",
+      element: <ChangePassword />
+    },
+    {
+      path: "/change-username",
+      element: <ChangeUsername />
+    },
+  ]);
 
   return (
-    <main className='App'>
-
-    <BrowserRouter>
-      <Routes>
-        <Route path='/register' element={<Register />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/' element={<Home />} />
-        <Route path='/forgotpass' element={<ForgotPassword />} />
-        <Route path='/forgotusername' element={<ForgotUsername />} />
-        <Route path='/changeusername' element={<ChangeUsername />} />
-        <Route path='/changepassword' element={<ChangePassword />} />
-        <Route path='/password-authentication-code' element={<PasswordAuthCode />} />
-        <Route path='/username-authentication-code' element={<UsernameAuthCode />} />
-        <Route path='/userprofile' element={<UserProfile />} />
-        <Route path='/viewprofile/:username' element={<ViewProfile />} />
-        <Route path='/verify_email/:email' element={<VerifyEmail />} />
-        <Route path='/viewlist' element={<ViewList />} />
-        <Route path='/calendar' element={<ViewCalendar />} />
-        <Route path='/testprofile/:username' element={<TestProfile />} /> {/* TESTING UI*/}
-        <Route path='/testprofile/' element={<TestProfile />} /> {/* TESTING UI */}
-        <Route path='/report' element={<ReportSubmission />} />
-        <Route path='/viewmutuals/:username' element={<ViewMutuals />} />
-        <Route path='/feedback' element={<Feedback />} />
-        <Route path='/delete' element={<DeleteAccount />} />
-        <Route path='/settings' element={<Settings />} />
-        <Route path='/message-user' element={<MessagePage/>} />
-        <Route path='/club' element={<ClubPage/>} />
-        <Route path='/interested-events' element={<EventsInterestedPage/>} />
-        <Route path='/username-lookup' element={<UsernameLookup/>} />
-   
-      </Routes>
-    </BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <Routes>
-            <Route path='/register' element={<Register />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/' element={<Home />} />
-            <Route path='/forgotpass' element={<ForgotPassword />} />
-            <Route path='/forgotusername' element={<ForgotUsername />} />
-            <Route path='/changeusername' element={<ChangeUsername />} />
-            <Route path='/changepassword' element={<ChangePassword />} />
-            <Route path='/password-authentication-code' element={<PasswordAuthCode />} />
-            <Route path='/username-authentication-code' element={<UsernameAuthCode />} />
-            <Route path='/userprofile' element={<UserProfile />} />
-            <Route path='/viewprofile/:username' element={<ViewProfile />} />
-            <Route path='/verify_email/:email' element={<VerifyEmail />} />
-            <Route path='/viewlist' element={<ViewList />} />
-            <Route path='/calendar' element={<ViewCalendar />} />
-
-            <Route path='/testprofile/:username' element={<TestProfile />} /> {/* TESTING UI*/}
-            <Route path='/testprofile/' element={<TestProfile />} /> {/* TESTING UI */}
-
-            <Route path='/report' element={<ReportSubmission />} />
-            <Route path='/viewmutuals/:username' element={<ViewMutuals />} />
-            <Route path='/feedback' element={<Feedback />} />
-            <Route path='/delete' element={<DeleteAccount />} />
-            <Route path='/settings' element={<Settings />} />
-            <Route path='/message-user' element={<MessagePage />} />
-            <Route path='/club' element={<ClubPage />} />
-
-            <Route path='/interested-events' element={<EventsInterestedPage />} />
-            <Route path='/username-lookup' element={<UsernameLookup />} />
-            <Route path='/faq' element={<FAQ />} />
-            <Route path='/weather' element={<Weather />} />
-            <Route path='/class-lookup' element={<ClassLookup />} />
-            <Route path='/class/:className' element={<ClassPage />} />
-            <Route path='/favorites' element={<Favorites />} />
-              
-            <Route path='/chat-bot' element={<ChatBot/>} />
-
-          </Routes>
-        </BrowserRouter>
+    <div>
+      <QueryClientProvider client={queryClient}>      
+        <RouterProvider router={router} />
       </QueryClientProvider>
-    </main>
-  );
+    </div>
+  )
 }
 
 export default App;

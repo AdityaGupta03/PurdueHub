@@ -46,6 +46,8 @@ const Navbar = () => {
   const [openDelete, setOpenDelete] = useState(false);
   const [deleteFeedback, setDeleteFeedback] = useState('');
 
+  const [allUsernames, setAllUsernames] = useState([]);
+
   const handleInputFocus = () => {
     // Input is in focus, make the div visible
     setSearchFocused(true);
@@ -105,18 +107,73 @@ const Navbar = () => {
   const [value, setValue] = useState("");
 
   const onSearch = (searchTerm) => {
-    navigate(`/class/${searchTerm}`);
+    if (placeholderSearch == "Search For User...") {
+      console.log("Searching for user: " + searchTerm);
+      navigate(`/profile/${searchTerm}`);
+    } else {
+      navigate(`/class/${searchTerm}`);
+    }
   };
 
-  const handleSubmitDelete = () => {
-    setOpenDelete(!openDelete); 
+  const handleSubmitDelete = async () => {
+    let my_username = sessionStorage.getItem('username');
+    console.log("Deleting account for: " + my_username);
+
+    if (deleteFeedback != '') {
+      let my_userid = sessionStorage.getItem('user_id');
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/submit_feedback", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ "user_id": my_userid, "feedback_title": "Delete Account", "feedback_body": deleteFeedback }),
+        });
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+    }
+
+    try {
+      let res = await fetch('http://localhost:5000/api/delete_account', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: my_username }),
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.log("Error:" + error);
+    }
+
+    setOpenDelete(!openDelete);
     // send feedback to the database here
     // delete account procedue here
     setDeleteFeedback("");
     navigate("/login");
   }
 
-  const handleSubmitFeedback = () => {
+  const handleSubmitFeedback = async () => {
+    let my_userid = sessionStorage.getItem('user_id');
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/submit_feedback", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "user_id": my_userid, "feedback_title": "PurdueHub General Feedback", "feedback_body": feedback }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+
     setOpenFeedback(!openFeedback);
     // send feedback to the database here
     setFeedback(""); // clear existing feedback
@@ -124,12 +181,12 @@ const Navbar = () => {
 
   const handleChange = (e) => {
 
-    console.log("Change:" + e);
+    console.log(e);
     setSearchFor(e.target.value);
 
     if (e.target.value === 1) {
       setPlaceholderSearch("Search For User...");
-      setUsingData(fakeUsers);
+      setUsingData(allUsernames);
     }
     else if (e.target.value === 2) {
       setPlaceholderSearch("Search For Clubs...");
@@ -167,12 +224,44 @@ const Navbar = () => {
       }
     };
 
+    fetchUsernames();
+    fetchClasses();
+
     document.body.addEventListener('click', handleOutsideClick);
 
     return () => {
       document.body.removeEventListener('click', handleOutsideClick);
     };
   }, []);
+
+  async function fetchUsernames() {
+    try {
+      let res = await fetch('http://localhost:5000/api/get_all_usernames', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ }),
+      });
+
+      const data = await res.json();
+      if (res.status === 200) {
+        const usernames_list = data.usernames.map((username) => {
+          return username.username;
+        });
+        setAllUsernames(usernames_list);
+        setUsingData(usernames_list);
+      } else {
+        setUsingData([]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function fetchClasses() {
+
+  }
   
   return (
 
@@ -246,7 +335,7 @@ const Navbar = () => {
           </Box>
         </div>
 
-        <div className='search-container'>
+        <form className='search-container' onSubmit={(e) => { e.preventDefault(); onSearch(value); }}>
           <div className='search'>
             <SearchIcon className='icon-search' />
             <input
@@ -254,6 +343,40 @@ const Navbar = () => {
               type="text"
               value={value}
               onChange={(e) => setValue(e.target.value)}
+              placeholder='Type to search...'
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
+            />
+          </div>
+        </form>
+        {searchFocused && (
+          <div className="dropdown">
+            {usingData.filter(item => {
+              const searchTerm = value.toLowerCase();
+              const foundTerm = item.toLowerCase();
+              return searchTerm && foundTerm.includes(searchTerm);
+            })
+              .map((item, index) => (
+                <div
+                  onClick={() => console.log("Clicked: " + item)}
+                  className="dropdown-row"
+                  key={index}
+                >
+                  {item}
+                </div>
+              ))}
+          </div>
+        )}
+
+        {/* <div className='search-container'>
+          <div className='search'>
+            <SearchIcon className='icon-search' />
+            <input
+              className='searchInput'
+              type="text"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              onSubmit={(value) => onSearch(value)}
               placeholder='Type to search...'
               onFocus={handleInputFocus}
               onBlur={handleInputBlur}
@@ -269,7 +392,7 @@ const Navbar = () => {
             })
               .map((item, index) => (
                 <div
-                  onClick={() => onSearch(item)}
+                  onClick={console.log("ello World!s")}
                   className="dropdown-row"
                   key={index}
                 >
@@ -277,7 +400,7 @@ const Navbar = () => {
                 </div>
               ))}
           </div>
-        )}
+        )} */}
 
 
       </div>
@@ -315,12 +438,12 @@ const Navbar = () => {
               </Link>
               <span>Log Out</span>
             </div>
-            <div className='menu-item'>
+            {/* <div className='menu-item'>
               <Link className='icon-button'>
                 <SettingsIcon />
               </Link>
               <span>Settings</span>
-            </div>
+            </div> */}
           </div>
 
         )}

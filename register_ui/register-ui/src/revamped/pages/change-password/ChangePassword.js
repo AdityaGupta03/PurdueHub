@@ -5,6 +5,7 @@ import './changePassword.scss'
 import '../login/LoadingSpinner.css';
 
 const ChangePassword = () => {
+  const username = sessionStorage.getItem('username');
 
   const [pwd, setPwd] = useState('');
   const [errMsg, setErrMsg] = useState('');
@@ -28,14 +29,32 @@ const ChangePassword = () => {
       setErrMsg(passwordMessage);
       return;
     }
-    else {
-      setSuccess(true);
-      setTimeout(() => {
-        navigate('/login');
-      }, 1500);
-    }
 
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/update_password", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "password": pwd, "username": username }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        setSuccess(true);
+        setTimeout(() => {
+          navigate('/login');
+        }, 1500);
+      } else {
+        setErrMsg(data.error);
+      }
+    } catch (error) {
+      console.log('Error:', error);
+      setErrMsg('Error occurred when changing password');
+    }
   }
+  
   useEffect(() => {
     setErrMsg('');
   }, [pwd])
