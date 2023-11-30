@@ -622,6 +622,47 @@ async function getFollowedOrgsQuery(user_id) {
   }
 }
 
+async function favoriteCourseQuery(user_id, course_id) {
+  const query = "UPDATE users SET favorite_courses = array_append(favorite_courses, $1) WHERE user_id = $2";
+  const data = [ course_id, user_id ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+
+async function unfavoriteCourseQuery(user_id, course_id) {
+  const query = "UPDATE users SET favorite_courses = array_remove(favorite_courses, $1) WHERE user_id = $2";
+  const data = [ course_id, user_id ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function getFavoriteCoursesQuery(user_id) {
+  const query = "SELECT array_agg(name) AS favorite_courses FROM course WHERE id = ANY(SELECT unnest(favorite_courses) FROM users WHERE user_id = $1)";
+  const data = [ user_id ];
+
+  try {
+    const courses = await pool.query(query, data);
+    return courses;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+
+}
+
 module.exports = {
   isUniqueUsernameQuery,
   updateUsernameQuery,
@@ -668,4 +709,7 @@ module.exports = {
   updateTutorialQuery,
   setAdviceQuery,
   getFollowedOrgsQuery,
+  favoriteCourseQuery,
+  unfavoriteCourseQuery,
+  getFavoriteCoursesQuery,
 };

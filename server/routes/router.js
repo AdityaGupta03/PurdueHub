@@ -7,6 +7,7 @@ const adviceController = require("../controllers/adviceController");
 const faqController = require("../controllers/faqController");
 const chatController = require("../controllers/chatController");
 const searchController = require("../controllers/searchController");
+const courseController = require("../controllers/courseController");
 
 const router = express.Router();
 
@@ -65,6 +66,9 @@ router.post("/ask_question", faqController.askQuestionAPI);
 router.post("/chat_bot", chatController.chatAPI);
 router.post("/get_all_usernames", searchController.getAllUsernames);
 router.get("/get_all_classes", searchController.getAllClasses);
-router.get("/get_followed_orgs", organizationController.getFollowedOrgs);
+router.post("/get_followed_orgs", organizationController.getFollowedOrgs);
+router.post("/fav_course", courseController.favoriteCourse);
+router.post("/unfav_course", courseController.unfavoriteCourse);
+router.post("/get_fav_courses", courseController.getFavoriteCourses);
 
 module.exports = router;
