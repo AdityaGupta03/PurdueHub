@@ -135,6 +135,7 @@ const LeftBar = () => {
       },
     },
   ]
+  
   tour.addStep({
     id: '1',
     title: 'Welcome to PurdueHub!',
