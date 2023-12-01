@@ -1,0 +1,68 @@
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+
+.assistant {
+    animation: fadeIn 1s ease-in-out;
+}
+.usersend {
+    animation: fadeIn 1s ease-in-out;
+}
+
+.usersend:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    border: 8px solid transparent;
+    right: 100%;
+    border-right-color: #3498db;
+}
+
+
+.assistant:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    border: 8px solid transparent;
+    left: 100%;
+    border-left-color: #fff;
+}
+
+.chat-bot-container {
+    width: 95%;
+    height: 95%;
+    margin: 20px auto;
+    border-radius: 5px;
+
+    .user-input {
+        border: 1px rgba(255, 255, 255, 0.2) solid; 
+        background-color: transparent;
+        display: flex;
+        padding: 10px;
+        border-radius: 12px;
+        position: fixed;
+        bottom: 0;
+        width: 1175px;
+        input {
+            background-color: transparent;
+            border: none;
+            font-size: 16px;
+            font-weight: 400;
+            color: white;
+        }
+        input:focus {
+            outline: none;
+        }
+        margin-bottom: 10px;
+    }
+    .user-input:hover {
+        border: 1px rgba(255, 255, 255, 0.5) solid; 
+    }
+    margin-bottom: 85px;
+}
