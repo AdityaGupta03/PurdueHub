@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import './Map.css';
-
+import './Map.scss'
 const Map = () => {
   const navigate = useNavigate();
   const [map, setMap] = useState(null);
@@ -187,13 +187,13 @@ const Map = () => {
 
   return (
     <div>
-      <div id="search-bar">
+      <div className="search-bar">
         <input type="text" id="location-input" placeholder="Enter location" />
         <button onClick={searchLocation}>Search</button>
         <input type="text" id="destination-input" placeholder="Enter destination" />
         <button onClick={getDirections}>Get Directions</button>
       </div>
-      <div id="map"></div>
+      <div className="map"></div>
     </div>
   );
 }
