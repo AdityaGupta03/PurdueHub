@@ -6,6 +6,7 @@ import Navbar from "./revamped/components/navbar/Navbar"
 import LeftBar from "./revamped/components/leftBar/LeftBar";
 
 import './revamped/styles.scss'
+import './App.css'
 
 import {
   createBrowserRouter,
