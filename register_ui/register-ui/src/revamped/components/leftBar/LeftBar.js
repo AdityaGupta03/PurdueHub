@@ -247,21 +247,9 @@ const LeftBar = () => {
     buttons: buttonConfig,
   },
   );
+
   tour.addStep({
     id: '8',
-    title: 'Viewing Favorite Clubs',
-    text: 'This dropdown will display all the clubs you have personally favorited for quick access',
-    attachTo: {
-      element: '.fav-clubs-tut',
-      on: 'right',
-    },
-    arrow: true,
-    classes: 'example-step-extra-class',
-    buttons: buttonConfig,
-  },
-  );
-  tour.addStep({
-    id: '9',
     title: 'Viewing Favorite Classes',
     text: 'This dropdown will display all the classes you have personally favorited for quick access',
     attachTo: {
@@ -274,7 +262,7 @@ const LeftBar = () => {
   },
   );
   tour.addStep({
-    id: '10',
+    id: '9',
     title: 'Providing Feedback',
     text: 'If you have feedback regarding our application, you can check out this page and send it over to us. We appreciate it!',
     attachTo: {
@@ -287,11 +275,52 @@ const LeftBar = () => {
   },
   );
   tour.addStep({
-    id: '11',
+    id: '10',
     title: 'Managing settings',
     text: 'If you want to disable or enable certain features of our application, you can do so here',
     attachTo: {
       element: '.settings-tut',
+      on: 'right',
+    },
+    arrow: true,
+    classes: 'example-step-extra-class',
+    buttons: buttonConfig,
+  },
+  );
+
+  tour.addStep({
+    id: '11',
+    title: 'Chatbot',
+    text: 'Interact with our AI chatbot, ask it anything!',
+    attachTo: {
+      element: '.chatbot-tut',
+      on: 'right',
+    },
+    arrow: true,
+    classes: 'example-step-extra-class',
+    buttons: buttonConfig,
+  },
+  );
+  tour.addStep({
+    id: '12',
+    title: 'Map View',
+    text: 'Want to find events happening around campus, or just figure out the route between classes? Just use our map view and plan your destination.',
+    attachTo: {
+      element: '.map-tut',
+      on: 'right',
+    },
+    arrow: true,
+    classes: 'example-step-extra-class',
+    buttons: buttonConfig,
+  },
+  );
+
+  tour.addStep({
+    id: '13',
+    title: 'Filter Courses',
+    text: 'Normal Search just is not cutting it? Use our filter search and find the exact class with detailed filter features at your disposal!',
+    attachTo: {
+      element: '.filter-courses-tut',
       on: 'right',
     },
     arrow: true,
@@ -308,7 +337,6 @@ const LeftBar = () => {
     ],
   },
   );
-
   // **************************************************************************************************************
 
   // FAVORITING CLUBS + CLASSES INFO
