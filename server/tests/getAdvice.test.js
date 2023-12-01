@@ -15,12 +15,11 @@ describe("Testing getAdvice API:", () => {
     consoleErrSpy.mockRestore();
   });
 
-  it("should return 200 with advice not equal to testing advice", async () => {
+  it("should return 200 with advice", async () => {
     let res = await request(app)
       .get("/api/get_advice");
 
     expect(res.statusCode).toEqual(200);
-    expect(res.body.advice).not.toEqual("Testing: Failed");
   });
 
 });

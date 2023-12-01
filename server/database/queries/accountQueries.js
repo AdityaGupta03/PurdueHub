@@ -584,7 +584,7 @@ async function friendsWhoFollowClubQuery(user_id, org_id) {
 }
 
 async function updateTutorialQuery(username) {
-  const query = "UPDATE users SET tutorial = 1 WHERE username = $1";
+  const query = "UPDATE users SET tutorial = 0 WHERE username = $1";
   const data = [ username ];
   
   try {
@@ -603,6 +603,72 @@ async function setAdviceQuery(user_id, toggleAdvice) {
   try {
     await pool.query(query, data);
     return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function getFollowedOrgsQuery(user_id) {
+  const query = "SELECT array_agg(name) AS followed_orgs FROM organization WHERE org_id = ANY(SELECT unnest(saved_orgs) FROM users WHERE user_id = $1)";
+  const data = [ user_id ];
+
+  try {
+    const orgs = await pool.query(query, data);
+    return orgs;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+async function favoriteCourseQuery(user_id, course_id) {
+  const query = "UPDATE users SET saved_courses = array_append(saved_courses, $1) WHERE user_id = $2";
+  const data = [ course_id, user_id ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+
+async function unfavoriteCourseQuery(user_id, course_id) {
+  const query = "UPDATE users SET saved_courses = array_remove(saved_courses, $1) WHERE user_id = $2";
+  const data = [ course_id, user_id ];
+
+  try {
+    await pool.query(query, data);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function getFavoriteCoursesQuery(user_id) {
+  const query = "SELECT array_agg(name) AS saved_courses FROM course WHERE id = ANY(SELECT unnest(saved_courses) FROM users WHERE user_id = $1)";
+  const data = [ user_id ];
+
+  try {
+    const courses = await pool.query(query, data);
+    return courses;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+async function isFavoriteCourseQuery(user_id, course_id) {
+  const query = "SELECT * FROM users WHERE user_id = $1 AND $2 = ANY(saved_courses)";
+  const data = [ user_id, course_id ];
+
+  try {
+    const db_res = await pool.query(query, data);
+    return db_res.rows.length > 0;
   } catch (error) {
     console.error(error);
     return false;
@@ -654,4 +720,9 @@ module.exports = {
   friendsWhoFollowClubQuery,
   updateTutorialQuery,
   setAdviceQuery,
+  getFollowedOrgsQuery,
+  favoriteCourseQuery,
+  unfavoriteCourseQuery,
+  getFavoriteCoursesQuery,
+  isFavoriteCourseQuery,
 };

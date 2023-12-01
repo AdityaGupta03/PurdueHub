@@ -4,6 +4,17 @@ body {
     padding: 0;
 }
 
+.disabled {
+    background-color: 'grey';
+    cursor: not-allowed;
+}
+
+.enabled {
+    background-color: #4caf50;
+    cursor: pointer;
+
+}
+
 .chat-bot-container {
     max-width: 400px;
     margin: 20px auto;
@@ -18,14 +29,14 @@ body {
     max-height: 300px;
 }
 
-.user,
+.usersend,
 .assistant {
     padding: 8px;
     margin: 8px;
     border-radius: 5px;
 }
 
-.user {
+.usersend {
     background-color: #4caf50;
     color: white;
     text-align: right;
@@ -53,13 +64,7 @@ input {
 
 button {
     padding: 8px;
-    background-color: #4caf50;
     color: white;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #45a049;
 }

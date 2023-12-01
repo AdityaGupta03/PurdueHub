@@ -60,6 +60,23 @@ async function getFriendsOrg(req, res) {
     console.log(db_res.rows);
 
     return res.status(200).json({ friends: db_res.rows });
+}
+
+async function getFollowedOrgs(req, res) {
+    console.log("getFollowedOrgs");
+    console.log(req.body);
+
+    const { user_id } = req.body;
+
+    let db_res = await accountQueries.getFollowedOrgsQuery(user_id);
+    console.log(db_res);
+    if (db_res == null) {
+        return res.status(400).json({ message: "Error getting followed orgs" });
+    }
+
+    console.log(db_res.rows);
+
+    return res.status(200).json({ orgs: db_res.rows });
 
 }
 
@@ -68,4 +85,5 @@ module.exports = {
     unfollowOrg,
     isFollowingOrg,
     getFriendsOrg,
+    getFollowedOrgs,
 };

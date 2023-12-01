@@ -3,7 +3,7 @@ const { app } = require("../server");
 const pool = require("../database/db");
 const accountQueries = require("../database/queries/accountQueries");
 
-describe("Testing blockUser API:", () => {
+describe("Testing getProfileData API:", () => {
   let consoleLogSpy, consoleErrSpy;
 
   beforeAll(async () => {

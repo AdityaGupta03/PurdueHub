@@ -3,7 +3,7 @@ const pool = require("../database/db");
 const { app } = require("../server");
 const accountQueries = require("../database/queries/accountQueries");
 
-describe("Testing messageUser API:", () => {
+describe("Testing searchUser API:", () => {
 
   let consoleLogSpy, consoleErrSpy;
 

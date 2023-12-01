@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purdue University Courses</title>
+  <style>
+    body {
+      background-color: #f0f0f0; /* Set your desired background color */
+      font-family: 'Arial', sans-serif; /* Set your desired font family */
+    }
+
+    .course-box {
+      border: 1px solid #ddd;
+      display: inline-block;
+      padding: 10px;
+      margin: 10px;
+      width: 200px;
+      text-align: center;
+      background-color: #fff; /* Set your desired background color for course boxes */
+    }
+
+    .course-box h3 {
+      margin-bottom: 5px;
+      color: #2c3e50;
+    }
+
+    .credit-hours {
+      color: #3498db;
+    }
+
+    /* Add additional styling as needed */
+  </style>
+</head>
+<body>
+
+<label for="subject">Select Subject:</label>
+<select id="subject">
+  <option value="">Select Subject</option>
+  <option value="CS">Computer Science (CS)</option>
+  <option value="CHM">Chemistry (CHM)</option>
+</select>
+
+<label for="classNumber">Enter Class Number or Interval:</label>
+<input type="text" id="classNumber" placeholder="Class Number or Interval">
+
+<label for="courseName">Search by Course Name:</label>
+<input type="text" id="courseName" placeholder="Course Name">
+
+<button onclick="fetchCourses()">Fetch Courses</button>
+
+<div id="courses-container"></div>
+
+<script>
+function fetchCourses() {
+  const selectedSubject = document.getElementById('subject').value;
+  let classNumberOrInterval = document.getElementById('classNumber').value;
+  const courseName = document.getElementById('courseName').value.toLowerCase();
+
+  // Check if a subject is selected
+  if (!selectedSubject) {
+    alert('Please select a subject filter.');
+    return;
+  }
+
+  // Handle the case where a shorter class number is entered (e.g., 180 instead of 18000)
+  if (classNumberOrInterval && !classNumberOrInterval.includes('-')) {
+    classNumberOrInterval = padClassNumber(classNumberOrInterval);
+  }
+
+  // Build the filter based on subject, class number or interval, and course name
+  let filter = `Subject/Abbreviation eq '${selectedSubject}'`;
+  if (classNumberOrInterval) {
+    if (classNumberOrInterval.includes('-')) {
+      // If it's an interval (e.g., 100-200)
+      const [start, end] = classNumberOrInterval.split('-');
+      filter += ` and Number ge '${padClassNumber(start)}' and Number le '${padClassNumber(end)}'`;
+    } else {
+      // If it's a single class number
+      filter += ` and Number eq '${padClassNumber(classNumberOrInterval)}'`;
+    }
+  }
+  
+  // Fetch data from the API
+  fetch(`https://api.purdue.io/odata/Courses?$filter=${filter}&$orderby=Number%20asc`)
+    .then(response => response.json())
+    .then(data => {
+      // Filter data by course name
+      const filteredData = courseName
+        ? data.value.filter(course => course.Title.toLowerCase().includes(courseName))
+        : data.value;
+
+      // Display data in boxes or show a message if no data is found
+      const coursesContainer = document.getElementById('courses-container');
+      coursesContainer.innerHTML = ''; // Clear previous content
+
+      if (filteredData.length > 0) {
+        filteredData.forEach(course => {
+          const courseBox = document.createElement('div');
+          courseBox.className = 'course-box';
+
+          const courseTitle = document.createElement('h3');
+          courseTitle.textContent = ` ${course.Number}`;
+
+          const creditHours = document.createElement('p');
+          creditHours.className = 'credit-hours';
+          creditHours.textContent = `Credit Hours: ${course.CreditHours}`;
+
+          const courseDescription = document.createElement('p');
+          courseDescription.textContent = course.Title;
+
+          courseBox.appendChild(courseTitle);
+          courseBox.appendChild(creditHours);
+          courseBox.appendChild(courseDescription);
+
+          coursesContainer.appendChild(courseBox);
+        });
+      } else {
+        const noClassesMessage = document.createElement('p');
+        noClassesMessage.textContent = 'No classes found!';
+        coursesContainer.appendChild(noClassesMessage);
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+}
+
+function padClassNumber(number) {
+  // Pad the class number with zeros to match the expected format (e.g., 18000)
+  const paddedNumber = '0000' + number;
+  return paddedNumber.slice(-5);
+}
+
+// Initial fetch when the page loads
+fetchCourses();
+</script>
+
+</body>
+</html>

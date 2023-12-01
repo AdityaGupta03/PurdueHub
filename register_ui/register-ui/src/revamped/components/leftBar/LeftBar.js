@@ -1,6 +1,10 @@
 import React from 'react';
 import { useRef, useState, useEffect } from 'react';
 
+import SmartToyIcon from '@mui/icons-material/SmartToy';
+import MapIcon from '@mui/icons-material/Map';
+import SortIcon from '@mui/icons-material/Sort';
+
 import './leftBar.scss'
 import {
   createBrowserRouter,
@@ -94,9 +98,11 @@ import Shepherd from 'shepherd.js';
 
 const LeftBar = () => {
 
+  const navigate = useNavigate();
+
   // SHOW TUTORIAL INFO
 
-  const [showTour, setShowTour] = useState(true);
+  const [showTour, setShowTour] = useState(false);
   const [completed, setCompleted] = useState(false);
 
   const tour = new Shepherd.Tour({
@@ -510,6 +516,8 @@ const LeftBar = () => {
     }
   }
 
+  const [openChatbot, setOpenChatbot] = useState(false);
+
   const handleCloseAll = () => {
     setOpenInterested(!openInterested);
     setShowFollowed(false);
@@ -592,10 +600,40 @@ const LeftBar = () => {
     if (showTour) {
       tour.start();
     }
-    else {
-    }
 
+    fetchFavClasses();
   }, []);
+
+  const [favClasses, setFavClasses] = useState([]);
+
+  async function fetchFavClasses() {
+    try {
+      let res = await fetch('http://localhost:5000/api/get_fav_courses', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "user_id": my_userid }),
+      });
+
+      const data = await res.json();
+      if (res.status == 200) {
+        console.log("Fetched favorite classes");
+        console.log(data.courses.rows[0]);
+        if (data.courses.rows[0].saved_courses == null) {
+          console.log("Empty");
+          setFavClasses([]);
+        } else {
+          console.log("Set it!");
+          setFavClasses(data.courses.rows[0].saved_courses);
+        }
+      } else {
+        console.log("Something went wrong in fetching favorite classes: " + res.status);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function handleAddEvent() {
     console.log("Adding event!");
@@ -970,64 +1008,27 @@ const LeftBar = () => {
           </Link>
 
           <div className="removeStyleLink">
-            <div onClick={() => setOpenFavClasses(!openFavClasses)} className='item fav-clubs-tut'>
+            <div onClick={() => setOpenFavClasses(!openFavClasses)} className='item fav-classes-tut'>
               {openFavClasses ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-              <span>Favorite Clubs:</span>
+              <span>Favorite Classes:</span>
             </div>
           </div>
 
           {openFavClasses && (
             <div>
-              <Link to="/club/Club Name 1" className="removeStyleLink">
-                <div className='club'>
-                  <img src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" alt='' />
-                  <span>Club 1 Name</span>
+              {favClasses.map((favClass, index) => (
+                <div key={index}>
+                  <Link to={`/class/${favClass}`} className="removeStyleLink">
+                    <div className='class-choice'>
+                      <SchoolIcon />
+                      <span>{favClass}</span>
+                    </div>
+                  </Link>
                 </div>
-              </Link>
-              <Link to="/club/Club Name 2" className="removeStyleLink">
-                <div className='club'>
-                  <img src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" alt='' />
-                  <span>Club 2 Name</span>
-                </div>
-              </Link>
-              <Link to="/club/Club Name 3" className="removeStyleLink">
-                <div className='club'>
-                  <img src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" alt='' />
-                  <span>Club 3 Name</span>
-                </div>
-              </Link>
+              ))}
             </div>
           )}
 
-          <div className="removeStyleLink">
-            <div onClick={() => setOpenFavClubs(!openFavClubs)} className='item fav-classes-tut'>
-              {openFavClubs ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-              <span>Favorite Classes:</span>
-            </div>
-          </div>
-
-          {openFavClubs && (
-            <div>
-              <Link to="/class/name1" className="removeStyleLink">
-                <div className='class-choice'>
-                  <SchoolIcon />
-                  <span>Class Name 1</span>
-                </div>
-              </Link>
-              <Link to="/class/name2" className="removeStyleLink">
-                <div className='class-choice'>
-                  <SchoolIcon />
-                  <span>Class Name 2</span>
-                </div>
-              </Link>
-              <Link to="/class/name3" className="removeStyleLink">
-                <div className='class-choice'>
-                  <SchoolIcon />
-                  <span>Class Name 3</span>
-                </div>
-              </Link>
-            </div>
-          )}
           <hr />
           <div className='menu'>
             <span>Others</span>
@@ -1047,6 +1048,30 @@ const LeftBar = () => {
               <div className='item settings-tut'>
                 <SettingsIcon />
                 <span>Settings</span>
+              </div>
+            </div>
+
+            {/* Chatbot */}
+            <div onClick={() => navigate('/chat-bot')} className="removeStyleLink">
+              <div className='item chatbot-tut'>
+                <SmartToyIcon />
+                <span>Chatbot</span>
+              </div>
+            </div>
+
+            {/* Map */}
+            <div onClick={() => navigate('/map')} className="removeStyleLink">
+              <div className='item map-tut'>
+                <MapIcon />
+                <span>Map</span>
+              </div>
+            </div>
+
+            {/* Filter Courses */}
+            <div onClick={() => navigate('/filter-courses')} className="removeStyleLink">
+              <div className='item filter-courses-tut'>
+                <SortIcon />
+                <span>Filter Courses</span>
               </div>
             </div>
           </div>

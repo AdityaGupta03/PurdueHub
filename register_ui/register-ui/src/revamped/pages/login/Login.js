@@ -57,6 +57,7 @@ const Login = () => {
         localStorage.setItem("username", user);
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("show_advice", data.show_advice);
+        localStorage.setItem("tutorial", data.tutorial);
         setSuccess(true);
         setTimeout(() => {
           setSuccess(false);
