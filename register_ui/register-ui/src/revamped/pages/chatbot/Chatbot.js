@@ -10,10 +10,10 @@ function ChatBot() {
     let [userInput, setUserInput] = useState("");
     const lorem = "An applicable message I can send back to the user in a meaningful amoumt of time. Like I can say this or that instead of traditional lorem ipsum which helps nobody. We can checkout reviews here and there.";
     useEffect(() => {
-        // const isLoggedIn = localStorage.getItem('isLoggedIn');
-        // if (isLoggedIn == 'false') {
-        //    navigate('/login');
-        // }
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        if (isLoggedIn == 'false') {
+           navigate('/login');
+        }
     }, []);
 
     const handleUserInput = (e) => {
@@ -60,12 +60,6 @@ function ChatBot() {
                         {message.text}
                     </div>
                 ))}
-                <div className='usersend'>
-                    {lorem}
-                </div>
-                <div className='assistant'>
-                    {lorem}
-                </div>
             </div>
             <div className="user-input">
                 <input
