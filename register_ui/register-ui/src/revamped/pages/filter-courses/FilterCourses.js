@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './filter-courses.css';
-
+import './filterCourses.scss'
 const FilterCourses = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    if (isLoggedIn == 'false') {
-      navigate('/login');
-    }
+    //const isLoggedIn = localStorage.getItem('isLoggedIn');
+    //if (isLoggedIn == 'false') {
+    //  navigate('/login');
+    //}
   }, []);
 
   async function fetchCourses() {
@@ -93,8 +93,9 @@ const FilterCourses = () => {
   }
 
   return (
-    <div>
+    <div className="container-of">
       <label for="subject">Select Subject:</label>
+      
       <select id="subject">
         <option value="">Select Subject</option>
         <option value="CS">Computer Science (CS)</option>
@@ -109,7 +110,7 @@ const FilterCourses = () => {
 
       <button onClick={fetchCourses}>Fetch Courses</button>
 
-      <div id="courses-container"></div>
+      <div id="courses-container" class="courses-container"></div>
     </div>
   )
 }

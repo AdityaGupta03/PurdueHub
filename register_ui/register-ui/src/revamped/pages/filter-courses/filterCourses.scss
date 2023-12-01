@@ -1,0 +1,31 @@
+.container-of {
+    padding: 30px;
+    //background-color: red;
+    height: 900px;
+    overflow-y: scroll;
+
+    .top-wrapper {
+        display: flex;
+    }
+    .courses-container {
+        //background-color: purple;
+        display: flex;
+        height: 100%;
+        align-items: center;
+        flex-wrap: wrap;
+        .course-box {
+            height: 200px;
+            align-items: center;
+            background-color: #5e5d5d;
+            border-radius: 8px;
+            border: none;
+            h3 {
+                color: white;
+            }
+            p {
+                color: white
+            }
+        }
+
+    }
+}

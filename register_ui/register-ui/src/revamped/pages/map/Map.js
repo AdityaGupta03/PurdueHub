@@ -193,7 +193,7 @@ const Map = () => {
         <input type="text" id="destination-input" placeholder="Enter destination" />
         <button onClick={getDirections}>Get Directions</button>
       </div>
-      <div className="map"></div>
+      <div id="map" className="map"></div>
     </div>
   );
 }
