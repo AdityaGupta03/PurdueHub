@@ -10,10 +10,10 @@ const Map = () => {
   let temp = 0;
 
   useEffect(() => {
-    // const isLoggedIn = localStorage.getItem('isLoggedIn');
-    // if (isLoggedIn === 'false') {
-    //   navigate('/login');
-    // }
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn === 'false') {
+      navigate('/login');
+    }
     try {
     const script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAJjTUM6jgVKmk-FGrB8FRgV1rArfnfUDo&libraries=places&callback=initMap`;
