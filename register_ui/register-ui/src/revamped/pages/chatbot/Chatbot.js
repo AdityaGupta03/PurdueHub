@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Chatbot.css';
+import './Chatbot.scss'
 
 function ChatBot() {
     const navigate = useNavigate();
 
     let [chat, setChat] = useState([]);
     let [userInput, setUserInput] = useState("");
-
+    const lorem = "An applicable message I can send back to the user in a meaningful amoumt of time. Like I can say this or that instead of traditional lorem ipsum which helps nobody. We can checkout reviews here and there.";
     useEffect(() => {
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        if (isLoggedIn == 'false') {
-            navigate('/login');
-        }
+        // const isLoggedIn = localStorage.getItem('isLoggedIn');
+        // if (isLoggedIn == 'false') {
+        //    navigate('/login');
+        // }
     }, []);
 
     const handleUserInput = (e) => {
@@ -38,9 +39,9 @@ function ChatBot() {
             console.log(data);
 
             if (response.status == 200) {
-                setChat([...chat, 
-                    { text: userInput, type: 'usersend' }, 
-                    { text: data.message.content, type: data.message.role }
+                setChat([...chat,
+                { text: userInput, type: 'usersend' },
+                { text: data.message.content, type: data.message.role }
                 ]);
             } else {
                 console.log('Error getting response from chatbot API');
@@ -59,6 +60,12 @@ function ChatBot() {
                         {message.text}
                     </div>
                 ))}
+                <div className='usersend'>
+                    {lorem}
+                </div>
+                <div className='assistant'>
+                    {lorem}
+                </div>
             </div>
             <div className="user-input">
                 <input
@@ -71,6 +78,9 @@ function ChatBot() {
             </div>
         </div>
     );
+
+
+
 }
 
 export default ChatBot;

@@ -15,18 +15,11 @@ body {
 
 }
 
-.chat-bot-container {
-    max-width: 400px;
-    margin: 20px auto;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow: hidden;
-}
+
 
 .chat-history {
+    height: 95%;
     padding: 10px;
-    overflow-y: scroll;
-    max-height: 300px;
 }
 
 .usersend,
@@ -36,23 +29,20 @@ body {
     border-radius: 5px;
 }
 
-.usersend {
-    background-color: #4caf50;
-    color: white;
-    text-align: right;
-}
-
 .assistant {
     background-color: #2196f3;
     color: white;
     text-align: left;
 }
 
-.user-input {
-    display: flex;
-    padding: 10px;
-    background-color: #383636;
+.usersend {
+    background-color: #4caf50;
+    color: white;
+    text-align: right;
 }
+
+
+
 
 input {
     flex: 1;
@@ -63,6 +53,10 @@ input {
 }
 
 button {
+    width: 130px;
+    height: 36px;
+    font-size: 16px;
+    font-weight: 400;
     padding: 8px;
     color: white;
     border: none;
