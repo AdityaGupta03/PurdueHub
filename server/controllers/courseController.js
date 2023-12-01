@@ -9,6 +9,8 @@ async function favoriteCourse(req, res) {
         return res.status(400).json({ message: "Missing user_id or course_id" });
     }
 
+    console.log(course_name);
+
     const course_id = await courseQueries.getCourseID(course_name);
 
     let db_res = await accountQueries.favoriteCourseQuery(user_id, course_id);

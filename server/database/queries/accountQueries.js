@@ -623,7 +623,7 @@ async function getFollowedOrgsQuery(user_id) {
 }
 
 async function favoriteCourseQuery(user_id, course_id) {
-  const query = "UPDATE users SET favorite_courses = array_append(favorite_courses, $1) WHERE user_id = $2";
+  const query = "UPDATE users SET saved_courses = array_append(saved_courses, $1) WHERE user_id = $2";
   const data = [ course_id, user_id ];
 
   try {
@@ -637,7 +637,7 @@ async function favoriteCourseQuery(user_id, course_id) {
 
 
 async function unfavoriteCourseQuery(user_id, course_id) {
-  const query = "UPDATE users SET favorite_courses = array_remove(favorite_courses, $1) WHERE user_id = $2";
+  const query = "UPDATE users SET saved_courses = array_remove(saved_courses, $1) WHERE user_id = $2";
   const data = [ course_id, user_id ];
 
   try {
@@ -650,7 +650,7 @@ async function unfavoriteCourseQuery(user_id, course_id) {
 }
 
 async function getFavoriteCoursesQuery(user_id) {
-  const query = "SELECT array_agg(name) AS favorite_courses FROM course WHERE id = ANY(SELECT unnest(favorite_courses) FROM users WHERE user_id = $1)";
+  const query = "SELECT array_agg(name) AS saved_courses FROM course WHERE id = ANY(SELECT unnest(saved_courses) FROM users WHERE user_id = $1)";
   const data = [ user_id ];
 
   try {
@@ -663,7 +663,7 @@ async function getFavoriteCoursesQuery(user_id) {
 }
 
 async function isFavoriteCourseQuery(user_id, course_id) {
-  const query = "SELECT * FROM users WHERE user_id = $1 AND $2 = ANY(favorite_courses)";
+  const query = "SELECT * FROM users WHERE user_id = $1 AND $2 = ANY(saved_courses)";
   const data = [ user_id, course_id ];
 
   try {
