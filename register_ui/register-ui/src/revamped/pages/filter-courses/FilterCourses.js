@@ -6,10 +6,10 @@ const FilterCourses = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    //const isLoggedIn = localStorage.getItem('isLoggedIn');
-    //if (isLoggedIn == 'false') {
-    //  navigate('/login');
-    //}
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn == 'false') {
+     navigate('/login');
+    }
   }, []);
 
   async function fetchCourses() {

@@ -510,175 +510,203 @@ const UserProfile = () => {
         title: 'Welcome to PurdueHub!',
         text: 'Glad to have you here, this is a general layout view of our application to get you started!',
         attachTo: {
-            element: '.base-home',
-            on: 'right',
+          element: '.base-home',
+          on: 'right',
         },
         arrow: true,
         classes: 'example-step-extra-class',
         buttons: [
-            {
-                classes: 'shepherd-button-secondary',
-                text: 'Exit',
-                action: () => {
-                    console.log('Exited');
-                    setCompleted(true);
-                    tour.cancel();
-                },
+          {
+            classes: 'shepherd-button-secondary',
+            text: 'Exit',
+            action: () => {
+              console.log('Exited');
+              setCompleted(true);
+              tour.cancel();
             },
-            {
-                text: 'Next',
-                action: () => {
-                    console.log('Yo');
-                    tour.next();
-                },
+          },
+          {
+            text: 'Next',
+            action: () => {
+              console.log('Yo');
+              tour.next();
             },
+          },
         ],
-    },
-    );
-
-    tour.addStep({
+      },
+      );
+    
+      tour.addStep({
         id: '2',
         title: 'Viewing Your Profile',
         text: 'You can click on this profile icon to be able to see a list of items, including navigation to your personal profile page!',
         attachTo: {
-            element: '.user',
-            on: 'right',
+          element: '.user',
+          on: 'right',
         },
         arrow: true,
         classes: 'example-step-extra-class',
         buttons: buttonConfig,
-    },
-    );
-
-    tour.addStep({
+      },
+      );
+    
+      tour.addStep({
         id: '3',
         title: 'Viewing Your Profile PT2',
         text: 'You can click on this profile icon to be able to your personal profile page directly',
         attachTo: {
-            element: '.user-tut',
-            on: 'right',
+          element: '.user-tut',
+          on: 'right',
         },
         arrow: true,
         classes: 'example-step-extra-class',
         buttons: buttonConfig,
-    },
-    );
-
-    tour.addStep({
+      },
+      );
+    
+      tour.addStep({
         id: '4',
         title: 'Viewing Your Calendar',
         text: 'You can click on this calendar icon to be show your own personal calendar which you can personalize',
         attachTo: {
-            element: '.calendar-tut',
-            on: 'right',
+          element: '.calendar-tut',
+          on: 'right',
         },
         arrow: true,
         classes: 'example-step-extra-class',
         buttons: buttonConfig,
-    },
-    );
-
-    tour.addStep({
+      },
+      );
+    
+      tour.addStep({
         id: '5',
         title: 'Viewing Your Interested Events',
         text: 'When you follow a club, you can click here to view all the events you are automatically signed up for and remove any you wish not to partake in',
         attachTo: {
-            element: '.interested-tut',
-            on: 'right',
+          element: '.interested-tut',
+          on: 'right',
         },
         arrow: true,
         classes: 'example-step-extra-class',
         buttons: buttonConfig,
-    },
-    );
-    tour.addStep({
+      },
+      );
+      tour.addStep({
         id: '6',
         title: 'Viewing Weather',
         text: 'If you are wondering how is the weather today, you can checkout this weather page to view it',
         attachTo: {
-            element: '.weather-tut',
-            on: 'right',
+          element: '.weather-tut',
+          on: 'right',
         },
         arrow: true,
         classes: 'example-step-extra-class',
         buttons: buttonConfig,
-    },
-    );
-    tour.addStep({
+      },
+      );
+      tour.addStep({
         id: '7',
         title: 'Viewing FAQ',
         text: 'Checkout this page to view FAQs regarding our application but also tips if you are new to Purdue. We also gave the ability for people to ask a question to the team here at PurdueHub if they would like to',
         attachTo: {
-            element: '.faq-tut',
-            on: 'right',
+          element: '.faq-tut',
+          on: 'right',
         },
         arrow: true,
         classes: 'example-step-extra-class',
         buttons: buttonConfig,
-    },
-    );
-    tour.addStep({
+      },
+      );
+    
+      tour.addStep({
         id: '8',
-        title: 'Viewing Favorite Clubs',
-        text: 'This dropdown will display all the clubs you have personally favorited for quick access',
-        attachTo: {
-            element: '.fav-clubs-tut',
-            on: 'right',
-        },
-        arrow: true,
-        classes: 'example-step-extra-class',
-        buttons: buttonConfig,
-    },
-    );
-    tour.addStep({
-        id: '9',
         title: 'Viewing Favorite Classes',
         text: 'This dropdown will display all the classes you have personally favorited for quick access',
         attachTo: {
-            element: '.fav-classes-tut',
-            on: 'right',
+          element: '.fav-classes-tut',
+          on: 'right',
         },
         arrow: true,
         classes: 'example-step-extra-class',
         buttons: buttonConfig,
-    },
-    );
-    tour.addStep({
-        id: '10',
+      },
+      );
+      tour.addStep({
+        id: '9',
         title: 'Providing Feedback',
         text: 'If you have feedback regarding our application, you can check out this page and send it over to us. We appreciate it!',
         attachTo: {
-            element: '.feedback-tut',
-            on: 'right',
+          element: '.feedback-tut',
+          on: 'right',
         },
         arrow: true,
         classes: 'example-step-extra-class',
         buttons: buttonConfig,
-    },
-    );
-    tour.addStep({
-        id: '11',
+      },
+      );
+      tour.addStep({
+        id: '10',
         title: 'Managing settings',
         text: 'If you want to disable or enable certain features of our application, you can do so here',
         attachTo: {
-            element: '.settings-tut',
-            on: 'right',
+          element: '.settings-tut',
+          on: 'right',
+        },
+        arrow: true,
+        classes: 'example-step-extra-class',
+        buttons: buttonConfig,
+      },
+      );
+    
+      tour.addStep({
+        id: '11',
+        title: 'Chatbot',
+        text: 'Interact with our AI chatbot, ask it anything!',
+        attachTo: {
+          element: '.chatbot-tut',
+          on: 'right',
+        },
+        arrow: true,
+        classes: 'example-step-extra-class',
+        buttons: buttonConfig,
+      },
+      );
+      tour.addStep({
+        id: '12',
+        title: 'Map View',
+        text: 'Want to find events happening around campus, or just figure out the route between classes? Just use our map view and plan your destination.',
+        attachTo: {
+          element: '.map-tut',
+          on: 'right',
+        },
+        arrow: true,
+        classes: 'example-step-extra-class',
+        buttons: buttonConfig,
+      },
+      );
+    
+      tour.addStep({
+        id: '13',
+        title: 'Filter Courses',
+        text: 'Normal Search just is not cutting it? Use our filter search and find the exact class with detailed filter features at your disposal!',
+        attachTo: {
+          element: '.filter-courses-tut',
+          on: 'right',
         },
         arrow: true,
         classes: 'example-step-extra-class',
         buttons: [
-            {
-                text: 'Finish',
-                action: () => {
-                    console.log('Finished');
-                    setCompleted(true);
-                    setFinishTutorial(true);
-                    tour.cancel();
-                },
+          {
+            text: 'Finish',
+            action: () => {
+              console.log('Finished');
+              setCompleted(true);
+              tour.next();
             },
+          },
         ],
-    },
-    );
+      },
+      );
 
     return (
 
