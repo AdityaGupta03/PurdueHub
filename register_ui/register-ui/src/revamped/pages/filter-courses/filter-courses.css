@@ -1,0 +1,23 @@
+body {
+    background-color: #f0f0f0; /* Set your desired background color */
+    font-family: 'Arial', sans-serif; /* Set your desired font family */
+  }
+
+  .course-box {
+    border: 1px solid #ddd;
+    display: inline-block;
+    padding: 10px;
+    margin: 10px;
+    width: 200px;
+    text-align: center;
+    background-color: #fff; /* Set your desired background color for course boxes */
+  }
+
+  .course-box h3 {
+    margin-bottom: 5px;
+    color: #2c3e50;
+  }
+
+  .credit-hours {
+    color: #3498db;
+  }

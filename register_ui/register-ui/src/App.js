@@ -35,6 +35,8 @@ import ViewCalendar from "./revamped/pages/calendar/ViewCalendar";
 import FAQ from "./revamped/pages/faq/FAQPage";
 import FAQPage from "./revamped/pages/faq/FAQPage";
 import ChatBot from "./revamped/pages/chatbot/Chatbot";
+import Map from "./revamped/pages/map/Map";
+import FilterCourses from "./revamped/pages/filter-courses/FilterCourses";
 
 
 function App() {
@@ -111,6 +113,14 @@ function App() {
         {
           path: "/chat-bot",
           element: <ChatBot />
+        },
+        {
+          path: "/map",
+          element: <Map />
+        },
+        {
+          path: "/filter-courses",
+          element: <FilterCourses />
         },
       ]
     },

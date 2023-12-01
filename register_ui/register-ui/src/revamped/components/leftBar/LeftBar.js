@@ -2,6 +2,8 @@ import React from 'react';
 import { useRef, useState, useEffect } from 'react';
 
 import SmartToyIcon from '@mui/icons-material/SmartToy';
+import MapIcon from '@mui/icons-material/Map';
+import SortIcon from '@mui/icons-material/Sort';
 
 import './leftBar.scss'
 import {
@@ -1058,11 +1060,27 @@ const LeftBar = () => {
 
             {/* Chatbot */}
             <div onClick={() => navigate('/chat-bot')} className="removeStyleLink">
-            <div className='item chatbot-tut'>
-              <SmartToyIcon />
-              <span>Chatbot</span>
+              <div className='item chatbot-tut'>
+                <SmartToyIcon />
+                <span>Chatbot</span>
+              </div>
             </div>
-          </div>
+
+            {/* Map */}
+            <div onClick={() => navigate('/map')} className="removeStyleLink">
+              <div className='item map-tut'>
+                <MapIcon />
+                <span>Map</span>
+              </div>
+            </div>
+
+            {/* Filter Courses */}
+            <div onClick={() => navigate('/filter-courses')} className="removeStyleLink">
+              <div className='item filter-courses-tut'>
+                <SortIcon />
+                <span>Filter Courses</span>
+              </div>
+            </div>
           </div>
 
         </div>

@@ -10,7 +10,7 @@ function ChatBot() {
 
     useEffect(() => {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
-        if (!isLoggedIn) {
+        if (isLoggedIn == 'false') {
             navigate('/login');
         }
     }, []);
@@ -39,7 +39,7 @@ function ChatBot() {
 
             if (response.status == 200) {
                 setChat([...chat, 
-                    { text: userInput, type: 'user' }, 
+                    { text: userInput, type: 'usersend' }, 
                     { text: data.message.content, type: data.message.role }
                 ]);
             } else {
@@ -67,7 +67,7 @@ function ChatBot() {
                     value={userInput}
                     onChange={handleUserInput}
                 />
-                <button onClick={handleSendMessage}>Send</button>
+                <button onClick={handleSendMessage} disabled={userInput ? false : true} className={userInput ? 'enabled' : 'disabled'}>Send</button>
             </div>
         </div>
     );
