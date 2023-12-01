@@ -65,4 +65,72 @@
         border: 1px rgba(255, 255, 255, 0.5) solid; 
     }
     margin-bottom: 85px;
+
+
+
+
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .disabled {
+        background-color: 'grey';
+        cursor: not-allowed;
+    }
+    
+    .enabled {
+        background-color: #4caf50;
+        cursor: pointer;
+    
+    }
+    
+    
+    
+    .chat-history {
+        height: 95%;
+        padding: 10px;
+    }
+    
+    .usersend,
+    .assistant {
+        padding: 8px;
+        margin: 8px;
+        border-radius: 5px;
+    }
+    
+    .assistant {
+        background-color: #2196f3;
+        color: white;
+        text-align: left;
+    }
+    
+    .usersend {
+        background-color: #4caf50;
+        color: white;
+        text-align: right;
+    }
+    
+    
+    
+    
+    input {
+        flex: 1;
+        padding: 8px;
+        margin-right: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    
+    button {
+        width: 130px;
+        height: 36px;
+        font-size: 16px;
+        font-weight: 400;
+        padding: 8px;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
 }

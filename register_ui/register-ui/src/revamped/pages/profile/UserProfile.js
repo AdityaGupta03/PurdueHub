@@ -66,7 +66,7 @@ const UserProfile = () => {
     const [usernameError, setUsernameError] = useState('');
     const [username, setUsername] = useState(user);
     //const [username, setUsername] = useState("Hello");
-    const [newUser, setNewUser] = useState(username);
+    const [newUser, setNewUser] = useState(userName);
 
     const CHARACTER_LIMIT = 150;
     const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;

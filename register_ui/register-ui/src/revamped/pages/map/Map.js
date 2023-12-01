@@ -10,27 +10,27 @@ const Map = () => {
   let temp = 0;
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    if (isLoggedIn === 'false') {
-      navigate('/login');
-    }
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      if (isLoggedIn === 'false') {
+        navigate('/login');
+      }
     try {
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAJjTUM6jgVKmk-FGrB8FRgV1rArfnfUDo&libraries=places&callback=initMap`;
-    script.async = true;
-    script.defer = true;
-    document.head.appendChild(script);
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAJjTUM6jgVKmk-FGrB8FRgV1rArfnfUDo&libraries=places&callback=initMap`;
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
 
-    setTimeout(() => {
-      initMap();
-    }, 2000);
+      setTimeout(() => {
+        initMap();
+      }, 2000);
 
-    return () => {
-      document.head.removeChild(script);
-    };
-  } catch {
-    console.log("error");
-  }
+      return () => {
+        document.head.removeChild(script);
+      };
+    } catch {
+      console.log("error");
+    }
 
     // if (temp == 0) {
     //   window.location.reload();
@@ -115,10 +115,10 @@ const Map = () => {
   function parseEventData(data) {
     const eventNames = data.map(entry => entry.event_name);
     const locations = data.map(entry => entry.location);
-  
+
     return { eventNames, locations };
   }
-  
+
   function addInfoWindow(marker, text) {
     const infoWindow = new window.google.maps.InfoWindow({
       content: text,
@@ -186,12 +186,19 @@ const Map = () => {
   }
 
   return (
-    <div>
+    <div className="container-overall">
       <div className="search-bar">
-        <input type="text" id="location-input" placeholder="Enter location" />
-        <button onClick={searchLocation}>Search</button>
-        <input type="text" id="destination-input" placeholder="Enter destination" />
-        <button onClick={getDirections}>Get Directions</button>
+        <div className="input-wrapper-1">
+          <input type="text" id="location-input" placeholder="Enter location" />
+          <button onClick={searchLocation}>Search</button>
+        </div>
+
+        <div className="input-wrapper-2">
+          <input type="text" id="destination-input" placeholder="Enter destination" />
+          <button onClick={getDirections}>Get Directions</button>
+        </div>
+
+
       </div>
       <div id="map" className="map"></div>
     </div>
