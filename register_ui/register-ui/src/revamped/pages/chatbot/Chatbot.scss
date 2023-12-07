@@ -15,39 +15,46 @@
     animation: fadeIn 1s ease-in-out;
 }
 
-.usersend:before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    border: 8px solid transparent;
-    right: 100%;
-    border-right-color: #3498db;
-}
-
-
-.assistant:before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    border: 8px solid transparent;
-    left: 100%;
-    border-left-color: #fff;
-}
-
 .chat-bot-container {
     width: 95%;
+    //background-color: yellow;
     height: 95%;
     margin: 20px auto;
     border-radius: 5px;
 
+    position: relative;
+
+    //display: block;
+    //overflow-y: auto;
+
+    .wrapper-input {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        height: 90px;
+        background-color: #333;
+
+        width: 75%;
+        position: fixed;
+        bottom: 0;
+        left: 25%;
+        //right: 0;
+        //bottom: 0;
+        
+        
+        .user-input {
+
+        }
+    }
     .user-input {
         border: 1px rgba(255, 255, 255, 0.2) solid; 
         background-color: transparent;
         display: flex;
         padding: 10px;
         border-radius: 12px;
-        position: fixed;
-        bottom: 0;
+        //osition: fixed;
+        //bottom: 0;
         width: 500px;
         input {
             background-color: transparent;
@@ -95,21 +102,25 @@
     
     .usersend,
     .assistant {
-        padding: 8px;
-        margin: 8px;
-        border-radius: 5px;
+        font-size: 19px;
+        line-height: 25px;
+        padding: 15px;
+        margin: 12px;
+        border-radius: 8px;
     }
     
     .assistant {
         background-color: #2196f3;
         color: white;
         text-align: left;
+        margin-right: 40%;
     }
     
     .usersend {
         background-color: #4caf50;
         color: white;
         text-align: right;
+        margin-left: 40%;
     }
     
     
