@@ -890,7 +890,7 @@ const UserProfile = () => {
                             <Typography sx={{ fontWeight: 'bold' }}>Profile Picture</Typography>
                         </Box>
                         <Box sx={{ ...containActual }}>
-                            <Box onClick={handleEditPicture} sx={{ ...actual, "&:hover": { cursor: 'pointer' } }} component="img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2" />
+                            <Box onClick={handleEditPicture} sx={{ ...actual, "&:hover": { cursor: 'pointer' } }} component="img" src="https://business.purdue.edu/masters/images/2023_kal_798611.jpg" />
                         </Box>
                     </Box>
                     <Box sx={containPic}>
