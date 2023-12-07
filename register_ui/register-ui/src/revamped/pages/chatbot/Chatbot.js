@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import './Chatbot.css';
 import './Chatbot.scss'
 
+import './profile_icon.jpeg'
+import './chatgpt_pic.jpeg'
+
 function ChatBot() {
     const navigate = useNavigate();
 
@@ -61,14 +64,16 @@ function ChatBot() {
                     </div>
                 ))}
             </div>
-            <div className="user-input">
-                <input
-                    type="text"
-                    placeholder="Type a message..."
-                    value={userInput}
-                    onChange={handleUserInput}
-                />
-                <button onClick={handleSendMessage} disabled={userInput ? false : true} className={userInput ? 'enabled' : 'disabled'}>Send</button>
+            <div className='wrapper-input'>
+                <div className="user-input">
+                    <input
+                        type="text"
+                        placeholder="Type a message..."
+                        value={userInput}
+                        onChange={handleUserInput}
+                    />
+                    <button onClick={handleSendMessage} disabled={userInput ? false : true} className={userInput ? 'enabled' : 'disabled'}>Send</button>
+                </div>
             </div>
         </div>
     );
