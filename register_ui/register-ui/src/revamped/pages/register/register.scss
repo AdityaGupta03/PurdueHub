@@ -16,6 +16,8 @@
         text-decoration: underline;
     }
     .iconButton {
+        width: 39px;
+        height: 39px;
         color: inherit;
     }
 
@@ -91,7 +93,7 @@
 
                 div {
                     position: relative;
-
+                    display: flex;
                     input {
                         width: 75%;
                         background-color: transparent;
