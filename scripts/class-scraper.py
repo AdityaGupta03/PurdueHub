@@ -2,6 +2,24 @@ from bs4 import BeautifulSoup
 import csv
 import requests
 
+def getDescription(course_id, cell, desc_writer):
+    link = cell.find('a')
+    if link is None:
+        return
+    
+    url = link.get('href')
+    print(course_id)
+    print(url)
+    response = requests.get(url)
+    content = response.text
+    print(content)
+
+    soup = BeautifulSoup(content, 'html.parser')
+    table = soup.find("table", { "class": "datadisplaytable" })
+
+    description = table.find('td', { "class": "ntdefault" })
+    row = [ course_id, description ]
+    desc_writer.writerow(row)
 
 print("Starting the scraper...")
 sitemap = 'https://www.cs.purdue.edu/sitemap.html'
@@ -22,16 +40,17 @@ for link in sitemap_links:
         full_url = "https://www.cs.purdue.edu/" + url
         urls.append(full_url)
 
-print("Scraping the following URLs:")
 # Open a CSV file to write the data
-with open('class_data.csv', 'w', newline='') as csv_file:
+print("Writing to CSV file(s): class_data.csv, desc_data.csv")
+with open('class_data.csv', 'w', newline='') as csv_file, open("desc_data.csv", 'w', newline='') as desc_file:
     # Create a writer object to write to the CSV file
     writer = csv.writer(csv_file)
+    desc_writer = csv.writer(desc_file)
+
+    found_courses = set()
 
     # Iterate over each URL
     for url in urls:
-        print(url)
-
         if 'fall' in url:
             time = 'fall'
         elif 'spring' in url:
@@ -63,8 +82,7 @@ with open('class_data.csv', 'w', newline='') as csv_file:
                 cell_contents = []
                 for i, cell in enumerate(cells):
                     if cell.get_text(strip=True) != '' and cell.get_text(strip=True) != 'Time':
-                        # Check if the cell is a teacher cell
-                        if i == 2 and cell.find('a'):
+                        if i == 2 and cell.find('a'): # Check if the cell is a teacher cell
                             teachers = cell.find_all('a')
                             teacher_names = []
                             for teacher in teachers:
@@ -73,7 +91,14 @@ with open('class_data.csv', 'w', newline='') as csv_file:
                                     teacher_names.append(teacher.get_text(strip=True))
                             if teacher_names:
                                 cell_contents.append(', '.join(teacher_names))
-                        else:
+                        elif i == 0: # Check if course identifier file
+                            course_id = cell.get_text(strip=True)
+                            if course_id in found_courses:
+                                getDescription(course_id, cell, desc_writer)
+                            else:
+                                found_courses.add(course_id)
+                            cell_contents.append(cell.get_text(strip=True))
+                        else: 
                             cell_contents.append(cell.get_text(strip=True))
 
                 if cell_contents:
